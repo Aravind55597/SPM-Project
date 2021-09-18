@@ -29,12 +29,16 @@ namespace SPM_Project
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            //https://www.benday.com/2017/12/20/ef-core-asp-net-core-read-connections-strings-from-environment-variables/
 
             //add db context 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    //Configuration.GetConnectionString("DefaultConnection")
+                    Environment.GetEnvironmentVariable("SPM_DB_STRING")
+                    ));
+
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
 

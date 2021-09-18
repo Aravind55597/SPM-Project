@@ -14,13 +14,15 @@ namespace SPM_Project.EntityModels
 
         public string LastName { get; set; }
 
+        public Department Department { get; set; }
+
         public DateTime DOB { get; set; }
 
         public DateTime CreationTimestamp { get; set; }
 
         public DateTime UpdateTimestamp { get; set; }
 
-
+        public LMSUser LMSUser { get; set; }
     }
     
 

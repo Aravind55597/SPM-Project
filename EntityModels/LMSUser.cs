@@ -12,9 +12,15 @@ namespace SPM_Project.EntityModels
 
         public int Id { get; set; }
 
+        //Quiz answers 
+        public List<UserAnswer> UserAnswers { get; set; }
 
+        public List<ProgressTracker> ProgressTrackers { get; set; }
 
+        //list of classes the user Trains 
+        public List<CourseClass> ClassesTrained { get; set; }
 
+        public List<ClassEnrollmentRecord> Enrollments { get; set; }
 
     }
 }

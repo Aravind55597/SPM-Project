@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.EntityModels
 {
-    public class Group
+    public class CourseClass
     {
         public int Id { get; set; }
 
@@ -13,8 +13,22 @@ namespace SPM_Project.EntityModels
 
         public DateTime CreationTimeStamp { get; set; }
 
-
         public DateTime UpdateTimeStamp { get; set; }
+
+
+        public DateTime StartRegistration  { get; set; }
+
+        public DateTime EndRegistration { get; set; }
+
+        //trainer of the class 
+        public LMSUser ClassTrainer { get; set; }
+
+        //course
+        public Course Course { get; set; }
+
+        public List<Chapter> Chapters { get; set; }
+
+
 
     }
 }

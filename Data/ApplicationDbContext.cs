@@ -12,8 +12,21 @@ namespace SPM_Project.Data
         {
         }
 
-        //for practice
+        //for practice (Remove once everyone is ok with datatables)
         public DbSet<Customer> Customer { get; set; }
+        public DbSet<Chapter> Chapter { get; set; }
+
+        public DbSet<ClassEnrollmentRecord> ClassEnrollmentRecord { get; set; }
+        public DbSet<Course> Course { get; set; }
+
+        public DbSet<CourseClass> CourseClass { get; set; }
+        public DbSet<Department> Department { get; set; }
+        public DbSet<LMSUser>LMSUser { get; set; }
+        public DbSet<ProgressTracker> ProgressTracker { get; set; }
+        public DbSet<Quiz> Quiz { get; set; }
+
+        public DbSet<QuizQuestion> QuizQuestion { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

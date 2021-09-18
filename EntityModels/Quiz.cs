@@ -23,6 +23,10 @@ namespace SPM_Project.EntityModels
         
         public int Score { get; set; }
 
+        public Chapter Chapter { get; set; }
+
+
+        public QuizQuestion Questions { get; set; }
     }
 
 

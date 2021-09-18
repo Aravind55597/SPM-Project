@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.EntityModels
 {
-    public class ProgressTracking
+    public class ProgressTracker
     {
         public int Id { get; set; }
 
@@ -13,7 +13,10 @@ namespace SPM_Project.EntityModels
 
         public DateTime UpdateTimestamp { get; set; }
 
-        public int MyProperty { get; set; }
+        public Chapter Chapter { get; set; }
 
+        public bool Completed { get; set; }
+
+        public LMSUser LMSUser { get; set; }
     }
 }

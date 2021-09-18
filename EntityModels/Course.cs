@@ -5,31 +5,21 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.EntityModels
 {
-    public class Resources
+    public class Course
     {
         public int Id { get; set; }
 
-        public int ContentUrl { get; set; }
-
-
-        public ContentType Content { get; set; }
-
+        public string Name { get; set; }
 
         public DateTime CreationTimestamp { get; set; }
 
         public DateTime UpdateTimestamp { get; set; }
 
 
-        public Chapter Chapter { get; set; }
-    }
+        public string Description { get; set; }
 
-    public enum ContentType
-    {
-        PDF, 
-        Word,
-        Excel,
-        Video,
-        PowerPoint
-    }
+        public List<CourseClass> CourseClass { get; set; }
 
+        public List<Course> PreRequisites { get; set; }
+    }
 }

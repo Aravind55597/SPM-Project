@@ -5,11 +5,15 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.EntityModels
 {
-    public class Department
+    public class ClassEnrollmentRecord
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public bool CompletionStatus { get; set; }
+
+        public bool Approved { get; set; }
+
+
 
     }
 }
