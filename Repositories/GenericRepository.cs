@@ -19,9 +19,6 @@ namespace SPM_Project.Repositories
  
         }
 
-        //CREATE------------------------------------------------------------------------------------------------
-
-
         //add entities to database
         public virtual async Task AddAsync(T entity)
         {
@@ -34,8 +31,25 @@ namespace SPM_Project.Repositories
             await _context.Set<T>().AddRangeAsync(entities);
         }
 
-        //READ------------------------------------------------------------------------------------------------
+        //remove an enitity by entity 
+        public virtual async Task RemoveAsync(T entity)
+        {
+            _context.Set<T>().Remove(entity);
+        }
 
+
+        public virtual async Task RemoveRange(IEnumerable<T> entities)
+        {
+            _context.Set<T>().RemoveRange(entities);
+        }
+
+
+        //find based on expression 
+        public virtual async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression)
+        {
+            var data =  await _context.Set<T>().Where(expression).ToListAsync();
+            return data;
+        }
 
         //retrieve all values (stupid to use on large data sets )
         //NEED To implement pagination later 
@@ -43,15 +57,11 @@ namespace SPM_Project.Repositories
             //lambda to filter
             Expression<Func<T, bool>> filter = null,
             //lambda to order
-            //q => q.OrderBy(s => s.LastName)
-            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            Expression<Func<T, bool>> orderBy = null,
             //properties to filter by 
             string includeProperties = "",
-            //page number
-            int pageNumber = 0,
-            //size of the page
-            int pageSize =0
-            )
+            //direction of results 
+            bool asc = true)
         {
             IQueryable<T> query = _context.Set<T>();
 
@@ -68,35 +78,24 @@ namespace SPM_Project.Repositories
 
             if (orderBy != null)
             {
-                orderBy(query);
+                if (asc)
+                {
+                    var data = await query.OrderBy(orderBy).ToListAsync();
+                    return data; 
+                }
+                else
+                {
+                    var data = await query.OrderByDescending(orderBy).ToListAsync();
+                    return data;
+                }
+               
             }
-      
-
-            if (pageNumber!=0 && pageSize != 0)
+            else
             {
-                query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                var data = await query.ToListAsync();
+                return data; 
             }
-
-            var data = await query.ToListAsync();
-
-            return data; 
-
         }
-
-       
-        
-        //remove an enitity  
-        public virtual async Task RemoveAsync(T entity)
-        {
-            _context.Set<T>().Remove(entity);
-        }
-
-        //remove range of entities from the parent entity 
-        public virtual async Task RemoveRange(IEnumerable<T> entities)
-        {
-            _context.Set<T>().RemoveRange(entities);
-        }
-
 
         //retreive data by Id 
         public async Task<T> GetByIdAsync(int id)
@@ -123,6 +122,9 @@ namespace SPM_Project.Repositories
             }
             
         }
+
+
+
 
     }
 }
