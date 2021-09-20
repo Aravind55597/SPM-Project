@@ -29,7 +29,6 @@
 
   <ItemGroup>
     <Folder Include="DataTableModels\DataTableData\" />
-    <Folder Include="DTOs\" />
     <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 
