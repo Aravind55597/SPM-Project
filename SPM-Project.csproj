@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="JsonModels\**" />
+    <Content Remove="JsonModels\**" />
+    <EmbeddedResource Remove="JsonModels\**" />
+    <None Remove="JsonModels\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Faker.Net" Version="1.5.148" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.5" />
@@ -22,8 +29,8 @@
 
   <ItemGroup>
     <Folder Include="DataTableModels\DataTableData\" />
-    <Folder Include="JsonModels\" />
-    <Folder Include="Services\" />
+    <Folder Include="DTOs\" />
+    <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 
 </Project>

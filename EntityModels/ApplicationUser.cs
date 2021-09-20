@@ -14,7 +14,6 @@ namespace SPM_Project.EntityModels
 
         public string LastName { get; set; }
 
-        public Department Department { get; set; }
 
         public DateTime DOB { get; set; }
 

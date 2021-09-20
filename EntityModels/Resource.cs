@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.EntityModels
 {
-    public class Resources
+    public class Resource
     {
         public int Id { get; set; }
 

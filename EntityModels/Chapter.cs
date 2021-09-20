@@ -18,7 +18,7 @@ namespace SPM_Project.EntityModels
         public DateTime UpdateTimeStamp { get; set; }
 
         
-        public List<Resources> Resources { get; set; }
+        public List<Resource> Resources { get; set; }
 
         public List<ProgressTracker> ProgressTrackers  { get; set; }
 
