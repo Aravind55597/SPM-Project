@@ -1,4 +1,4 @@
-﻿# To contribute improvements to CI/CD templates, please follow the Development guide at:
+# To contribute improvements to CI/CD templates, please follow the Development guide at:
 # https://docs.gitlab.com/ee/development/cicd/templates.html
 # This specific template is located at:
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/dotNET-Core.yml
@@ -85,7 +85,7 @@ cache:
 # Learn more about GitLab cache: https://docs.gitlab.com/ee/ci/caching/index.html
 before_script:
   - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
-  - 'docker login registry.gitlab.com -u scaper65'
+  - 'docker login -u "smug4lms" -p "Smug4lms@1234"'
 
 build:
   stage: build
