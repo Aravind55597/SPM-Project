@@ -8,5 +8,7 @@ namespace SPM_Project.Repositories.Interfaces
 {
     interface IProgressTrackerRepository:IGenericRepository<ProgressTracker>
     {
+
+
     }
 }

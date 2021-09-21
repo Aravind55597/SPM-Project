@@ -20,6 +20,11 @@ namespace SPM_Project.EntityModels
 
         public DateTime EndRegistration { get; set; }
 
+        public DateTime StartClass  { get; set; }
+
+        public DateTime EndClass { get; set; }
+
+
         //trainer of the class 
         public LMSUser ClassTrainer { get; set; }
 
@@ -28,7 +33,7 @@ namespace SPM_Project.EntityModels
 
         public List<Chapter> Chapters { get; set; }
 
-
+        public int MaxStudents { get; set; }
 
     }
 }

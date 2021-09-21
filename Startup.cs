@@ -82,7 +82,7 @@ namespace SPM_Project
 
 
             //Add database seeding code here 
-            //SeedDatabase.Initialize(dbContext);
+            SeedDatabase.Initialize(dbContext);
 
             app.UseEndpoints(endpoints =>
             {

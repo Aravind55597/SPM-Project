@@ -8,5 +8,8 @@ namespace SPM_Project.Repositories.Interfaces
 {
     interface ILMSUserRepository: IGenericRepository<LMSUser>
     {
+
+        //
+        
     }
 }
