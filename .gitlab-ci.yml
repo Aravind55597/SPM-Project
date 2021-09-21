@@ -85,7 +85,7 @@ cache:
 # Learn more about GitLab cache: https://docs.gitlab.com/ee/ci/caching/index.html
 before_script:
   - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
-  - 'docker login -u "smug4lms" -p "Smug4lms@1234"'
+ 
 
 build:
   stage: build
