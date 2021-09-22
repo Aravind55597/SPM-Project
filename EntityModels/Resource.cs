@@ -9,7 +9,7 @@ namespace SPM_Project.EntityModels
     {
         public int Id { get; set; }
 
-        public int ContentUrl { get; set; }
+        public string ContentUrl { get; set; }
 
 
         public ContentType Content { get; set; }
@@ -29,7 +29,8 @@ namespace SPM_Project.EntityModels
         Word,
         Excel,
         Video,
-        PowerPoint
+        PowerPoint,
+        Hyperlink
     }
 
 }

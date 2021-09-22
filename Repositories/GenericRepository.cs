@@ -11,7 +11,7 @@ namespace SPM_Project.Repositories
 {
     public class GenericRepository<T>: IGenericRepository<T> where T : class
     {
-        protected readonly ApplicationDbContext _context;
+        public ApplicationDbContext _context;
 
         public GenericRepository(ApplicationDbContext context)
         {
@@ -83,8 +83,24 @@ namespace SPM_Project.Repositories
 
         }
 
-       
-        
+
+        //retreive data by Id 
+        public virtual async Task<T> GetByIdAsync(int id)
+        {
+            var data = await _context.Set<T>().FindAsync(id);
+            return data;
+        }
+
+        //UPDATE------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+        //DELETE------------------------------------------------------------------------------------------------
+
         //remove an enitity  
         public virtual async Task RemoveAsync(T entity)
         {
@@ -98,15 +114,9 @@ namespace SPM_Project.Repositories
         }
 
 
-        //retreive data by Id 
-        public async Task<T> GetByIdAsync(int id)
-        {
-            var data = await _context.Set<T>().FindAsync(id);
-            return data; 
-        }
 
         //remove data by Id
-        public async Task RemoveByIdAsync(int id )
+        public virtual async Task RemoveByIdAsync(int id )
         {
           var data = await _context.Set<T>().FindAsync(id);
           _context.Set<T>().Remove(data); 
@@ -114,7 +124,7 @@ namespace SPM_Project.Repositories
         }
 
         //remove range of entities by Id
-        public async Task RemoveRangeAsync(List<int> ids)
+        public virtual async Task RemoveRangeAsync(List<int> ids)
         {
             for (int i = 0; i < ids.Count; i++)
             {
@@ -125,4 +135,16 @@ namespace SPM_Project.Repositories
         }
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -44,19 +44,33 @@ namespace SPM_Project
 
             //add indentity 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                    .AddEntityFrameworkStores<ApplicationDbContext>();
+                    .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             //add controllers that allows for views & suppress auto 400 reponses when model biding is invalid 
             services.AddControllersWithViews().ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; });
 
+            //seed users
+            services.AddScoped<SeedUsers>();
 
- 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         //db context is auto injected here from the DI container
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext dbContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,  SeedUsers seedUsers)
         {
+
+            //remove this soon 
+
+            //seedUsers.SeedMainHRUser();
+            //seedUsers.SeedMainLearnerUser();
+            //seedUsers.SeedMainTrainerUser();
+
+
+            //remove this soon 
+
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -83,6 +97,8 @@ namespace SPM_Project
 
             //Add database seeding code here 
             //SeedDatabase.Initialize(dbContext);
+
+
 
             app.UseEndpoints(endpoints =>
             {

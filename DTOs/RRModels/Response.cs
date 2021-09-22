@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace SPM_Project.DTOs.RRModels
@@ -17,13 +18,14 @@ namespace SPM_Project.DTOs.RRModels
             Message = string.Empty;
             Errors = null;
             Data = data;
+            HttpCode = HttpStatusCode.OK;
         }
         public T Data { get; set; }
         public bool Succeeded { get; set; }
-        public List<string> Errors { get; set; }
+        public Dictionary<string,string> Errors { get; set; }
         public string Message { get; set; }
 
-
+        public HttpStatusCode HttpCode { get; set; }
 
 
 
