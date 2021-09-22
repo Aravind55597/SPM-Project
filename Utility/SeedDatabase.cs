@@ -1,45 +1,40 @@
 ﻿using SPM_Project.Data;
 using SPM_Project.EntityModels;
-using SPM_Project.PracticeDatatableModelAndController;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SPM_Project.Utility
 {
     public class SeedDatabase
     {
-
         public static void Initialize(ApplicationDbContext dbContext)
         {
-
             //USERS TO BE CREATED------------------------------------------------------------------------------\
 
-                //14 senior engineers
-                //60 enginneers
-                //lmsusers of id from 1 to 100 have been created 
-                //1 TO 14 are senior engineers 
-                //15-100 are junior engineers 
+            //14 senior engineers
+            //60 enginneers
+            //lmsusers of id from 1 to 100 have been created
+            //1 TO 14 are senior engineers
+            //15-100 are junior engineers
 
             //CREATED-----------------------------------------------------------------------------------------
 
-                //1-14 are seniors 
-                //15 to 100 are juniors
-                //1 to 15 are courses
-                //each course have 2 classes
-                //each class have 10 chapters 
-                //each chapter have a video for now 
+            //1-14 are seniors
+            //15 to 100 are juniors
+            //1 to 15 are courses
+            //each course have 2 classes
+            //each class have 10 chapters
+            //each chapter have a video for now
 
             //NOT CREATED-----------------------------------------------------------------------------------------
 
-                //pdf,word,docs for resources 
-                //prerequisites 
-
+            //pdf,word,docs for resources
+            //prerequisites
 
             //DATA------------------------------------------------------------------------------------------------
 
-                var links = new List<string>() {
+            var links = new List<string>() {
                 "https://www.youtube.com/watch?v=r-X9coYTOV4&list=PLah6faXAgguOeMUIxS22ZU4w5nDvCl5gs",
                 "https://www.youtube.com/watch?v=r3MFuAdkHEM&list=PLah6faXAgguOeMUIxS22ZU4w5nDvCl5gs&index=2",
                 "https://www.youtube.com/watch?v=-HpIzM11xJI&list=PLah6faXAgguOeMUIxS22ZU4w5nDvCl5gs&index=3",
@@ -52,53 +47,163 @@ namespace SPM_Project.Utility
                 "https://www.youtube.com/watch?v=1XACmWnK0MU&list=PLah6faXAgguOeMUIxS22ZU4w5nDvCl5gs&index=11"
                 };
 
-            //DATA CREATION------------------------------------------------------------------------------------------------
-
-                var transaction = dbContext.Database.BeginTransaction();
-
-            //CREATE LMSUSERS----------------------------------------------------
-
-                //LMSUser lmsUser; 
-
-                //for (int i = 0; i <100 ; i++)
-                //{
-                //    lmsUser = new LMSUser()
-                //    {
-
-                //    };
+            var imageUrl = "https://inmagazine.ca/wp-content/uploads/2020/04/Hey-Can-I-Ask-You-A-Question.jpg";
 
 
-
-                //    dbContext.Add(lmsUser);
-
-                //}
-
-            dbContext.SaveChanges();
-
-           
-
-            //create courses , classes , chapters ,quiz , 
-
-
-            //CREATE COURSES 1 to 8 (NO PREREQUISITES)-------------------------------------------------------------------------------------------------------
-
-
-                    //CREATED FOR : To preassign students, To preassign Trainers 
             var create = DateTime.Now;
 
-            for (int i = 1; i < 8; i++)
+            var questionOptionmMCQ = new List<string>()
             {
-                var name = Faker.Company.CatchPhrase();
+                "Answer A" , "Answer B" , "Answer C" , "Answer D"
+            };
 
+            var tfStrings = new List<string>()
+            {
+                "true","false"
+            };
+
+
+            //create list of ungraded quiz questions
+            List<QuizQuestion> CreateListQuestionsUngraded()
+            {
+                List<QuizQuestion> questions1 = new List<QuizQuestion>();
+
+                //multiseldect mcq
+                for (int z = 0; z < 3; z++)
+                {
+                    Random rnd = new Random();
+                    var ans = rnd.Next(0, 3);
+                    questions1.Add(new McqQuestion()
+                    {
+                        ImageUrl = imageUrl,
+                        Question = Faker.Lorem.Sentence(),
+                        Option1 = questionOptionmMCQ[0],
+                        Option2 = questionOptionmMCQ[1],
+                        Option3 = questionOptionmMCQ[2],
+                        Option4 = questionOptionmMCQ[3],
+                        IsMultiSelect = true,
+                        Answer = $"{rnd.Next(0, 3).ToString()},{rnd.Next(0, 3).ToString()},{rnd.Next(0, 3).ToString()}",
+                        QuestionType = "McqQuestion"
+                    }); ;
+                }
+
+                //sngle select mcq
+                for (int y = 0; y < 3; y++)
+                {
+                    Random rnd = new Random();
+                    var ans = rnd.Next(0, 3);
+                    questions1.Add(new McqQuestion()
+                    {
+                        ImageUrl = imageUrl,
+                        Question = Faker.Lorem.Sentence(),
+                        Option1 = questionOptionmMCQ[0],
+                        Option2 = questionOptionmMCQ[1],
+                        Option3 = questionOptionmMCQ[2],
+                        Option4 = questionOptionmMCQ[3],
+                        Answer = rnd.Next(0, 3).ToString(),
+                        QuestionType = "McqQuestion"
+                    }); ;
+                }
+
+                //true false
+                for (int g = 0; g < 3; g++)
+                {
+                    Random rnd = new Random();
+                    var ans = rnd.Next(0, 1);
+                    questions1.Add(new TFQuestion()
+                    {
+                        ImageUrl = imageUrl,
+                        Question = Faker.Lorem.Sentence(),
+                        TrueOption = questionOptionmMCQ[0],
+                        FalseOption = questionOptionmMCQ[1],
+                        Answer = tfStrings[rnd.Next(0, 1)],
+                        QuestionType = "TFQuestion"
+                    }); ;
+                }
+
+                return questions1;
+            }
+
+            //create list of ungraded questions 
+
+            List<QuizQuestion> CreateListQuestionsGraded()
+            {
+                List<QuizQuestion> questions = new List<QuizQuestion>();
+
+                //multiseldect mcq
+                for (int z = 0; z < 3; z++)
+                {
+                    Random rnd = new Random();
+                    var ans = rnd.Next(0, 3);
+                    questions.Add(new McqQuestion()
+                    {
+                        ImageUrl = imageUrl,
+                        Question = Faker.Lorem.Sentence(),
+                        Option1 = questionOptionmMCQ[0],
+                        Option2 = questionOptionmMCQ[1],
+                        Option3 = questionOptionmMCQ[2],
+                        Option4 = questionOptionmMCQ[3],
+                        IsMultiSelect = true,
+                        Answer = $"{rnd.Next(0, 3).ToString()},{rnd.Next(0, 3).ToString()},{rnd.Next(0, 3).ToString()}",
+                        QuestionType = "McqQuestion",
+                        Marks = 4
+                    }); ;
+                }
+
+                //sngle select mcq
+                for (int y = 0; y < 3; y++)
+                {
+                    Random rnd = new Random();
+                    var ans = rnd.Next(0, 3);
+                    questions.Add(new McqQuestion()
+                    {
+                        ImageUrl = imageUrl,
+                        Question = Faker.Lorem.Sentence(),
+                        Option1 = questionOptionmMCQ[0],
+                        Option2 = questionOptionmMCQ[1],
+                        Option3 = questionOptionmMCQ[2],
+                        Option4 = questionOptionmMCQ[3],
+                        Answer = rnd.Next(0, 3).ToString(),
+                        QuestionType = "McqQuestion",
+                        Marks = 2
+                    }); ;
+                }
+
+                //true false
+                for (int g = 0; g < 3; g++)
+                {
+                    Random rnd = new Random();
+                    var ans = rnd.Next(0, 1);
+                    questions.Add(new TFQuestion()
+                    {
+                        ImageUrl = imageUrl,
+                        Question = Faker.Lorem.Sentence(),
+                        TrueOption = questionOptionmMCQ[0],
+                        FalseOption = questionOptionmMCQ[1],
+                        Answer = tfStrings[rnd.Next(0, 1)],
+                        QuestionType = "TFQuestion",
+                        Marks = 1
+                    }); ;
+                }
+
+                return questions;
+
+            }
+
+            //create list of chapters (10)
+            List<Chapter> CreateChapters(string courseName, List<QuizQuestion> ungradedQuizzes)
+            {
                 List<Chapter> chapters = new List<Chapter>();
 
+                //CREATE 10 CHAPTERS PER COURSE
                 for (int n = 0; n < 10; n++)
                 {
+                    var chapterName = courseName + " Chapter " + n.ToString();
                     chapters.Add(
-                        
+
                         new Chapter()
                         {
-                            Name= Faker.Lorem.GetFirstWord(),
+                            Name = chapterName,
                             Description = Faker.Lorem.Sentence(),
                             CreationTimeStamp = create,
                             Resources = new List<Resource>()
@@ -110,78 +215,319 @@ namespace SPM_Project.Utility
                                     CreationTimestamp=create
                                 },
 
+                            },
+                            Quizzes = new List<Quiz>()
+                            {
+                                new Quiz()
+                                {
+                                    Name=chapterName+" Quiz 1",
+                                    Description= Faker.Lorem.Paragraph(),
+                                    CreationTimeStamp=create ,
+                                    TimeLimit=20,
+                                    Questions=ungradedQuizzes
+                                },
+                                new Quiz()
+                                {
+                                    Name=chapterName+" Quiz 2",
+                                    Description= Faker.Lorem.Paragraph(),
+                                    CreationTimeStamp=create ,
+                                    Questions=ungradedQuizzes
+                                }
                             }
                         }
 
                         );
                 }
-               
-                var course = new Course()
+
+
+                return chapters; 
+            }
+
+
+            //create list of ungraded quiz questions
+            var ungradedQuestions = CreateListQuestionsUngraded();
+
+
+            //create list of graded quiz questions 
+            var gradedQuestions = CreateListQuestionsGraded();
+
+
+
+            //DATA CREATION------------------------------------------------------------------------------------------------
+
+            var transaction = dbContext.Database.BeginTransaction();
+
+            //CREATE LMSUSERS----------------------------------------------------
+
+            void CreateLMSUsers()
+            {
+
+                LMSUser lmsUser = new LMSUser(); 
+                for (int i = 0; i < 100; i++)
                 {
-                    Name = name,
-                    CreationTimestamp=create,
-                    Description = Faker.Lorem.Sentence(),
-                    CourseClass = new List<CourseClass>()
+                    lmsUser = new LMSUser()
                     {
-                        //g1 is for ongoing classes 
-                        //can add quizzes etc.
-                       new CourseClass(){ 
+                    };
+
+                    dbContext.Add(lmsUser);
+
+                }
+                dbContext.SaveChanges();
+            }
+
+
+            //CREATE COURSES 1 to 4 (NO PREREQUISITES)-------------------------------------------------------------------------------------------------------
+
+            //g1->FUTURE CLASSES : EMPTY
+            //g2->ONGOING CLASSES : TRAINERS ,LEARNERS,  CHAPTERS , RESOURCES (JUST VIDEO FOR NOW) , QUIZ QUESTIONS , QUIZ MODEL ANSWERS
+
+            void CreateCourses1to4()
+            {
+
+                for (int i = 1; i < 5; i++)
+                {
+
+
+
+                    //COURSE NAME
+                    var name = "Course " + i.ToString();
+
+                    //CHAPTER LIST
+                    List<Chapter> chapters = new List<Chapter>();
+
+                    //CREATE 10 CHAPTERS PER COURSE
+                    for (int n = 0; n < 10; n++)
+                    {
+                        var chapterName = name + " Chapter " + n.ToString();
+                        chapters.Add(
+
+                            new Chapter()
+                            {
+                                Name = chapterName,
+                                Description = Faker.Lorem.Sentence(),
+                                CreationTimeStamp = create,
+                                Resources = new List<Resource>()
+                                {
+                                new Resource()
+                                {
+                                    ContentUrl=links[n],
+                                    Content = ContentType.Video,
+                                    CreationTimestamp=create
+                                },
+
+                                },
+                                Quizzes = new List<Quiz>()
+                                {
+                                new Quiz()
+                                {
+                                    Name=chapterName+" Quiz 1",
+                                    Description= Faker.Lorem.Paragraph(),
+                                    CreationTimeStamp=create ,
+                                    TimeLimit=20,
+                                    Questions= ungradedQuestions
+                                },
+                                new Quiz()
+                                {
+                                    Name=chapterName+" Quiz 2",
+                                    Description= Faker.Lorem.Paragraph(),
+                                    CreationTimeStamp=create ,
+                                    Questions= ungradedQuestions
+                                }
+                                }
+                            }
+
+                            );
+                    }
+
+                    var course = new Course()
+                    {
+                        Name = name,
+                        CreationTimestamp = create,
+                        Description = Faker.Lorem.Sentence(),
+                        CourseClass = new List<CourseClass>()
+                    {
+                       new CourseClass(){
                            Name=name + " G1"   ,
                            CreationTimeStamp=create,
                            StartRegistration =create.AddMinutes(1),
-                           EndRegistration = create.AddMinutes(4),
-                           StartClass =create.AddHours(1) ,
-                           EndClass = create.AddMonths(4),
-                           ClassTrainer = dbContext.LMSUser.FirstOrDefault(u=>u.Id==i),
-                           MaxStudents= 30,
-                           Chapters=chapters
+                           EndRegistration = create.AddMonths(3),
+                           StartClass =create.AddMonths(3).AddDays(1) ,
+                           EndClass = create.AddMonths(5),
+                           Slots= 30,
                        },
 
-                       //g2 is for future classes to register
                         new CourseClass(){
                            Name=name + " G2"   ,
                            CreationTimeStamp=create,
                            StartRegistration =create.AddMinutes(1),
-                           EndRegistration = create.AddMonths(3),
-                           StartClass=create.AddMonths(2).AddHours(1) ,
-                           EndClass=create.AddMonths(5),
+                           EndRegistration = create.AddMinutes(4),
+                           StartClass=create.AddHours(1) ,
+                           EndClass=create.AddMonths(1),
+                           Slots= 30,
+                           Chapters=chapters,
                            ClassTrainer = dbContext.LMSUser.FirstOrDefault(u=>u.Id==i),
-                           MaxStudents= 30,
-                           Chapters=chapters
-                       }
+                       },
+
                     }
 
+                    };
 
-
-                };
+                    dbContext.Add(course);
+                }
 
 
             }
 
 
 
-            //CREATE COURSES 8 to 10 (HAVE PREREQUISITES)-------------------------------------------------------------------------------------------------------
+            //ADD GRADED QUIZZES TO COURSES FROM 1 to 4 (NO PREREQUISITES)-------------------------------------------------------------------------------------------------------
+
+            void AddGradedQuiz1to4()
+            {
+                //ADD GRADED QUIZ TO  G2 CLASSES
+                for (int i = 26; i < 33; i += 2)
+                {
+                    var courseClass = dbContext.CourseClass.FirstOrDefault(c => c.Id == i);
+
+                    courseClass.GradedQuiz = new Quiz
+                    {
+                        Name = "Class" + " Graded Quiz",
+                        Description = Faker.Lorem.Sentence(),
+                        CreationTimeStamp = create,
+                        IsGraded = true,
+                        Questions = gradedQuestions,
+                        TimeLimit = 20
+                    };
+
+                }
+
+            }
 
 
 
 
+            //CREATE COURSES 5 to 8 (HAVE PREREQUISITES)-------------------------------------------------------------------------------------------------------
+
+            //g1->FUTURE CLASSES : EMPTY
+            //g2->ONGOING CLASSES : TRAINERS ,LEARNERS,  CHAPTERS , RESOURCES (JUST VIDEO FOR NOW) , QUIZ QUESTIONS , QUIZ MODEL ANSWERS
 
 
+            void CreateCourses5to8()
+            {
+                for (int i = 1; i < 5; i++)
+                {
+                    //QUIZ QUSTION LIST
+                    List<QuizQuestion> questions3 = new List<QuizQuestion>();
 
 
-            //CREATE COURSES 8 to 10 (HAVE QUIZZES AND ANSWERS)-------------------------------------------------------------------------------------------------------
+                    //COURSE NAME
+                    var name = "Course " + $"{i + 4}";
 
+                    //CHAPTER LIST
+                    List<Chapter> chapters = new List<Chapter>();
 
+                    //CREATE 10 CHAPTERS PER COURSE CLASS
+                    for (int n = 0; n < 10; n++)
+                    {
+                        var chapterName = name + " Chapter " + n.ToString();
+                        chapters.Add(
+
+                            new Chapter()
+                            {
+                                Name = chapterName,
+                                Description = Faker.Lorem.Sentence(),
+                                CreationTimeStamp = create,
+                                Resources = new List<Resource>()
+                                {
+                                new Resource()
+                                {
+                                    ContentUrl=links[n],
+                                    Content = ContentType.Video,
+                                    CreationTimestamp=create
+                                },
+
+                                },
+                                Quizzes = new List<Quiz>()
+                                {
+                                new Quiz()
+                                {
+                                    Name=chapterName+" Quiz 1",
+                                    Description= Faker.Lorem.Paragraph(),
+                                    CreationTimeStamp=create ,
+                                    TimeLimit=20,
+                                    Questions= ungradedQuestions
+                                },
+                                new Quiz()
+                                {
+                                    Name=chapterName+" Quiz 2",
+                                    Description= Faker.Lorem.Paragraph(),
+                                    CreationTimeStamp=create ,
+                                    Questions= ungradedQuestions
+                                }
+                                }
+                            }
+
+                            );
+                    }
+
+                    var course = new Course()
+                    {
+                        Name = name,
+                        CreationTimestamp = create,
+                        Description = Faker.Lorem.Sentence(),
+                        CourseClass = new List<CourseClass>()
+                    {
+                        new CourseClass() {
+                            Name = name + " G1",
+                            CreationTimeStamp = create,
+                            StartRegistration = create.AddMinutes(1),
+                            EndRegistration = create.AddMonths(3),
+                            StartClass = create.AddMonths(3).AddDays(1),
+                            EndClass = create.AddMonths(5),
+                            Slots = 30,
+                        },
+
+                        new CourseClass() {
+                            Name = name + " G2",
+                            CreationTimeStamp = create,
+                            StartRegistration = create.AddMinutes(1),
+                            EndRegistration = create.AddMinutes(4),
+                            StartClass = create.AddHours(1),
+                            EndClass = create.AddMonths(1),
+                            Slots = 30,
+                            Chapters = chapters,
+                            ClassTrainer = dbContext.LMSUser.FirstOrDefault(u => u.Id == i),
+                            GradedQuiz = new Quiz()
+                            {
+                                Name = "Class" + " Graded Quiz",
+                                Description = Faker.Lorem.Sentence(),
+                                CreationTimeStamp = create,
+                                IsGraded = true,
+                                Questions = gradedQuestions,
+                                TimeLimit = 20
+                            }
+                        },
+
+                    },
+                        PreRequisites = new List<Course>()
+                    {
+                        dbContext.Course.FirstOrDefault(c=>c.Name==$"Course {i}")
+
+                    }
+
+                    };
+
+                    dbContext.Add(course);
+                }
+
+                dbContext.SaveChanges();
+            };
+     
 
 
 
 
             transaction.Commit();
         }
-
-
-
-
-
     }
 }

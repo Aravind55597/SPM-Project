@@ -45,7 +45,7 @@ namespace SPM_Project.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [EmailAddress]
+            [Display(Name = "Username/Email")]
             public string Email { get; set; }
 
             [Required]
@@ -81,28 +81,6 @@ namespace SPM_Project.Areas.Identity.Pages.Account
         
             if (ModelState.IsValid)
             {
-                //add claims to user before logging in 
-                var user = await _userManager.FindByEmailAsync(Input.Email);
-
-
-                if (user != null)
-                {
-                    //check if claims exist 
-                    var claims = await _userManager.GetClaimsAsync(user);
-
-                    var firstName = claims.FirstOrDefault(c => c.Type == "FirstName");
-                    var lastName = claims.FirstOrDefault(c => c.Type == "LastName");
-                    var department = claims.FirstOrDefault(c => c.Type == "Department");
-
-                    if (firstName == null && lastName == null)
-                    {
-                        await _userManager.AddClaimAsync(user, new Claim("FirstName", user.FirstName));
-                        await _userManager.AddClaimAsync(user, new Claim("LastName", user.LastName));
-                        await _userManager.AddClaimAsync(user, new Claim("Department", user.Department.ToString()));
-                    }
-
-                }
-
 
 
                 // This doesn't count login failures towards account lockout

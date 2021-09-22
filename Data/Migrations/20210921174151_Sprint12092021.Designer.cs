@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SPM_Project.Data;
 
 namespace SPM_Project.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210921174151_Sprint12092021")]
+    partial class Sprint12092021
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,17 +184,20 @@ namespace SPM_Project.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("LMSUserId")
                         .HasColumnType("int");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -342,14 +347,11 @@ namespace SPM_Project.Data.Migrations
                     b.Property<DateTime>("EndRegistration")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("GradedQuizId")
+                    b.Property<int>("MaxStudents")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Slots")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartClass")
                         .HasColumnType("datetime2");
@@ -365,8 +367,6 @@ namespace SPM_Project.Data.Migrations
                     b.HasIndex("ClassTrainerId");
 
                     b.HasIndex("CourseId");
-
-                    b.HasIndex("GradedQuizId");
 
                     b.ToTable("CourseClass");
                 });
@@ -399,14 +399,14 @@ namespace SPM_Project.Data.Migrations
                     b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("HaveViewedResources")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("LMSUserId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdateTimestamp")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("ViewedResource")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -433,14 +433,14 @@ namespace SPM_Project.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsGraded")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("TimeLimit")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int?>("QuestionsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdateTimeStamp")
                         .HasColumnType("datetime2");
@@ -448,6 +448,8 @@ namespace SPM_Project.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ChapterId");
+
+                    b.HasIndex("QuestionsId");
 
                     b.ToTable("Quiz");
                 });
@@ -465,9 +467,6 @@ namespace SPM_Project.Data.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Marks")
-                        .HasColumnType("int");
-
                     b.Property<string>("Question")
                         .HasColumnType("nvarchar(max)");
 
@@ -475,12 +474,7 @@ namespace SPM_Project.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("QuizId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("QuizId");
 
                     b.ToTable("QuizQuestion");
 
@@ -673,15 +667,9 @@ namespace SPM_Project.Data.Migrations
                         .WithMany("CourseClass")
                         .HasForeignKey("CourseId");
 
-                    b.HasOne("SPM_Project.EntityModels.Quiz", "GradedQuiz")
-                        .WithMany()
-                        .HasForeignKey("GradedQuizId");
-
                     b.Navigation("ClassTrainer");
 
                     b.Navigation("Course");
-
-                    b.Navigation("GradedQuiz");
                 });
 
             modelBuilder.Entity("SPM_Project.EntityModels.ProgressTracker", b =>
@@ -705,14 +693,13 @@ namespace SPM_Project.Data.Migrations
                         .WithMany("Quizzes")
                         .HasForeignKey("ChapterId");
 
-                    b.Navigation("Chapter");
-                });
+                    b.HasOne("SPM_Project.EntityModels.QuizQuestion", "Questions")
+                        .WithMany()
+                        .HasForeignKey("QuestionsId");
 
-            modelBuilder.Entity("SPM_Project.EntityModels.QuizQuestion", b =>
-                {
-                    b.HasOne("SPM_Project.EntityModels.Quiz", null)
-                        .WithMany("Questions")
-                        .HasForeignKey("QuizId");
+                    b.Navigation("Chapter");
+
+                    b.Navigation("Questions");
                 });
 
             modelBuilder.Entity("SPM_Project.EntityModels.Resource", b =>
@@ -773,11 +760,6 @@ namespace SPM_Project.Data.Migrations
                     b.Navigation("ProgressTrackers");
 
                     b.Navigation("UserAnswers");
-                });
-
-            modelBuilder.Entity("SPM_Project.EntityModels.Quiz", b =>
-                {
-                    b.Navigation("Questions");
                 });
 
             modelBuilder.Entity("SPM_Project.EntityModels.QuizQuestion", b =>

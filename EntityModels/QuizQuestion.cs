@@ -47,6 +47,7 @@ namespace SPM_Project.EntityModels
         /// </summary>
         public string Answer { get; set; }
 
+        public int Marks { get; set; }
         public List<UserAnswer> UserAnswers { get; set; }
     }
 
@@ -70,9 +71,6 @@ namespace SPM_Project.EntityModels
 
         //check if multiselect or not 
         public bool IsMultiSelect { get; set; }
-
-
-     
 
     }
 }

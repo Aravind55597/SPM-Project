@@ -30,10 +30,14 @@ namespace SPM_Project.EntityModels
 
         //course
         public Course Course { get; set; }
-
+        //course 
         public List<Chapter> Chapters { get; set; }
 
-        public int MaxStudents { get; set; }
+
+        //graded quiz 
+        public Quiz GradedQuiz { get; set; }
+
+        public int Slots { get; set; }
 
     }
 }
