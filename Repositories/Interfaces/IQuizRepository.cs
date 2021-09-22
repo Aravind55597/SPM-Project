@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.Repositories.Interfaces
 {
-    interface IQuizRepository:IGenericRepository<Quiz>
+    public interface IQuizRepository:IGenericRepository<Quiz>
     {
     }
 }

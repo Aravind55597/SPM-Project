@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.Repositories.Interfaces
 {
-    interface IResourceRepository:IGenericRepository<Resource>
+    public interface IResourceRepository:IGenericRepository<Resource>
     {
 
 

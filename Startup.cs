@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SPM_Project.Data;
 using SPM_Project.EntityModels;
+using SPM_Project.Repositories;
+using SPM_Project.Repositories.Interfaces;
 using SPM_Project.Utility;
 using System;
 using System.Collections.Generic;
@@ -53,6 +55,9 @@ namespace SPM_Project
             //seed users
             services.AddScoped<SeedUsers>();
 
+
+            //unit of work 
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

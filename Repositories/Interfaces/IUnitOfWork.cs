@@ -5,35 +5,35 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.Repositories.Interfaces
 {
-    interface IUnitOfWork
+    public interface IUnitOfWork
     {
 
         //entity repositories 
 
-        IApplicationUserRepository ApplicationUserRepository { get; }
+        public IApplicationUserRepository ApplicationUserRepository { get; }
 
-        IChapterRepository ChapterRepository { get; }
+        public IChapterRepository ChapterRepository { get; }
 
-        IClassEnrollmentRecordRepository ClassEnrollmentRecordRepository { get; }
+        public IClassEnrollmentRecordRepository ClassEnrollmentRecordRepository { get; }
 
-        ICourseClassRepository CourseClassRepository { get; }
+        public ICourseClassRepository CourseClassRepository { get; }
 
-        ICourseRepository CourseRepository { get; }
+        public ICourseRepository CourseRepository { get; }
 
-        ILMSUserRepository LMSUserRepository { get;  }
+        public ILMSUserRepository LMSUserRepository { get;  }
 
-        IProgressTrackerRepository ProgressTrackerRepository { get; }
+        public IProgressTrackerRepository ProgressTrackerRepository { get; }
 
-        IQuizQuestionRepository QuizQuestionRepository { get; }
+        public IQuizQuestionRepository QuizQuestionRepository { get; }
 
-        IQuizRepository QuizRepository { get; }
+        public IQuizRepository QuizRepository { get; }
 
-        IResourceRepository ResourceRepository { get; }
+        public IResourceRepository ResourceRepository { get; }
 
-        IUserAnswerRepository UserAnswerRepository { get;  }
+        public IUserAnswerRepository UserAnswerRepository { get;  }
 
         //function to end database transaction 
-        Task Complete();
+        public Task CompleteAsync();
 
     }
 }

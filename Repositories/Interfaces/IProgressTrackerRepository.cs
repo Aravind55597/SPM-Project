@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.Repositories.Interfaces
 {
-    interface IProgressTrackerRepository:IGenericRepository<ProgressTracker>
+    public interface IProgressTrackerRepository:IGenericRepository<ProgressTracker>
     {
 
 

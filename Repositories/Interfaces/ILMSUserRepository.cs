@@ -6,10 +6,17 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.Repositories.Interfaces
 {
-    interface ILMSUserRepository: IGenericRepository<LMSUser>
+    public interface ILMSUserRepository: IGenericRepository<LMSUser>
     {
 
         //
+
+        //retrieve all engineers
+
+        //check if user is eligible for a course 
+
+       
+
         
     }
 }
