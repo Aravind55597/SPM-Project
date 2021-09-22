@@ -57,18 +57,13 @@ namespace SPM_Project
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         //db context is auto injected here from the DI container
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,  SeedUsers seedUsers)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,  SeedUsers seedUsers, ApplicationDbContext dbContext)
         {
 
-            //remove this soon 
-
-            //seedUsers.SeedMainHRUser();
-            //seedUsers.SeedMainLearnerUser();
-            //seedUsers.SeedMainTrainerUser();
-
-
-            //remove this soon 
-
+          
+            //need to blcok the thread as we are making an async call in a sync method (bad practice but ok for now )
+            //seedUsers.SeedTestUsers().GetAwaiter().GetResult(); 
+ 
 
 
             if (env.IsDevelopment())

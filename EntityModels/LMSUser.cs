@@ -22,5 +22,6 @@ namespace SPM_Project.EntityModels
 
         public List<ClassEnrollmentRecord> Enrollments { get; set; }
 
+        
     }
 }

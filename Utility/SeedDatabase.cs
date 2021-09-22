@@ -10,27 +10,251 @@ namespace SPM_Project.Utility
     {
         public static void Initialize(ApplicationDbContext dbContext)
         {
-            //USERS TO BE CREATED------------------------------------------------------------------------------\
+            //USERS CREATED------------------------------------------------------------------------------\
 
             //14 senior engineers
             //60 enginneers
             //lmsusers of id from 1 to 100 have been created
             //1 TO 14 are senior engineers
-            //15-100 are junior engineers
+            //15-89 are junior engineers
+            //90 to 100 are administrators 
 
-            //CREATED-----------------------------------------------------------------------------------------
 
-            //1-14 are seniors
-            //15 to 100 are juniors
-            //1 to 15 are courses
+            //COURSES ETC. CREATED-----------------------------------------------------------------------------------------
+
+
             //each course have 2 classes
             //each class have 10 chapters
             //each chapter have a video for now
 
+            //COURSE 1 TO 4 (No prerequisites )
+
+            //g1->FUTURE CLASSES : EMPTY
+            //g2->ONGOING CLASSES : TRAINERS ,LEARNERS,  CHAPTERS , RESOURCES (JUST VIDEO FOR NOW) , QUIZ QUESTIONS , QUIZ MODEL ANSWERS
+
+
+            //COURSE 5 TO 8 (have prerequisites)
+
+            //g1->FUTURE CLASSES : EMPTY
+            //g2->ONGOING CLASSES : TRAINERS ,LEARNERS,  CHAPTERS , RESOURCES (JUST VIDEO FOR NOW) , QUIZ QUESTIONS , QUIZ MODEL ANSWERS
+
+            //EACH CLASS HAVE MAX 30
+
+
+            //so LMSuser 1 (Trainer) will train course1 g2 & course 5 g2 (Requires course 1 as prerequisite)
+
+            //LMSuser 15 (Leaner) will be in course1 g2
+
+
+            //the rest will be free flow 
+
+            //plan add learners to  course 1 ,2 ,3 , 4  g2
+
+            //course 1 ,2 , 3, 4 g2 classes 
+            //ids are 26 , 28 , 30 , 32 
+            //each class will have 10 learners 
+
+
+            //start user id -> 15
+           
+            //add to current class g2 course 1 to 4--------------------------------------------------------------------------------------------------------------------
+            for (int i = 15; i < 25; i++)
+            {
+                var user = dbContext.LMSUser.FirstOrDefault(u=>u.Id==i);
+
+                var enrollment = new ClassEnrollmentRecord()
+                {
+                    CompletionStatus = false,
+                    Approved = true,
+                    CourseClass= dbContext.CourseClass.FirstOrDefault(c => c.Id == 26)
+                };
+
+                user.Enrollments = new List<ClassEnrollmentRecord>() {
+
+
+
+                    enrollment
+
+
+
+                };
+                    
+ 
+                    
+              
+
+            }
+
+            for (int i = 25; i < 35; i++)
+            {
+                var user = dbContext.LMSUser.FirstOrDefault(u => u.Id == i);
+
+                var enrollment = new ClassEnrollmentRecord()
+                {
+                    CompletionStatus = false,
+                    Approved = true,
+                    CourseClass = dbContext.CourseClass.FirstOrDefault(c => c.Id == 28)
+                };
+
+
+                user.Enrollments = new List<ClassEnrollmentRecord>() {
+
+
+
+                    enrollment
+
+
+
+                };
+            }
+
+            for (int i = 35; i < 45; i++)
+            {
+                var user = dbContext.LMSUser.FirstOrDefault(u => u.Id == i);
+
+                var enrollment = new ClassEnrollmentRecord()
+                {
+                    CompletionStatus = false,
+                    Approved = true,
+                    CourseClass = dbContext.CourseClass.FirstOrDefault(c => c.Id == 30)
+                };
+
+                user.Enrollments = new List<ClassEnrollmentRecord>() {
+
+
+
+                    enrollment
+
+
+
+                };
+            }
+
+            for (int i = 45; i < 55; i++)
+            {
+                var user = dbContext.LMSUser.FirstOrDefault(u => u.Id == i);
+
+                var enrollment = new ClassEnrollmentRecord()
+                {
+                    CompletionStatus = false,
+                    Approved = true,
+                    CourseClass = dbContext.CourseClass.FirstOrDefault(c => c.Id == 32)
+                };
+
+
+                user.Enrollments = new List<ClassEnrollmentRecord>() {
+
+
+
+                    enrollment
+
+
+
+                };
+            }
+
+
+            //add to current class g2 course 5 to 8--------------------------------------------------------------------------------------------------------------------
+
+            for (int i = 55; i < 63; i++)
+            {
+                var user = dbContext.LMSUser.FirstOrDefault(u => u.Id == i);
+
+                var enrollment = new ClassEnrollmentRecord()
+                {
+                    CompletionStatus = false,
+                    Approved = true,
+                    CourseClass = dbContext.CourseClass.FirstOrDefault(c => c.Id == 34)
+                };
+
+
+                user.Enrollments = new List<ClassEnrollmentRecord>() {
+
+
+
+                    enrollment
+
+
+
+                };
+
+            }
+
+            for (int i = 63; i < 71; i++)
+            {
+                var user = dbContext.LMSUser.FirstOrDefault(u => u.Id == i);
+
+                var enrollment = new ClassEnrollmentRecord()
+                {
+                    CompletionStatus = false,
+                    Approved = true,
+                    CourseClass = dbContext.CourseClass.FirstOrDefault(c => c.Id == 36)
+                };
+
+
+                user.Enrollments = new List<ClassEnrollmentRecord>() {
+
+
+
+                    enrollment
+
+
+
+                };
+            }
+
+            for (int i = 71; i < 79; i++)
+            {
+                var user = dbContext.LMSUser.FirstOrDefault(u => u.Id == i);
+
+                var enrollment = new ClassEnrollmentRecord()
+                {
+                    CompletionStatus = false,
+                    Approved = true,
+                    CourseClass = dbContext.CourseClass.FirstOrDefault(c => c.Id == 38)
+                };
+
+
+                user.Enrollments = new List<ClassEnrollmentRecord>() {
+
+
+
+                    enrollment
+
+
+
+                };
+            }
+
+            for (int i = 79; i < 89; i++)
+            {
+                var user = dbContext.LMSUser.FirstOrDefault(u => u.Id == i);
+
+                var enrollment = new ClassEnrollmentRecord()
+                {
+                    CompletionStatus = false,
+                    Approved = true,
+                    CourseClass = dbContext.CourseClass.FirstOrDefault(c => c.Id == 40)
+                };
+
+
+                user.Enrollments = new List<ClassEnrollmentRecord>() {
+
+
+
+                    enrollment
+
+
+
+                };
+            }
+
+
+
             //NOT CREATED-----------------------------------------------------------------------------------------
 
             //pdf,word,docs for resources
-            //prerequisites
+
 
             //DATA------------------------------------------------------------------------------------------------
 
@@ -522,10 +746,10 @@ namespace SPM_Project.Utility
 
                 dbContext.SaveChanges();
             };
-     
 
 
 
+            dbContext.SaveChanges();
 
             transaction.Commit();
         }
