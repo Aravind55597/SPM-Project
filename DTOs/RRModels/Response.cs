@@ -9,6 +9,7 @@ namespace SPM_Project.DTOs.RRModels
     public class Response<T>
     {
 
+
         public Response()
         {
         }
