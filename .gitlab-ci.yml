@@ -89,7 +89,8 @@ before_script:
   - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
  
 
-build:
+build: 
+  extends: .only-master
   stage: build
   # ### Build all projects discovered from solution file.
   #
