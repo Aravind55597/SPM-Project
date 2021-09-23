@@ -18,7 +18,9 @@
 # Learn more about Docker tags: https://docs.docker.com/glossary/?term=tag
 # and the Docker itself: https://opensource.com/resources/what-docker
 image: microsoft/dotnet:latest
-
+.only-master:
+  only:
+   - master
 # ### Define variables
 #
 variables:
