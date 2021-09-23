@@ -20,7 +20,6 @@ namespace SPM_Project.EntityModels
 
         public ApplicationUser User { get; set; }
 
-
         public string Answer { get; set; }
 
         //check if the ans is corect 

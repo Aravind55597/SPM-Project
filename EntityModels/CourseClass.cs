@@ -20,15 +20,27 @@ namespace SPM_Project.EntityModels
 
         public DateTime EndRegistration { get; set; }
 
+        public DateTime StartClass  { get; set; }
+
+        public DateTime EndClass { get; set; }
+
+
         //trainer of the class 
         public LMSUser ClassTrainer { get; set; }
 
         //course
         public Course Course { get; set; }
-
+        //course 
         public List<Chapter> Chapters { get; set; }
 
 
+        //graded quiz 
+        public Quiz GradedQuiz { get; set; }
+
+        public int Slots { get; set; }
+
+
+        public List<ClassEnrollmentRecord> ClassEnrollmentRecords { get; set; }
 
     }
 }

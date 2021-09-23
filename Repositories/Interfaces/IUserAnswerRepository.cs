@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.Repositories.Interfaces
 {
-    interface IUserAnswerRepository: IGenericRepository<UserAnswer>
+    public interface IUserAnswerRepository: IGenericRepository<UserAnswer>
     {
     }
 }

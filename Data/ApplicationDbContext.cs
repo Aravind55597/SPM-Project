@@ -42,9 +42,20 @@ namespace SPM_Project.Data
             modelBuilder.Entity<QuizQuestion>()
               .HasDiscriminator(b => b.QuestionType);
 
-            
+            //QUIZ ------------------------------------------------------------------------------------------------------------------------------------------
 
-  
+            //quiz question and course class have a 1 to 1 relationship , hence need to indicate which is the principle entity 
+            //https://docs.microsoft.com/en-us/ef/core/modeling/relationships?tabs=fluent-api%2Cfluent-api-simple-key%2Csimple-key#one-to-one
+
+
+
+
+
+            //seed users and roles 
+
+            //lms users 1 to 14 are senior engineers!!!!!!!!!!!!!!!!!
+            //lms 15 onwards are learners !!!!!!!!!!!!!!!!
+
         }
     }
 }

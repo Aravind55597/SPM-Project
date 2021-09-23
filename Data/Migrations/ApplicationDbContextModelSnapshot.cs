@@ -16,7 +16,7 @@ namespace SPM_Project.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.5")
+                .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -172,7 +172,7 @@ namespace SPM_Project.Data.Migrations
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DepartmentId")
+                    b.Property<int>("Department")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -182,20 +182,17 @@ namespace SPM_Project.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("LMSUserId")
                         .HasColumnType("int");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -228,8 +225,6 @@ namespace SPM_Project.Data.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("LMSUserId");
 
@@ -286,10 +281,15 @@ namespace SPM_Project.Data.Migrations
                     b.Property<bool>("CompletionStatus")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("CourseClassId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("LMSUserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CourseClassId");
 
                     b.HasIndex("LMSUserId");
 
@@ -341,11 +341,23 @@ namespace SPM_Project.Data.Migrations
                     b.Property<DateTime>("CreationTimeStamp")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("EndClass")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("EndRegistration")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("GradedQuizId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Slots")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartClass")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("StartRegistration")
                         .HasColumnType("datetime2");
@@ -359,22 +371,9 @@ namespace SPM_Project.Data.Migrations
 
                     b.HasIndex("CourseId");
 
+                    b.HasIndex("GradedQuizId");
+
                     b.ToTable("CourseClass");
-                });
-
-            modelBuilder.Entity("SPM_Project.EntityModels.Department", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Department");
                 });
 
             modelBuilder.Entity("SPM_Project.EntityModels.LMSUser", b =>
@@ -404,6 +403,9 @@ namespace SPM_Project.Data.Migrations
 
                     b.Property<DateTime>("CreateTimestamp")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("HaveViewedResources")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("LMSUserId")
                         .HasColumnType("int");
@@ -436,14 +438,14 @@ namespace SPM_Project.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsGraded")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("QuestionsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("int");
+                    b.Property<decimal>("TimeLimit")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("UpdateTimeStamp")
                         .HasColumnType("datetime2");
@@ -451,8 +453,6 @@ namespace SPM_Project.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ChapterId");
-
-                    b.HasIndex("QuestionsId");
 
                     b.ToTable("Quiz");
                 });
@@ -470,6 +470,9 @@ namespace SPM_Project.Data.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Marks")
+                        .HasColumnType("int");
+
                     b.Property<string>("Question")
                         .HasColumnType("nvarchar(max)");
 
@@ -477,14 +480,19 @@ namespace SPM_Project.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("QuizId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("QuizId");
 
                     b.ToTable("QuizQuestion");
 
                     b.HasDiscriminator<string>("QuestionType");
                 });
 
-            modelBuilder.Entity("SPM_Project.EntityModels.Resources", b =>
+            modelBuilder.Entity("SPM_Project.EntityModels.Resource", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -497,8 +505,8 @@ namespace SPM_Project.Data.Migrations
                     b.Property<int>("Content")
                         .HasColumnType("int");
 
-                    b.Property<int>("ContentUrl")
-                        .HasColumnType("int");
+                    b.Property<string>("ContentUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationTimestamp")
                         .HasColumnType("datetime2");
@@ -510,7 +518,7 @@ namespace SPM_Project.Data.Migrations
 
                     b.HasIndex("ChapterId");
 
-                    b.ToTable("Resources");
+                    b.ToTable("Resource");
                 });
 
             modelBuilder.Entity("SPM_Project.EntityModels.UserAnswer", b =>
@@ -632,15 +640,9 @@ namespace SPM_Project.Data.Migrations
 
             modelBuilder.Entity("SPM_Project.EntityModels.ApplicationUser", b =>
                 {
-                    b.HasOne("SPM_Project.EntityModels.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId");
-
                     b.HasOne("SPM_Project.EntityModels.LMSUser", "LMSUser")
                         .WithMany()
                         .HasForeignKey("LMSUserId");
-
-                    b.Navigation("Department");
 
                     b.Navigation("LMSUser");
                 });
@@ -654,9 +656,15 @@ namespace SPM_Project.Data.Migrations
 
             modelBuilder.Entity("SPM_Project.EntityModels.ClassEnrollmentRecord", b =>
                 {
+                    b.HasOne("SPM_Project.EntityModels.CourseClass", "CourseClass")
+                        .WithMany("ClassEnrollmentRecords")
+                        .HasForeignKey("CourseClassId");
+
                     b.HasOne("SPM_Project.EntityModels.LMSUser", null)
                         .WithMany("Enrollments")
                         .HasForeignKey("LMSUserId");
+
+                    b.Navigation("CourseClass");
                 });
 
             modelBuilder.Entity("SPM_Project.EntityModels.Course", b =>
@@ -676,9 +684,15 @@ namespace SPM_Project.Data.Migrations
                         .WithMany("CourseClass")
                         .HasForeignKey("CourseId");
 
+                    b.HasOne("SPM_Project.EntityModels.Quiz", "GradedQuiz")
+                        .WithMany()
+                        .HasForeignKey("GradedQuizId");
+
                     b.Navigation("ClassTrainer");
 
                     b.Navigation("Course");
+
+                    b.Navigation("GradedQuiz");
                 });
 
             modelBuilder.Entity("SPM_Project.EntityModels.ProgressTracker", b =>
@@ -702,16 +716,17 @@ namespace SPM_Project.Data.Migrations
                         .WithMany("Quizzes")
                         .HasForeignKey("ChapterId");
 
-                    b.HasOne("SPM_Project.EntityModels.QuizQuestion", "Questions")
-                        .WithMany()
-                        .HasForeignKey("QuestionsId");
-
                     b.Navigation("Chapter");
-
-                    b.Navigation("Questions");
                 });
 
-            modelBuilder.Entity("SPM_Project.EntityModels.Resources", b =>
+            modelBuilder.Entity("SPM_Project.EntityModels.QuizQuestion", b =>
+                {
+                    b.HasOne("SPM_Project.EntityModels.Quiz", null)
+                        .WithMany("Questions")
+                        .HasForeignKey("QuizId");
+                });
+
+            modelBuilder.Entity("SPM_Project.EntityModels.Resource", b =>
                 {
                     b.HasOne("SPM_Project.EntityModels.Chapter", "Chapter")
                         .WithMany("Resources")
@@ -758,6 +773,8 @@ namespace SPM_Project.Data.Migrations
             modelBuilder.Entity("SPM_Project.EntityModels.CourseClass", b =>
                 {
                     b.Navigation("Chapters");
+
+                    b.Navigation("ClassEnrollmentRecords");
                 });
 
             modelBuilder.Entity("SPM_Project.EntityModels.LMSUser", b =>
@@ -769,6 +786,11 @@ namespace SPM_Project.Data.Migrations
                     b.Navigation("ProgressTrackers");
 
                     b.Navigation("UserAnswers");
+                });
+
+            modelBuilder.Entity("SPM_Project.EntityModels.Quiz", b =>
+                {
+                    b.Navigation("Questions");
                 });
 
             modelBuilder.Entity("SPM_Project.EntityModels.QuizQuestion", b =>

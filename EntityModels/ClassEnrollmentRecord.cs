@@ -13,7 +13,7 @@ namespace SPM_Project.EntityModels
 
         public bool Approved { get; set; }
 
-
+        public CourseClass CourseClass { get; set; }
 
     }
 }

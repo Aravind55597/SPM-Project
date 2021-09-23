@@ -7,6 +7,11 @@ namespace SPM_Project.EntityModels
 {
     public class Quiz
     {
+
+        public Quiz()
+        {
+
+        }
         public int Id { get; set; }
 
 
@@ -20,13 +25,23 @@ namespace SPM_Project.EntityModels
 
         public DateTime UpdateTimeStamp { get; set; }
 
-        
-        public int Score { get; set; }
 
+        //check if it is graded 
+        public bool IsGraded { get; set; }
+
+        //relate to chapters if it is not a graded quiz 
         public Chapter Chapter { get; set; }
 
 
-        public QuizQuestion Questions { get; set; }
+
+        //list of questions present 
+        public List<QuizQuestion> Questions { get; set; }
+
+
+        //time limit (in minutes)
+        public decimal TimeLimit { get; set; }
+
+
     }
 
 
