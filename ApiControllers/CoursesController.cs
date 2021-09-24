@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.ApiControllers
 {
-    public class Courses : Controller
+    public class CoursesController : Controller
     {
         public IActionResult Index()
         {

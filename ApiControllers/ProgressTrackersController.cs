@@ -9,8 +9,11 @@ namespace SPM_Project.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Resources : ControllerBase
+    public class ProgressTrackersController : ControllerBase
     {
+
+
+
 
 
 
