@@ -8,7 +8,7 @@ namespace SPM_Project.Controllers
 {
     public class AdministratorController : Controller
     {
-        public IActionResult Index()
+        public IActionResult HR()
         {
             return View();
         }
