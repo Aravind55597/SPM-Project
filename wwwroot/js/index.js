@@ -187,12 +187,6 @@
 
 
 
-
-
-
-
-
-
 	table.on('change', '.group-checkable', function () {
 		var set = $(this).closest('table').find('td:first-child .checkable');
 		var checked = $(this).is(':checked');
@@ -201,6 +195,7 @@
 			if (checked) {
 				$(this).prop('checked', true);
 				table.rows($(this).closest('tr')).select();
+				console.log(90)
 			}
 			else {
 				$(this).prop('checked', false);
