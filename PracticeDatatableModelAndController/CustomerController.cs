@@ -47,6 +47,12 @@ namespace SPM_Project.PracticeDatatableModelAndController
                 //number of records to be skipped
                 int skip = customerTable.Start;
                 int recordsTotal = 0;
+
+
+
+
+
+
                 var customerQueryable = _dbContext.Customer.AsQueryable();
 
 
