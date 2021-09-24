@@ -8,7 +8,7 @@ namespace SPM_Project.Controllers
 {
     public class LearnerController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Learner_courses()
         {
             return View();
         }
