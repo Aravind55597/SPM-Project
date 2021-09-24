@@ -25,11 +25,14 @@ namespace SPM_Project.ApiControllers
 
 
         [HttpPost, Route("Engineers", Name = "GetEngineersDataTable")]
-        public async Task<DTResponse> GetEngineersDataTable([FromBody]DTParameterModel dTParameterModel)
+        public async Task<IActionResult> GetEngineersDataTable([FromBody]DTParameterModel dTParameterModel)
         {
             var response = await _serviceManager.UserManagementService.GetEngineersDataTable(dTParameterModel);
 
-            return response; 
+
+            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+            return Ok(responseJson);
+      
         }
 
 
