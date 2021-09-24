@@ -77,12 +77,14 @@
     <!--begin::Page Custom Javascript(used by this page)-->
     <script src="~/assets/js/custom/widgets.js"></script>
 
+    <input type="hidden" id="get-engineers-datatable" value="@Url.RouteUrl("GetEngineersDataTable")">
+
     <!--end::Page Custom Javascript-->
     @RenderSection("scripts", required: false)
     <!--end::Javascript-->
     @*API CALLS*@
-    
-    <input type="hidden" id="get-engineers-datatable" value="@Url.RouteUrl("GetEngineersDataTable")">
+
+
 
 </body>
 <!--end::Body-->

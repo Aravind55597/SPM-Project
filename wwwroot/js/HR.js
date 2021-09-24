@@ -92,9 +92,8 @@ function viewEngineerDT() {
 			//regarding name (https://datatables.net/reference/option/columns.name)
 			{ name: 'Checkbox', data: null, orderable: false },
 			{ name: 'Id', data: 'Id' },
-			{ name: 'FirstName', data: 'FirstName' },
-			{ name: 'LastName', data: 'LastName' },
-			{ name: 'Role in Company', data: 'Email' },
+			{ name: 'Name', data: 'Name' },
+			{ name: 'Role', data: 'Role' },
 			//responsive priority is an option to state the priority of the column to be view when the screen is smaller
 			//data: null means it is not retreiveing data from the server
 			{ name: 'Actions', data: null, responsivePriority: -1, orderable: false },
