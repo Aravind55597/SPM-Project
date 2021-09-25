@@ -43,6 +43,8 @@ namespace SPM_Project
                     ));
 
 
+
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
 
