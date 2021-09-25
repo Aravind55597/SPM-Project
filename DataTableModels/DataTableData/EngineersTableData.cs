@@ -1,15 +1,20 @@
-﻿using System;
+﻿using SPM_Project.DataTableModels.DataTableDataInterface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SPM_Project.DataTableModels.DataTableDataInterface
+namespace SPM_Project.DataTableModels.DataTableData
 {
-
-    //marker interface for classes used for DataTable data 
-    public interface IDTData
+    public class EngineersTableData:IDTData
     {
 
+        public string Name { get; set; }
+
+
+        public int Id { get; set; }
+
+        public string Role { get; set; }
 
         public int DT_RowId { get; set; }
 
@@ -18,5 +23,7 @@ namespace SPM_Project.DataTableModels.DataTableDataInterface
         public Dictionary<dynamic, dynamic> DT_RowData { get; set; }
 
         public Dictionary<dynamic, dynamic> DT_RowAttr { get; set; }
+
+
     }
 }

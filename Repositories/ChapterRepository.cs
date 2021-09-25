@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.Repositories
 {
-    public class ChapterRepositoy: GenericRepository<Chapter>, IChapterRepository
+    public class ChapterRepository: GenericRepository<Chapter>, IChapterRepository
     {
-        public ChapterRepositoy(ApplicationDbContext context) : base(context)
+        public ChapterRepository(ApplicationDbContext context) : base(context)
         {
 
 

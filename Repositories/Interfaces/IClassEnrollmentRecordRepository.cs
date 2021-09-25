@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.Repositories.Interfaces
 {
-    interface IClassEnrollmentRecordRepository: IGenericRepository<ClassEnrollmentRecord>
+    public interface IClassEnrollmentRecordRepository: IGenericRepository<ClassEnrollmentRecord>
     {
 
 

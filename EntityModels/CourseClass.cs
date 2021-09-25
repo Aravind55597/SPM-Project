@@ -39,5 +39,8 @@ namespace SPM_Project.EntityModels
 
         public int Slots { get; set; }
 
+
+        public List<ClassEnrollmentRecord> ClassEnrollmentRecords { get; set; }
+
     }
 }

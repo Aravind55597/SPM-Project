@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.Repositories.Interfaces
 {
-    interface IChapterRepository:IGenericRepository<Chapter>
+    public interface IChapterRepository:IGenericRepository<Chapter>
     {
+
+
+
+
+
     }
 }

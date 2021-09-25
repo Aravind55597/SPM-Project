@@ -9,6 +9,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SPM_Project.Data;
 using SPM_Project.EntityModels;
+using SPM_Project.Repositories;
+using SPM_Project.Repositories.Interfaces;
+using SPM_Project.Services;
+using SPM_Project.Services.Interfaces;
 using SPM_Project.Utility;
 using System;
 using System.Collections.Generic;
@@ -39,6 +43,8 @@ namespace SPM_Project
                     ));
 
 
+
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
 
@@ -51,24 +57,25 @@ namespace SPM_Project
             services.AddControllersWithViews().ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; });
 
             //seed users
-            services.AddScoped<SeedUsers>();
+            //services.AddScoped<SeedUsers>();
 
+
+            //unit of work 
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            //servicemanager
+            services.AddScoped<IServiceManager, ServiceManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         //db context is auto injected here from the DI container
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,  SeedUsers seedUsers)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ApplicationDbContext dbContext)
         {
 
-            //remove this soon 
-
-            //seedUsers.SeedMainHRUser();
-            //seedUsers.SeedMainLearnerUser();
-            //seedUsers.SeedMainTrainerUser();
-
-
-            //remove this soon 
-
+          
+            //need to blcok the thread as we are making an async call in a sync method (bad practice but ok for now )
+            //seedUsers.SeedTestUsers().GetAwaiter().GetResult(); 
+ 
 
 
             if (env.IsDevelopment())

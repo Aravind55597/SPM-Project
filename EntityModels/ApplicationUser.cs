@@ -10,7 +10,6 @@ namespace SPM_Project.EntityModels
 
     public class ApplicationUser:IdentityUser
     {
-
         public string Name { get; set; }
 
         public Departments Department { get; set; }
@@ -22,8 +21,6 @@ namespace SPM_Project.EntityModels
         public DateTime UpdateTimestamp { get; set; }
 
         public LMSUser LMSUser { get; set; }
-
-
     }
 
     public enum Departments
@@ -32,5 +29,5 @@ namespace SPM_Project.EntityModels
         Engineering
     }
 
-
+    
 }

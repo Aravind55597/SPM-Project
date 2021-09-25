@@ -76,9 +76,17 @@
     <!--end::Global Javascript Bundle-->
     <!--begin::Page Custom Javascript(used by this page)-->
     <script src="~/assets/js/custom/widgets.js"></script>
+
+    <input type="hidden" id="get-engineers-datatable" value="@Url.RouteUrl("GetEngineersDataTable")">
+
     <!--end::Page Custom Javascript-->
     @RenderSection("scripts", required: false)
+
     <!--end::Javascript-->
+    @*API CALLS*@
+
+
+
 </body>
 <!--end::Body-->
 </html>
