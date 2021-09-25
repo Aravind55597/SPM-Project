@@ -38,7 +38,7 @@ namespace SPM_Project
             //add db context 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")
+                   Environment.GetEnvironmentVariable("SPM_DB_STRING");
                    
                     ));
 
