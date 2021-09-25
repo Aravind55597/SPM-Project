@@ -34,12 +34,12 @@ namespace SPM_Project
         public void ConfigureServices(IServiceCollection services)
         {
             //https://www.benday.com/2017/12/20/ef-core-asp-net-core-read-connections-strings-from-environment-variables/
-
+          
             //add db context 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    //Configuration.GetConnectionString("DefaultConnection")
-                    Environment.GetEnvironmentVariable("SPM_DB_STRING")
+                    Configuration.GetConnectionString("DefaultConnection")
+                   
                     ));
 
 

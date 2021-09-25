@@ -1,8 +1,20 @@
-FROM alpine
+# https://hub.docker.com/_/microsoft-dotnet
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR .
 
-CMD echo 'Built with kaniko from https://gitlab.com/guided-explorations/gitlab-ci-yml-tips-tricks-and-hacks/kaniko-docker-build/'
+# copy csproj and restore as distinct layers
+COPY *.sln .
+COPY *.csproj .
+RUN dotnet restore
 
-#When Kaniko Caching is being used each layer is immediately pushed before processing the next RUN command
-RUN apk add git
+# copy everything else and build app
+COPY *. .
+WORKDIR .
+# RUN dotnet publish -c release -o /app --no-restore
+RUN dotnet build
 
-RUN apk add openssh
+# # final stage/image
+# FROM mcr.microsoft.com/dotnet/aspnet:6.0
+# WORKDIR /app
+# COPY --from=build /app ./
+# ENTRYPOINT ["dotnet", "aspnetapp.dll"]
