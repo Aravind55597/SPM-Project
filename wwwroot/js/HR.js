@@ -8,17 +8,17 @@ $(document).ready(function () {
 
 
 // Handle Tab Event Control
-function navEventHandler() {
-	$(".tabMenu").each(function () {
-		$(this).click(function () {
-			var linkID = this.id;
-			$(".tabMenu").removeClass("active"); //reset tab link
-			$(this).addClass("active");
-			$(".tabContent").removeClass("show"); //reset tab content
-			$("." + linkID).addClass('show');
-		});
-	});
-}
+//function navEventHandler() {
+//	$(".tabMenu").each(function () {
+//		$(this).click(function () {
+//			var linkID = this.id;
+//			$(".tabMenu").removeClass("active"); //reset tab link
+//			$(this).addClass("active");
+//			$(".tabContent").removeClass("show"); //reset tab content
+//			$("." + linkID).addClass('show');
+//		});
+//	});
+//}
 
 
 
