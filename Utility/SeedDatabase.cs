@@ -33,6 +33,14 @@ namespace SPM_Project.Utility
             //g2->ONGOING CLASSES : TRAINERS ,LEARNERS,  CHAPTERS , RESOURCES (JUST VIDEO FOR NOW) , QUIZ QUESTIONS , QUIZ MODEL ANSWERS
 
 
+
+            //course 5 -> course 1
+            //course 6 -> course 2
+            //7 -> 3
+            //8-> 4
+
+
+
             //COURSE 5 TO 8 (have prerequisites)
 
             //g1->FUTURE CLASSES : EMPTY
@@ -44,6 +52,8 @@ namespace SPM_Project.Utility
             //so LMSuser 1 (Trainer) will train course1 g2 & course 5 g2 (Requires course 1 as prerequisite)
 
             //LMSuser 15 (Leaner) will be in course1 g2
+
+
 
 
             //the rest will be free flow 
