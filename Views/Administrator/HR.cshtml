@@ -1,5 +1,5 @@
 ﻿@section styles{
-    <link href="~/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.11.3/r-2.2.9/sl-1.3.3/datatables.min.css" />
     <link href="~/css/HR.css" rel="stylesheet" type="text/css" />
 }
 
@@ -36,10 +36,9 @@
                         <tr>
                             @*add checkbox*@
                             <th></th>
-                            <th>User Id</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Role in Company</th>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Role</th>
                             @*add button*@
                             <th>Action</th>
                         </tr>
@@ -93,6 +92,6 @@
 
 
 @section scripts {
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.11.3/r-2.2.9/sl-1.3.3/datatables.min.js"></script>
     <script src="~/js/HR.js"></script>
-    <script src="~/assets/plugins/custom/datatables/datatables.bundle.js"></script>
 }

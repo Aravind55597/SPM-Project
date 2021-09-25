@@ -1,8 +1,8 @@
 ﻿
 $(document).ready(function () {
-	viewEngineerDT();
 	navEventHandler();
-	viewClassDT();
+	viewEngineerDT();
+	//viewClassDT();
 
 });
 
@@ -24,12 +24,16 @@ function navEventHandler() {
 
 function viewEngineerDT() {
 
-	var retreiveEngineers = $(".get-engineers-datatable").val();
+	var retreiveEngineers = $("#get-engineers-datatable").val();
 
 	var table = $('#engineer_datatable').DataTable({
 
 		//width of column siwll be auto 
-		"autoWidth": false,
+		autoWidth: false,
+
+		filter:true,
+
+		searching:true,
 
 		//make the table responsive 
 		responsive: true,
