@@ -7,5 +7,9 @@ namespace SPM_Project.Services.Interfaces
 {
     public interface ICourseManagementService
     {
+
+
+
+
     }
 }

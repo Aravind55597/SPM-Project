@@ -32,7 +32,6 @@ namespace SPM_Project.Repositories
             //LMSId is validated to be a Trainer Id in the service layer 
 
 
-
             var draw = dTParameterModel.Draw;
             var start = dTParameterModel.Start;
             var length = dTParameterModel.Start;

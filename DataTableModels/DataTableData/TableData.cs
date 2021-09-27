@@ -9,8 +9,6 @@ namespace SPM_Project.DataTableModels.DataTableData
     {
 
 
-
-       
         public int DT_RowId { get; set; }
 
         public string DT_RowClass { get; set; }

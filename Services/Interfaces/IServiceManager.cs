@@ -9,11 +9,7 @@ namespace SPM_Project.Services.Interfaces
     {
         public ICourseManagementService CourseManagementService { get; set; }
 
-
         public IProgressManagementService ProgressManagementService { get; set; }
-
-
-        public IResourceManagementService ResourceManagementService { get; set; }
 
         public IUserManagementService UserManagementService { get; set; }
     }

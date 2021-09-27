@@ -19,8 +19,22 @@ namespace SPM_Project.Repositories
 
         }
 
-        
 
+        //for now it will just return null
+        public async Task<int?> RetreiveCurrentUserId() {
+
+            return null;
+
+        }
+
+        //for now , it will just return null
+        public async Task<bool?> CheckCurrentUserRole(string Role)
+        {
+
+            return null;
+
+
+        }
 
 
 
@@ -112,7 +126,7 @@ namespace SPM_Project.Repositories
 
 
 
-
+        
      
 
     }
