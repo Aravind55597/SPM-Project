@@ -12,12 +12,10 @@ namespace SPM_Project.Repositories.Interfaces
     public interface ICourseClassRepository:IGenericRepository<CourseClass>
     {
 
-        //return classes for a particular course  
+        
+        public Task<DTResponse<CourseClassTableData>> GetCourseClassesForTrainerDataTable(DTParameterModel dTParameterModel , int LMSId);
 
-        //return  list of users for the class 
 
-        //get id of trainer and remove trainer from class
 
-        public Task<DTResponse<CourseClassTableData>> GetCourseClassesForTrainerDataTable(DTParameterModel dTParameterModel, int LMSId);
     }
 }

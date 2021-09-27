@@ -28,7 +28,7 @@ namespace SPM_Project.Repositories
         }
 
         //for now , it will just return null
-        public async Task<bool?> CheckCurrentUserRole(string role)
+        public async Task<bool?> CheckCurrentUserRole(string Role)
         {
 
             return null;
