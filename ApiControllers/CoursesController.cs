@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using SPM_Project.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,11 +8,20 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.ApiControllers
 {
-    public class CoursesController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CoursesController : ControllerBase
     {
-        public IActionResult Index()
+
+        public IServiceManager _serviceManager;
+
+        public CoursesController(IServiceManager serviceManager)
         {
-            return View();
+            _serviceManager = serviceManager;
         }
+
+
+
+
     }
 }
