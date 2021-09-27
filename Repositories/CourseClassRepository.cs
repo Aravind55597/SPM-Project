@@ -1,4 +1,6 @@
 ﻿using SPM_Project.Data;
+using SPM_Project.DataTableModels;
+using SPM_Project.DataTableModels.DataTableResponse;
 using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
 using System;
@@ -16,6 +18,11 @@ namespace SPM_Project.Repositories
 
 
         }
+
+
+
+
+
 
 
     }

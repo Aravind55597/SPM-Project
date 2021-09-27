@@ -1,4 +1,6 @@
-﻿using SPM_Project.EntityModels;
+﻿using SPM_Project.DataTableModels;
+using SPM_Project.DataTableModels.DataTableResponse;
+using SPM_Project.EntityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +17,6 @@ namespace SPM_Project.Repositories.Interfaces
 
         //get id of trainer and remove trainer from class
 
-
+        //public Task<DTResponse> GetClassesForTrainerDataTable(DTParameterModel dTParameterModel); 
     }
 }

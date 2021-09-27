@@ -17,7 +17,14 @@ namespace SPM_Project.Repositories
     {
         public LMSUserRepository(ApplicationDbContext context) : base(context)
         {
+
         }
+
+        //get dictioanry of role name & role id 
+
+
+
+
 
         public async Task<DTResponse> GetEngineersDataTable(DTParameterModel dTParameterModel)
         {
@@ -36,6 +43,9 @@ namespace SPM_Project.Repositories
             int skip = dTParameterModel.Start;
             int recordsTotal = 0;
 
+
+
+            //get queryable ----------------------------------------------------------------------------------------------------------------------------------
 
             //retreive learners and trainers role id 
             var learnerRole = _context.Roles.
@@ -67,7 +77,11 @@ namespace SPM_Project.Repositories
                     Name = l.Name,
                     Role = _context.Roles.Where(r => r.Id == ur.RoleId).Select(r => r.Name).FirstOrDefault()
                 }
-                );  
+                );
+
+            //get queryable ----------------------------------------------------------------------------------------------------------------------------------
+
+
 
 
             //if sortcolumn and sort colum direction are not empty 
@@ -82,6 +96,9 @@ namespace SPM_Project.Repositories
                 engineersQueryable = engineersQueryable.Where(m => m.Name.Contains(searchValue)
                                             || m.Role.Contains(searchValue));
             }
+
+            //--------------------------------------------------------------------------------------------------------------------------------
+
 
             recordsTotal = engineersQueryable.Count();
 
@@ -109,11 +126,11 @@ namespace SPM_Project.Repositories
 
 
         }
-    
-    
-    
-    
-    
-    
+
+      
+
+
+
+
     }
 }
