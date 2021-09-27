@@ -10,7 +10,9 @@ namespace SPM_Project.Repositories.Interfaces
 
         //entity repositories 
 
-        public IApplicationUserRepository ApplicationUserRepository { get; }
+        //applciation user is removed everything is done via lms user 
+        //If any function require stuff via application user entity , we still will deal with lms user 
+        //this simplifies & prevents any form of confusion 
 
         public IChapterRepository ChapterRepository { get; }
 
