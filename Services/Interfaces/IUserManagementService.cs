@@ -1,4 +1,5 @@
 ﻿using SPM_Project.DataTableModels;
+using SPM_Project.DataTableModels.DataTableData;
 using SPM_Project.DataTableModels.DataTableResponse;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace SPM_Project.Services.Interfaces
 {
     public interface IUserManagementService
     {
-        public Task<DTResponse> GetEngineersDataTable(DTParameterModel dTParameterModel); 
+        public Task<DTResponse<EngineersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel); 
 
 
     }

@@ -24,7 +24,7 @@ namespace SPM_Project.ApiControllers
 
 
 
-        [HttpPost, Route("Engineers", Name = "GetEngineersDataTable")]
+        [HttpPost, Route("EngineersDataTable", Name = "GetEngineersDataTable")]
         public async Task<IActionResult> GetEngineersDataTable([FromBody]DTParameterModel dTParameterModel)
         {
             var response = await _serviceManager.UserManagementService.GetEngineersDataTable(dTParameterModel);

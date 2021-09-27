@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 using SPM_Project.DataTableModels.DataTableResponse;
-using SPM_Project.DataTableModels.DataTableDataInterface;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -74,7 +73,7 @@ namespace SPM_Project.PracticeDatatableModelAndController
                 recordsTotal = customerQueryable.Count();
 
                 //skip 'start' records & retreive 'pagesize' records
-                var data =customerQueryable.Skip(skip).Take(pageSize).Select(c=>(IDTData)new CustomerDT() { 
+                var data =customerQueryable.Skip(skip).Take(pageSize).Select(c=>new CustomerDT() { 
                 
                 Id=c.Id,
                 FirstName=c.FirstName,
@@ -94,7 +93,7 @@ namespace SPM_Project.PracticeDatatableModelAndController
 
                 }).ToList();
 
-                var dtResponse = new DTResponse()
+                var dtResponse = new DTResponse<CustomerDT>()
                 {
                     Draw = draw,
                     RecordsFiltered = recordsTotal,
@@ -116,17 +115,6 @@ namespace SPM_Project.PracticeDatatableModelAndController
 
 
 
-        // DELETE api/<CustomerController>/5
-        [HttpDelete, Route("Customers/{id}", Name = "DeleteCustomers")]
-        public void Delete(int id)
-        {
-            if (ModelState.IsValid)
-            {
 
-            }
-
-
-
-        }
     }
 }

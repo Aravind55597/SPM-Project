@@ -13,9 +13,10 @@ namespace SPM_Project.Repositories.Interfaces
     {
 
         //retrieve data to display all engineers present
-        public Task<DTResponse> GetEngineersDataTable(DTParameterModel dTParameterModel); 
+        public Task<DTResponse<EngineersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel);
 
 
-        
+       
+
     }
 }

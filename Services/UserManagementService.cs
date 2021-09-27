@@ -1,4 +1,5 @@
 ﻿using SPM_Project.DataTableModels;
+using SPM_Project.DataTableModels.DataTableData;
 using SPM_Project.DataTableModels.DataTableResponse;
 using SPM_Project.Repositories.Interfaces;
 using SPM_Project.Services.Interfaces;
@@ -21,7 +22,7 @@ namespace SPM_Project.Services
 
 
         //retrieve all engineers (both learners & trainers) for datatable
-        public async Task<DTResponse> GetEngineersDataTable(DTParameterModel dTParameterModel)
+        public async Task<DTResponse<EngineersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel)
         {
             var response = await _unitOfWork.LMSUserRepository.GetEngineersDataTable(dTParameterModel);
 

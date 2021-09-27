@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
-using SPM_Project.DataTableModels.DataTableDataInterface;
 using Microsoft.EntityFrameworkCore;
 
 namespace SPM_Project.Repositories
@@ -20,13 +19,13 @@ namespace SPM_Project.Repositories
 
         }
 
-        //get dictioanry of role name & role id 
+        
 
 
 
 
-
-        public async Task<DTResponse> GetEngineersDataTable(DTParameterModel dTParameterModel)
+        //get all engineers present -> Accessed by Trainer 
+        public async Task<DTResponse<EngineersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel)
         {
 
 
@@ -43,9 +42,6 @@ namespace SPM_Project.Repositories
             int skip = dTParameterModel.Start;
             int recordsTotal = 0;
 
-
-
-            //get queryable ----------------------------------------------------------------------------------------------------------------------------------
 
             //retreive learners and trainers role id 
             var learnerRole = _context.Roles.
@@ -66,7 +62,7 @@ namespace SPM_Project.Repositories
                 FirstOrDefault();
 
             //Retreive all userid + roleid pair that has either learnerRole or trainer role
-            var engineersQueryable = _context.UserRoles.Where(ur => ur.RoleId == learnerRole.Id || ur.RoleId == trainerRole.Id)
+            var queryable = _context.UserRoles.Where(ur => ur.RoleId == learnerRole.Id || ur.RoleId == trainerRole.Id)
                 .Join(_context.Users,
                 ur => ur.UserId,
                 l => l.Id,
@@ -79,42 +75,29 @@ namespace SPM_Project.Repositories
                 }
                 );
 
-            //get queryable ----------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
+      
             //if sortcolumn and sort colum direction are not empty 
             if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
             {
-                engineersQueryable = engineersQueryable.OrderBy(sortColumn + " " + sortColumnDirection);
+                queryable = queryable.OrderBy(sortColumn + " " + sortColumnDirection);
             }
 
             //if search value is not empty 
             if (!string.IsNullOrEmpty(searchValue))
             {
-                engineersQueryable = engineersQueryable.Where(m => m.Name.Contains(searchValue)
+                queryable = queryable.Where(m => m.Name.Contains(searchValue)
                                             || m.Role.Contains(searchValue));
             }
 
-            //--------------------------------------------------------------------------------------------------------------------------------
 
 
-            recordsTotal = engineersQueryable.Count();
+
+            recordsTotal = queryable.Count();
 
             //skip 'start' records & retreive 'pagesize' records
-            var data = await engineersQueryable.Skip(skip).Take(pageSize).Select(e => (IDTData)new EngineersTableData()
-            {
+            var data = await queryable.Skip(skip).Take(pageSize).ToListAsync();
 
-                Id = e.Id,
-                Name = e.Name,
-                Role = e.Role,
-                DT_RowId = e.Id
-
-
-            }).ToListAsync();
-
-            var dtResponse = new DTResponse()
+            var dtResponse = new DTResponse<EngineersTableData>()
             {
                 Draw = draw,
                 RecordsFiltered = recordsTotal,
@@ -127,10 +110,10 @@ namespace SPM_Project.Repositories
 
         }
 
-      
 
 
 
+     
 
     }
 }
