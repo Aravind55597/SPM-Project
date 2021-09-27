@@ -19,7 +19,7 @@ namespace SPM_Project.Services
             CourseManagementService = new CourseManagementService(unitOfWork);
             ProgressManagementService = new ProgressManagementService(unitOfWork);
 
-            ResourceManagementService = new ResourceManagementService(unitOfWork);
+
 
             UserManagementService = new UserManagementService(unitOfWork); 
         }
@@ -30,7 +30,6 @@ namespace SPM_Project.Services
         public IProgressManagementService ProgressManagementService { get; set; }
 
 
-        public IResourceManagementService ResourceManagementService { get; set; }
 
         public IUserManagementService UserManagementService { get; set; }
     }
