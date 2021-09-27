@@ -47,11 +47,11 @@ function viewEngineerDT() {
 		//send ajax request to server to retreive customers
 		ajax: {
 			url: retreiveEngineers,
-			type: 'POST',
-			//modify the json sent to server . 
+			type: "POST",
+			contentType: "application/json",
+			dataType: "json",
 			data: function (d) {
-				//add properties if needed. Tell me if yall are adding it 
-				return d
+				return JSON.stringify(d);
 			}
 		},
 

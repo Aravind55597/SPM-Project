@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.DataTableModels
 {
-    [ModelBinder(BinderType = typeof(ModelBinder.DataTableModelBinder.DTModelBinder))]
+    //[ModelBinder(BinderType = typeof(ModelBinder.DataTableModelBinder.DTModelBinder))]
     public class DTParameterModel
     {
         /// <summary>

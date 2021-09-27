@@ -28,8 +28,8 @@ namespace SPM_Project.PracticeDatatableModelAndController
 
         // POST api/<CustomerController>
         [HttpPost, Route("Customers", Name = "RetrieveCustomers")]
-        public IActionResult Customers([FromBody] DTParameterModel customerTable)
-        {
+        public IActionResult Customers(DTParameterModel customerTable)
+         {
 
             try
             {
@@ -46,11 +46,6 @@ namespace SPM_Project.PracticeDatatableModelAndController
                 //number of records to be skipped
                 int skip = customerTable.Start;
                 int recordsTotal = 0;
-
-
-
-
-
 
                 var customerQueryable = _dbContext.Customer.AsQueryable();
 
