@@ -9,3 +9,5 @@ build:
     - dotnet build
   only:
     - master
+  rules:
+  - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master"'
