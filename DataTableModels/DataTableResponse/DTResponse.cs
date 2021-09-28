@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using SPM_Project.DataTableModels.DataTableDataInterface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.DataTableModels.DataTableResponse
 {
-    public class DTResponse
+    public class DTResponse<T>
     {
         [JsonProperty(PropertyName = "draw")]
         public int Draw { get; set; }
@@ -19,7 +18,7 @@ namespace SPM_Project.DataTableModels.DataTableResponse
         public int RecordsFiltered { get; set; }
 
         [JsonProperty(PropertyName = "data")]
-        public List<IDTData> Data { get; set; }
+        public List<T> Data { get; set; }
 
         [JsonProperty(PropertyName = "error")]
         public string Error { get; set; }

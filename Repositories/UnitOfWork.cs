@@ -14,7 +14,7 @@ namespace SPM_Project.Repositories
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
-            ApplicationUserRepository = new ApplicationUserRepository(context);
+            // ApplicationUserRepository = new ApplicationUserRepository(context);
             ChapterRepository = new ChapterRepository(context);
             ClassEnrollmentRecordRepository = new ClassEnrollmentRecordRepository(context);
             CourseClassRepository = new CourseClassRepository(context);
@@ -27,7 +27,7 @@ namespace SPM_Project.Repositories
         }
 
         //all the repositories 
-        public IApplicationUserRepository ApplicationUserRepository { get; }
+        // public IApplicationUserRepository ApplicationUserRepository { get; }
 
         public IChapterRepository ChapterRepository { get; }
 

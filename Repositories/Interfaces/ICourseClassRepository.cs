@@ -1,4 +1,7 @@
-﻿using SPM_Project.EntityModels;
+﻿using SPM_Project.DataTableModels;
+using SPM_Project.DataTableModels.DataTableData;
+using SPM_Project.DataTableModels.DataTableResponse;
+using SPM_Project.EntityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +12,9 @@ namespace SPM_Project.Repositories.Interfaces
     public interface ICourseClassRepository:IGenericRepository<CourseClass>
     {
 
-        //return classes for a particular course  
+        
+        public Task<DTResponse<CourseClassTableData>> GetCourseClassesForTrainerDataTable(DTParameterModel dTParameterModel , int LMSId);
 
-        //return  list of users for the class 
-
-        //get id of trainer and remove trainer from class
 
 
     }

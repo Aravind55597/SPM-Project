@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DataTableModels\DataTableData\" />
+    <Folder Include="PaginationJSModels\" />
   </ItemGroup>
 
 </Project>

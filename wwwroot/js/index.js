@@ -36,11 +36,11 @@
 		//send ajax request to server to retreive customers
 		ajax: {
 			url: retreiveCustomers,
-			type: 'POST',
-			//modify the json sent to server . 
+			type: "POST",
+			contentType: "application/json",
+			dataType: "json",
 			data: function (d) {
-				//add properties if needed. Tell me if yall are adding it 
-				return d
+				return JSON.stringify(d);
 			}
 		},
 
@@ -187,12 +187,6 @@
 
 
 
-
-
-
-
-
-
 	table.on('change', '.group-checkable', function () {
 		var set = $(this).closest('table').find('td:first-child .checkable');
 		var checked = $(this).is(':checked');
@@ -201,6 +195,7 @@
 			if (checked) {
 				$(this).prop('checked', true);
 				table.rows($(this).closest('tr')).select();
+				console.log(90)
 			}
 			else {
 				$(this).prop('checked', false);

@@ -1,4 +1,7 @@
-﻿using SPM_Project.EntityModels;
+﻿using SPM_Project.DataTableModels;
+using SPM_Project.DataTableModels.DataTableData;
+using SPM_Project.DataTableModels.DataTableResponse;
+using SPM_Project.EntityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +12,14 @@ namespace SPM_Project.Repositories.Interfaces
     public interface ILMSUserRepository: IGenericRepository<LMSUser>
     {
 
-        //
+        //retrieve data to display all engineers present
+        public Task<DTResponse<EngineersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel);
 
-        //retrieve all engineers
+        //for now it will just return null
+        public Task<int?> RetreiveCurrentUserId();
 
-        //check if user is eligible for a course 
+        //for now , it will just return null
+        public Task<bool?> CheckCurrentUserRole(string Role); 
 
-       
-
-        
     }
 }
