@@ -7,8 +7,6 @@ $(document).ready(function () {
 
 
 
-
-
 function viewEngineerDT() {
 
 	var retreiveEngineers = $("#get-engineers-datatable").val();
@@ -198,10 +196,12 @@ function viewClassDT() {
 		ajax: {
 			url: retreiveEngineers,
 			type: 'POST',
+			contentType: "application/json",
+			dataType: "json",
 			//modify the json sent to server . 
 			data: function (d) {
 				//add properties if needed. Tell me if yall are adding it 
-				return d
+				return JSON.stringify(d)
 			}
 		},
 
