@@ -1,8 +1,8 @@
 ﻿$(function () {
 
-	var retreiveCustomers = $("#retreive-customers").val(); 
+	var RetrieveCustomers = $("#Retrieve-customers").val(); 
 
-	console.log(retreiveCustomers)
+	console.log(RetrieveCustomers)
 
 	var table = $('#kt_datatable').DataTable({
 
@@ -33,9 +33,9 @@
 			selector: 'td:first-child .checkable',
 		},
 
-		//send ajax request to server to retreive customers
+		//send ajax request to server to Retrieve customers
 		ajax: {
-			url: retreiveCustomers,
+			url: RetrieveCustomers,
 			type: "POST",
 			contentType: "application/json",
 			dataType: "json",
@@ -65,7 +65,7 @@
 		//data table will receive an array of objects where each object is for each row
 		//the key for the object corresponds to the columns
 		columns: [
-			//data: null means it is not retreiveing data from the server
+			//data: null means it is not Retrieveing data from the server
 			//column can't be ordered
 			//regarding name (https://datatables.net/reference/option/columns.name)
 			{ name: 'Checkbox',data: null, orderable: false },
@@ -76,7 +76,7 @@
 			{ name: 'Email',data: 'Email' },
 			{ name: 'DateOfBirth',data: 'DateOfBirth' },
 			//responsive priority is an option to state the priority of the column to be view when the screen is smaller
-			//data: null means it is not retreiveing data from the server
+			//data: null means it is not Retrieveing data from the server
 			{ name: 'Actions', data: null, responsivePriority: -1, orderable: false},
 		],
 
@@ -164,7 +164,7 @@
 
 		//https://datatables.net/reference/option/createdRow
 		// add events, class name information or otherwise format the row when it is created
-		//retreive DT_RowData from data and add the object to row using jquery (read the serversiderendering of datatables )
+		//Retrieve DT_RowData from data and add the object to row using jquery (read the serversiderendering of datatables )
 		createdRow: function (row, data, dataIndex) {
 
 			//i am sending the data for the row again just for testing purposes (just id , firstname , lastname)

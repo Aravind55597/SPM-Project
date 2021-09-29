@@ -21,7 +21,7 @@ namespace SPM_Project.Repositories
 
 
         //for now it will just return null
-        public async Task<int?> RetreiveCurrentUserId() {
+        public async Task<int?> RetrieveCurrentUserId() {
 
             return null;
 
@@ -57,7 +57,7 @@ namespace SPM_Project.Repositories
             int recordsTotal = 0;
 
 
-            //retreive learners and trainers role id 
+            //Retrieve learners and trainers role id 
             var learnerRole = _context.Roles.
                 Where(r => r.Name == "Learner").
                 Select(r => new { 
@@ -75,7 +75,7 @@ namespace SPM_Project.Repositories
                 }).
                 FirstOrDefault();
 
-            //Retreive all userid + roleid pair that has either learnerRole or trainer role
+            //Retrieve all userid + roleid pair that has either learnerRole or trainer role
             var queryable = _context.UserRoles.Where(ur => ur.RoleId == learnerRole.Id || ur.RoleId == trainerRole.Id)
                 .Join(_context.Users,
                 ur => ur.UserId,
@@ -108,7 +108,7 @@ namespace SPM_Project.Repositories
 
             recordsTotal = queryable.Count();
 
-            //skip 'start' records & retreive 'pagesize' records
+            //skip 'start' records & Retrieve 'pagesize' records
             var data = await queryable.Skip(skip).Take(pageSize).ToListAsync();
 
             var dtResponse = new DTResponse<EngineersTableData>()

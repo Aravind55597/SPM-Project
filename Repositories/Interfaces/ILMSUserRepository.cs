@@ -16,7 +16,7 @@ namespace SPM_Project.Repositories.Interfaces
         public Task<DTResponse<EngineersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel);
 
         //for now it will just return null
-        public Task<int?> RetreiveCurrentUserId();
+        public Task<int?> RetrieveCurrentUserId();
 
         //for now , it will just return null
         public Task<string> RetreiveCurrentUserRole();

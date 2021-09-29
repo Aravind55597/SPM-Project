@@ -9,7 +9,7 @@ $(document).ready(function () {
 
 function viewEngineerDT() {
 
-	var retreiveEngineers = $("#get-engineers-datatable").val();
+	var RetrieveEngineers = $("#get-engineers-datatable").val();
 
 	var table = $('#engineer_datatable').DataTable({
 
@@ -42,9 +42,9 @@ function viewEngineerDT() {
 			selector: 'td:first-child .checkable',
 		},
 
-		//send ajax request to server to retreive customers
+		//send ajax request to server to Retrieve customers
 		ajax: {
-			url: retreiveEngineers,
+			url: RetrieveEngineers,
 			type: "POST",
 			contentType: "application/json",
 			dataType: "json",
@@ -76,7 +76,7 @@ function viewEngineerDT() {
 		//data table will receive an array of objects where each object is for each row
 		//the key for the object corresponds to the columns
 		columns: [
-			//data: null means it is not retreiveing data from the server
+			//data: null means it is not Retrieveing data from the server
 			//column can't be ordered
 			//regarding name (https://datatables.net/reference/option/columns.name)
 			{ name: 'Checkbox', data: null, orderable: false },
@@ -84,7 +84,7 @@ function viewEngineerDT() {
 			{ name: 'Name', data: 'Name' },
 			{ name: 'Role', data: 'Role' },
 			//responsive priority is an option to state the priority of the column to be view when the screen is smaller
-			//data: null means it is not retreiveing data from the server
+			//data: null means it is not Retrieveing data from the server
 			{ name: 'Actions', data: null, responsivePriority: -1, orderable: false },
 		],
 
@@ -117,7 +117,7 @@ function viewEngineerDT() {
 
 		//https://datatables.net/reference/option/createdRow
 		// add events, class name information or otherwise format the row when it is created
-		//retreive DT_RowData from data and add the object to row using jquery (read the serversiderendering of datatables )
+		//Retrieve DT_RowData from data and add the object to row using jquery (read the serversiderendering of datatables )
 		createdRow: function (row, data, dataIndex) {
 
 			//i am sending the data for the row again just for testing purposes (just id , firstname , lastname)
@@ -160,7 +160,7 @@ function viewEngineerDT() {
 
 function viewClassDT() {
 
-	var retreiveEngineers = $(".get-engineers-datatable").val();
+	var RetrieveEngineers = $(".get-engineers-datatable").val();
 
 
 	var table = $('#class_datatable').DataTable({
@@ -192,9 +192,9 @@ function viewClassDT() {
 			selector: 'td:first-child .checkable',
 		},
 
-		//send ajax request to server to retreive customers
+		//send ajax request to server to Retrieve customers
 		ajax: {
-			url: retreiveEngineers,
+			url: RetrieveEngineers,
 			type: 'POST',
 			contentType: "application/json",
 			dataType: "json",
@@ -215,13 +215,13 @@ function viewClassDT() {
 		//data table will receive an array of objects where each object is for each row
 		//the key for the object corresponds to the columns
 		columns: [
-			//data: null means it is not retreiveing data from the server
+			//data: null means it is not Retrieveing data from the server
 			//column can't be ordered
 			//regarding name (https://datatables.net/reference/option/columns.name)
 			{ name: 'Id', data: 'Id' },
 			{ name: 'FirstName', data: 'FirstName' },
 			//responsive priority is an option to state the priority of the column to be view when the screen is smaller
-			//data: null means it is not retreiveing data from the server
+			//data: null means it is not Retrieveing data from the server
 			{ name: 'Actions', data: null, responsivePriority: -1, orderable: false },
 		],
 
@@ -243,7 +243,7 @@ function viewClassDT() {
 
 		//https://datatables.net/reference/option/createdRow
 		// add events, class name information or otherwise format the row when it is created
-		//retreive DT_RowData from data and add the object to row using jquery (read the serversiderendering of datatables )
+		//Retrieve DT_RowData from data and add the object to row using jquery (read the serversiderendering of datatables )
 		createdRow: function (row, data, dataIndex) {
 
 			//i am sending the data for the row again just for testing purposes (just id , firstname , lastname)
