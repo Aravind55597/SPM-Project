@@ -67,7 +67,7 @@ namespace SPM_Project.PracticeDatatableModelAndController
 
                 recordsTotal = customerQueryable.Count();
 
-                //skip 'start' records & retreive 'pagesize' records
+                //skip 'start' records & Retrieve 'pagesize' records
                 var data =customerQueryable.Skip(skip).Take(pageSize).Select(c=>new CustomerDT() { 
                 
                 Id=c.Id,

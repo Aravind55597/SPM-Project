@@ -9,9 +9,13 @@
 
   <ItemGroup>
     <Compile Remove="JsonModels\**" />
+    <Compile Remove="PaginationJSModels\**" />
     <Content Remove="JsonModels\**" />
+    <Content Remove="PaginationJSModels\**" />
     <EmbeddedResource Remove="JsonModels\**" />
+    <EmbeddedResource Remove="PaginationJSModels\**" />
     <None Remove="JsonModels\**" />
+    <None Remove="PaginationJSModels\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,10 +33,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.12" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="PaginationJSModels\" />
   </ItemGroup>
 
 </Project>

@@ -84,7 +84,7 @@ namespace SPM_Project.Repositories
         }
 
 
-        //retreive data by Id 
+        //Retrieve data by Id 
         public virtual async Task<T> GetByIdAsync(int id)
         {
             var data = await _context.Set<T>().FindAsync(id);
