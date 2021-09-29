@@ -8,6 +8,7 @@ namespace SPM_Project.DataTableModels.DataTableResponse
 {
     public class DTResponse<T>
     {
+
         [JsonProperty(PropertyName = "draw")]
         public int Draw { get; set; }
 

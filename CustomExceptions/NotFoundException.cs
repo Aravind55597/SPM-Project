@@ -24,6 +24,8 @@ namespace SPM_Project.CustomExceptions
             : base(info, context)
         {
         }
+
+
     }
 
 }

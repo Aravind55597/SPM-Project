@@ -1,3 +1,4 @@
+using CustomExceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -106,6 +107,12 @@ namespace SPM_Project
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            //handles exceptions thrown and returns an error reponse based on the type of exception thrown 
+            app.UseMiddleware<ErrorHandlerMiddleware>();
+
+
+
 
             app.UseAuthentication();
             app.UseAuthorization();

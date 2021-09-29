@@ -6,30 +6,40 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.DTOs.RRModels
 {
-    public class Response<T>
+    public class Response<T>  
     {
 
 
         public Response()
         {
         }
+
+        //Success response
         public Response(T data)
         {
             Succeeded = true;
             Message = string.Empty;
             Errors = null;
             Data = data;
-            HttpCode = HttpStatusCode.OK;
+            HttpCode = (int)HttpStatusCode.OK;
         }
+
+        //failure response
+        public Response(int errorCode , Dictionary<string,string> errors)
+        {
+            Succeeded = true;
+            Message = string.Empty;
+            Errors = errors;
+            Data = default(T);
+            HttpCode = errorCode;
+        }
+
         public T Data { get; set; }
         public bool Succeeded { get; set; }
         public Dictionary<string,string> Errors { get; set; }
         public string Message { get; set; }
 
-        public HttpStatusCode HttpCode { get; set; }
-
-
-
+        public int HttpCode { get; set; }
 
     }
 }
