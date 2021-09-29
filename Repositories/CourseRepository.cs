@@ -13,7 +13,7 @@ namespace SPM_Project.Repositories
 
         public CourseRepository(ApplicationDbContext context) : base(context)
         {
-            //TODO retreive course based on 
+            //TODO Retrieve course based on 
 
         }
 

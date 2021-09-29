@@ -29,7 +29,6 @@ namespace SPM_Project.ApiControllers
         {
             var response = await _serviceManager.UserManagementService.GetEngineersDataTable(dTParameterModel);
 
-
             var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
             return Ok(responseJson);
       
