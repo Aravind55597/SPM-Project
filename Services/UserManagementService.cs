@@ -13,13 +13,14 @@ namespace SPM_Project.Services
     public class UserManagementService:IUserManagementService
     {
 
+
         public IUnitOfWork _unitOfWork;
 
         public UserManagementService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-        }
 
+        }
 
         //retrieve all engineers (both learners & trainers) for datatable
         public async Task<DTResponse<EngineersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel)
@@ -28,9 +29,6 @@ namespace SPM_Project.Services
 
             return response; 
         }
-
-
-
 
 
 

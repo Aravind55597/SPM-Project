@@ -28,7 +28,11 @@ namespace SPM_Project.Services
 
             //RetreiveCurrentUserId() return the id of the current user ; for now return which is the test Trainer 
             //if null , return 1 
-            int LMSUserId = await _unitOfWork.LMSUserRepository.RetreiveCurrentUserId() ?? 1; 
+            int LMSUserId = await _unitOfWork.LMSUserRepository.RetreiveCurrentUserId() ?? 1;
+
+            //check role of the user 
+            var userRole = await _unitOfWork.LMSUserRepository.RetreiveCurrentUserRole() ?? "Trainer"; 
+
 
 
             var response = await _unitOfWork.CourseClassRepository.GetCourseClassesForTrainerDataTable(dTParameterModel, LMSUserId);
@@ -36,12 +40,6 @@ namespace SPM_Project.Services
 
             return response;
         }
-
-
-
-
-
-
 
 
 

@@ -19,7 +19,8 @@ namespace SPM_Project.Repositories.Interfaces
         public Task<int?> RetreiveCurrentUserId();
 
         //for now , it will just return null
-        public Task<bool?> CheckCurrentUserRole(string Role); 
+        public Task<string> RetreiveCurrentUserRole();
 
+       
     }
 }

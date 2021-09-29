@@ -63,8 +63,17 @@ namespace SPM_Project
             //unit of work 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+
             //servicemanager
             services.AddScoped<IServiceManager, ServiceManager>();
+
+
+
+
+
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
