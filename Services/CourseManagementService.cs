@@ -40,7 +40,25 @@ namespace SPM_Project.Services
             return response;
         }
 
+        //get classes for course 
 
+        public async Task<DTResponse<CourseClassTableData>> GetCourseClasses(DTParameterModel dTParameterModel)
+        {
+
+
+            //RetrieveCurrentUserId() return the id of the current user ; for now return which is the test Trainer 
+            //if null , return 1 
+            int LMSUserId = await _unitOfWork.LMSUserRepository.RetrieveCurrentUserId() ?? 1;
+
+            //check role of the user 
+            //var userRole = await _unitOfWork.LMSUserRepository.RetreiveCurrentUserRole() ?? "Trainer"; 
+
+
+            var response = await _unitOfWork.CourseClassRepository.GetCourseClassesDataTable(dTParameterModel);
+
+
+            return response;
+        }
 
 
 

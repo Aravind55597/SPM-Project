@@ -15,6 +15,8 @@ namespace SPM_Project.Repositories.Interfaces
         
         public Task<DTResponse<CourseClassTableData>> GetCourseClassesForTrainerDataTable(DTParameterModel dTParameterModel , int LMSId);
 
+        public Task<DTResponse<CourseClassTableData>> GetCourseClassesDataTable(DTParameterModel dTParameterModel);
+
 
 
     }

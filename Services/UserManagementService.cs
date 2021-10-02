@@ -26,18 +26,18 @@ namespace SPM_Project.Services
         public async Task<DTResponse<EngineersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel)
         {
 
-
-
-
-
             var response = await _unitOfWork.LMSUserRepository.GetEngineersDataTable(dTParameterModel);
 
             return response; 
         }
 
 
+        public async Task<DTResponse<EngineersTableData>> GetUserCourseEligiblity(DTParameterModel dTParameterModel)
+        {
+            var response = await _unitOfWork.LMSUserRepository.GetEngineersDataTable(dTParameterModel);
 
-
+            return response;
+        }
 
 
 
