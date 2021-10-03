@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SPM_Project.EntityModels;
-using SPM_Project.PracticeDatatableModelAndController;
+
 
 namespace SPM_Project.Data
 {
@@ -13,7 +13,7 @@ namespace SPM_Project.Data
         }
 
         //for practice (Remove once everyone is ok with datatables)
-        public DbSet<Customer> Customer { get; set; }
+      
         public DbSet<Chapter> Chapter { get; set; }
 
         public DbSet<ClassEnrollmentRecord> ClassEnrollmentRecord { get; set; }
