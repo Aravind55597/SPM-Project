@@ -19,7 +19,6 @@ namespace SPM_Project.Repositories
 
         }
 
-
         //for now it will just return null
         public async Task<int?> RetrieveCurrentUserId() {
 
@@ -32,10 +31,7 @@ namespace SPM_Project.Repositories
         {
 
             return null;
-
-
         }
-
 
 
         //get all engineers present -> Accessed by Trainer 
