@@ -45,7 +45,7 @@
     <div class="d-flex align-items-stretch flex-shrink-0">
 
         <!--begin::Search-->
-    
+
         <partial name="~/Views/Shared/Extras/_Search.cshtml" />
         <!--end::Search-->
         <!--begin::Activities-->
@@ -63,7 +63,12 @@
         <partial name="~/Views/Shared/Extras/_QuickLinks.cshtml" />
         <!--end::Quick links-->
         <!--begin::UserDropdown-->
-        <partial name="~/Views/Shared/Extras/_UserDropDown.cshtml" />
+        @*<partial name="~/Views/Shared/Extras/_UserDropDown.cshtml" />*@
+
+        <!--begin::Sign in /out-->
+        <partial name="~/Views/Shared/_LoginPartial.cshtml" />
+        <!--end::Sign in/out-->
+
         <!--end::UserDropdown -->
     </div>
     <!--end::Toolbar wrapper-->
