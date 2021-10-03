@@ -49,6 +49,7 @@ function viewEngineerDT() {
 			contentType: "application/json",
 			dataType: "json",
 			data: function (d) {
+				console.log(JSON.stringify(d))
 				return JSON.stringify(d);
 			}
 		},
