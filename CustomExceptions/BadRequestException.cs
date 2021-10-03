@@ -11,14 +11,41 @@ namespace SPM_Project.CustomExceptions
     public class BadRequestException:Exception
     {
 
+
+        public BadRequestException()
+
+        {
+        }
+
+
+
         public BadRequestException(string message)
             : base(message)
         {
         }
+
+
+
+        public BadRequestException(string message, IDictionary<string, string> errorDict) : base(message)
+        {
+
+            foreach (KeyValuePair<string, string> err in errorDict)
+            { 
+                
+          
+                Data.Add(err.Key.ToString(), err.Key.ToString());
+
+            }
+
+        }
+
+
         public BadRequestException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
+
+
         public BadRequestException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

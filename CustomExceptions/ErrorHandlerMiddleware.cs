@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using SPM_Project;
 using SPM_Project.CustomExceptions;
 using SPM_Project.DTOs.RRModels;
 using System;
@@ -18,6 +19,20 @@ namespace CustomExceptions
             _next = next;
         }
 
+        public HttpResponse ReturnResponseObject(HttpContext context)
+        {
+            return context.Response;
+
+        }
+
+        public Response<object> CreateResultObject(HttpContext context, HttpResponse response)
+        {
+
+            response.ContentType = "application/json";
+            var result = new Response<object>();
+            return result;
+        }
+
         public async Task Invoke(HttpContext context)
         {
             try
@@ -25,21 +40,24 @@ namespace CustomExceptions
                 await _next(context);
             }
 
+
             catch (Exception error)
             {
+
                 var response = context.Response;
                 response.ContentType = "application/json";
-                var result = new Response<object>(); 
+                var result = new Response<object>();
                 switch (error)
                 {
                     case BadRequestException e:
                         // bad request due to faulty input
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        
+                        //result.Errors = (IDictionary<string,string>)e.Data;
                         break;
                     case NotFoundException e:
                         // not found error
                         response.StatusCode = (int)HttpStatusCode.NotFound;
+                        //result.Errors = (IDictionary<string, string>)e.Data;
                         break;
                     default:
                         // unhandled error
@@ -47,15 +65,26 @@ namespace CustomExceptions
                         break;
                 }
 
+                //add the httpcode
                 result.HttpCode = response.StatusCode;
-                result.Errors =(Dictionary<string, string>) error.Data; 
+
+                //add the custom message 
+                result.Message = error.Message;
+
+                //serialised response 
                 var httpResponse = Newtonsoft.Json.JsonConvert.SerializeObject(
 
                     result
 
                     );
                 await response.WriteAsync(httpResponse);
+
+        
+
+
             }
+
+
         }
     }
 }

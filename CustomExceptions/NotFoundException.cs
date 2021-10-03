@@ -12,10 +12,33 @@ namespace SPM_Project.CustomExceptions
     {
 
 
+
+
+
+        public NotFoundException()
+        {
+        }
         public NotFoundException(string message)
             : base(message)
         {
         }
+
+        public NotFoundException(string message, IDictionary<string, string> errorDict) : base(message)
+        {
+
+            foreach (KeyValuePair<string, string> err in errorDict)
+            {
+
+
+                Data.Add(err.Key.ToString(), err.Key.ToString());
+
+            }
+
+        }
+
+
+
+
         public NotFoundException(string message, Exception innerException)
             : base(message, innerException)
         {

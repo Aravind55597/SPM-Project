@@ -36,7 +36,7 @@ namespace SPM_Project.DTOs.RRModels
 
         public T Data { get; set; }
         public bool Succeeded { get; set; }
-        public Dictionary<string,string> Errors { get; set; }
+        public IDictionary<string,string> Errors { get; set; }
         public string Message { get; set; }
 
         public int HttpCode { get; set; }

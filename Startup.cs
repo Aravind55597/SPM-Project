@@ -82,14 +82,17 @@ namespace SPM_Project
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ApplicationDbContext dbContext)
         {
 
-          
+
             //need to blcok the thread as we are making an async call in a sync method (bad practice but ok for now )
             //seedUsers.SeedTestUsers().GetAwaiter().GetResult(); 
- 
+
+
 
 
             if (env.IsDevelopment())
             {
+
+
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
             }
@@ -108,9 +111,9 @@ namespace SPM_Project
 
             app.UseRouting();
 
+
             //handles exceptions thrown and returns an error reponse based on the type of exception thrown 
             app.UseMiddleware<ErrorHandlerMiddleware>();
-
 
 
 
@@ -120,7 +123,8 @@ namespace SPM_Project
 
             //Add database seeding code here 
             //SeedDatabase.Initialize(dbContext);
-
+            //handles exceptions thrown and returns an error reponse based on the type of exception thrown 
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
 
             app.UseEndpoints(endpoints =>
