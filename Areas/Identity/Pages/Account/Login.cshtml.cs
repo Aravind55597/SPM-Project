@@ -42,18 +42,27 @@ namespace SPM_Project.Areas.Identity.Pages.Account
         [TempData]
         public string ErrorMessage { get; set; }
 
+
+
+        //list of roles to display as radio buttons
+        public string[] Roles { get { return new[] { "Learner", "Trainer", "Administrator" }; } }
+
+
         public class InputModel
         {
-            [Required]
+            //[Required]
             [Display(Name = "Username/Email")]
             public string Email { get; set; }
 
-            [Required]
+            //[Required]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
+
+            //roles chosen
+            public string Role { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -82,10 +91,37 @@ namespace SPM_Project.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
 
-   
+
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+
+
+                Microsoft.AspNetCore.Identity.SignInResult result= new Microsoft.AspNetCore.Identity.SignInResult(); 
+
+                if (Input.Role!=null)
+                {
+                    switch (Input.Role)
+                    {
+                        case "Learner":
+                            // code block
+                            result = await _signInManager.PasswordSignInAsync("learner@email.com", "password", Input.RememberMe, lockoutOnFailure: false);
+                            break;
+                        case "Trainer":
+                            // code block
+                            result = await _signInManager.PasswordSignInAsync("trainer@email.com", "password", Input.RememberMe, lockoutOnFailure: false);
+                            break;
+                        case "Administrator":
+                            // code block
+                            result = await _signInManager.PasswordSignInAsync("admin@email.com", "password", Input.RememberMe, lockoutOnFailure: false);
+                            break;
+                    }
+
+                }
+                else
+                {
+                    result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                }
+
                 if (result.Succeeded)
                 {
 
