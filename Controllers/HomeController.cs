@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SPM_Project.CustomExceptions;
 using SPM_Project.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,9 @@ namespace SPM_Project.Controllers
 
         public IActionResult Index()
         {
+
+
+
             return View();
         }
 

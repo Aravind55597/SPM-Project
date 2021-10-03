@@ -8,7 +8,7 @@ namespace SPM_Project.CustomExceptions
 {
 
     [Serializable]
-    public class NotFoundException:Exception
+    public class NotFoundException: CustomExceptionParent
     {
 
 
@@ -23,16 +23,10 @@ namespace SPM_Project.CustomExceptions
         {
         }
 
-        public NotFoundException(string message, IDictionary<string, string> errorDict) : base(message)
+        public NotFoundException(string message, Dictionary<string, string> errorDict) : base(message, errorDict)
         {
 
-            foreach (KeyValuePair<string, string> err in errorDict)
-            {
 
-
-                Data.Add(err.Key.ToString(), err.Key.ToString());
-
-            }
 
         }
 

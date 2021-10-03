@@ -8,7 +8,7 @@ namespace SPM_Project.CustomExceptions
 {
     [Serializable]
 
-    public class BadRequestException:Exception
+    public class BadRequestException: CustomExceptionParent
     {
 
 
@@ -26,16 +26,9 @@ namespace SPM_Project.CustomExceptions
 
 
 
-        public BadRequestException(string message, IDictionary<string, string> errorDict) : base(message)
+        public BadRequestException(string message, Dictionary<string, string> errorDict) : base(message , errorDict)
         {
 
-            foreach (KeyValuePair<string, string> err in errorDict)
-            { 
-                
-          
-                Data.Add(err.Key.ToString(), err.Key.ToString());
-
-            }
 
         }
 

@@ -52,12 +52,12 @@ namespace CustomExceptions
                     case BadRequestException e:
                         // bad request due to faulty input
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        //result.Errors = (IDictionary<string,string>)e.Data;
+                        result.Errors = e.ErrorDict;
                         break;
                     case NotFoundException e:
                         // not found error
                         response.StatusCode = (int)HttpStatusCode.NotFound;
-                        //result.Errors = (IDictionary<string, string>)e.Data;
+                        result.Errors = e.ErrorDict;
                         break;
                     default:
                         // unhandled error
