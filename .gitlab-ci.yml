@@ -1,7 +1,7 @@
 image : mcr.microsoft.com/dotnet/sdk:5.0
 
 stages:
-    - build
+    # - build
     - test
 
 variables:
@@ -11,11 +11,10 @@ before_script:
     - "cd src"
     - "dotnet restore"
 
-build:
-    stage: build
-    script:
-        - "cd src"
-        - "dotnet build"
+# build:
+#     stage: build
+#     script:
+#         - "dotnet build"
 
 test:
     stage: test
