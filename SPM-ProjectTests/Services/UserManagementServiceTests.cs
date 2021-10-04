@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using SPM_Project.Services;
+using Moq;
 using SPM_Project.DataTableModels;
 using SPM_Project.DataTableModels.DataTableData;
 using SPM_Project.DataTableModels.DataTableRequest;
@@ -11,7 +12,7 @@ using Xunit;
 
 namespace SPM_Project.Services.Tests
 {
-    public class UserManagementServiceTests: IDisposable
+    public class UserManagementServiceTests : IDisposable
     {
         //input
         public DTParameterModel _engineersDataTableInput;
@@ -30,7 +31,7 @@ namespace SPM_Project.Services.Tests
 
 
         //SETUP-------------------------------------------------------------------
-        public  UserManagementServiceTests()
+        public UserManagementServiceTests()
         {
 
             _engineersDataTableInput = new DTParameterModel()
@@ -127,12 +128,12 @@ namespace SPM_Project.Services.Tests
             _engineersDataTableOutput = new DTResponse<EngineersTableData>();
 
 
-             _mockLMSUserRepository = new Mock<ILMSUserRepository>();
-            _mockLMSUserRepository.Setup(l => l.GetEngineersDataTable(_engineersDataTableInput) ).ReturnsAsync(_engineersDataTableOutput).Verifiable();
+            _mockLMSUserRepository = new Mock<ILMSUserRepository>();
+            _mockLMSUserRepository.Setup(l => l.GetEngineersDataTable(_engineersDataTableInput)).ReturnsAsync(_engineersDataTableOutput).Verifiable();
 
 
             _mockUnitOfWork = new Mock<IUnitOfWork>();
-            _mockUnitOfWork.Setup(u => u.LMSUserRepository).Returns(_mockLMSUserRepository.Object); 
+            _mockUnitOfWork.Setup(u => u.LMSUserRepository).Returns(_mockLMSUserRepository.Object);
 
 
             //create the service object & pass the mock unitofwork 
@@ -165,16 +166,13 @@ namespace SPM_Project.Services.Tests
             //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
 
             //verify that GetEngineersDataTable was called!!!!!!!!!!!!!!!
-            _mockLMSUserRepository.Verify(); 
+            _mockLMSUserRepository.Verify();
 
             //verify that you did not get null as a result 
             Assert.NotNull(actual);
-            Assert.IsType<DTResponse<EngineersTableData>>(actual); 
+            Assert.IsType<DTResponse<EngineersTableData>>(actual);
 
         }
-
-
-
 
     }
 }
