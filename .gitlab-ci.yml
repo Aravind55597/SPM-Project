@@ -1,11 +1,23 @@
-image : mcr.microsoft.com/dotnet/sdk:5.0
+image: microsoft/dotnet:latest
 
 stages:
-  - build
+    - build
+    - test
+
+variables:
+    test: "spm-project.test"
+
+before_script:
+    - "cd src"
+    - "dotnet restore"
 
 build:
-  stage: build
-  script:
-    - dotnet build
-  only:
-    - master
+    stage: build
+    script:
+        - "dotnet build"
+
+test:
+    stage: test
+    script: 
+        - "cd $test"
+        - "dotnet test"
