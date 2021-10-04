@@ -13,19 +13,19 @@ namespace SPM_Project.Controllers.Tests
 {
     public class AdministratorControllerTests
     {
-        [Fact()]
-        public void HRTest()
-        {
-            var controller = new AdministratorController().WithIdentity("Administrator");
+        //[Fact()]
+        //public void HRTest()
+        //{
+        //    var controller = new AdministratorController().WithIdentity("Administrator");
 
-            var result = controller.HR() as ViewResult;
+        //    var result = controller.HR() as ViewResult;
 
-            var checkAttribute = controller.GetType().GetMethod("HR").GetCustomAttributes(typeof(AuthorizeAttribute), true);
+        //    var checkAttribute = controller.GetType().GetMethod("HR").GetCustomAttributes(typeof(AuthorizeAttribute), true);
 
-            Assert.Equal(typeof(AuthorizeAttribute),checkAttribute[0].GetType()); 
-            Assert.NotNull(result); 
-            Assert.Equal("HR",result.ViewName);
+        //    Assert.Equal(typeof(AuthorizeAttribute),checkAttribute[0].GetType()); 
+        //    Assert.NotNull(result); 
+        //    Assert.Equal("HR",result.ViewName);
           
-        }
+        //}
     }
 }
