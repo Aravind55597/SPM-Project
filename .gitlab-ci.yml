@@ -19,5 +19,5 @@ build:
 test:
     stage: test
     script: 
-        - "cd $test"
+        - "cd spm-project.test"
         - "dotnet test"
