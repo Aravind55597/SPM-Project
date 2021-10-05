@@ -11,13 +11,18 @@ namespace SPM_Project.Controllers
     public class AdministratorController : Controller
     {
         [Authorize(Roles = "Administrator")]
-        public IActionResult HR()
+        public IActionResult ViewEngineers()
         {
-            return View("Index");
+            return View("ViewEngineers");
         }
 
 
 
+        [Authorize(Roles = "Administrator")]
+        public IActionResult ViewAllCourses()
+        {
+            return View("ViewAllCourses");
+        }
 
 
 
