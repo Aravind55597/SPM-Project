@@ -16,7 +16,7 @@ build:
     script:
         - "dotnet build"
     tags:
-        - cicd-new    
+        - "cicd-new"    
 
 test:
     stage: test
@@ -24,4 +24,4 @@ test:
         - "cd spm-project-test"
         - "dotnet test"
     tags:
-        - cicd-new    
+        - "cicd-new"   
