@@ -5,19 +5,19 @@ stages:
     - test
 
 variables:
-    test: "spm-project.test"
+    test: "spm-project-test"
 
 before_script:
     - "cd src"
     - "dotnet restore"
 
-# build:
-#     stage: build
-#     script:
-#         - "dotnet build"
+build:
+    stage: build
+    script:
+        - "dotnet build"
 
 test:
     stage: test
     script: 
-        - "cd spm-project.test"
+        - "cd spm-project-test"
         - "dotnet test"
