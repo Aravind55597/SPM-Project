@@ -15,13 +15,11 @@ build:
     stage: build
     script:
         - "dotnet build"
-    tags:
-        - "cicd-new"    
+    
 
 test:
     stage: test
     script: 
         - "cd spm-project-test"
         - "dotnet test"
-    tags:
-        - "cicd-new"   
+   
