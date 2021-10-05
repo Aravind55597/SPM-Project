@@ -12,7 +12,7 @@ namespace SPM_Project.Services.Interfaces
     {
 
 
-        public Task<DTResponse<CourseClassTableData>> GetCourseClassesForTrainerDataTable(DTParameterModel dTParameterModel);
-
+        public Task<DTResponse<CourseClassTableData>> GetCourseClassesDataTable(DTParameterModel dTParameterModel);
+        public Task<DTResponse<CourseTableData>> GetCoursesDataTable(DTParameterModel dTParameterModel); 
     }
 }
