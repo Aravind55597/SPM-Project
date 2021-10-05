@@ -1,0 +1,34 @@
+﻿
+
+@section styles{
+    <link href="~/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+}
+
+
+
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+
+    <div class="d-flex flex-column-fluid">
+        <!--begin::Container-->
+        <div class="container">
+            <!--begin::Card-->
+            <div class="card card-custom">
+                <h1>LMS SYSTEM DEMO</h1>
+            </div>
+            <!--end::Card-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Entry-->
+</div>
+
+@*url for retrieving customers*@
+<input type="hidden" id="Retrieve-customers" value="@Url.RouteUrl("RetrieveCustomers")">
+
+
+
+@section scripts {
+    <script src="~/js/index.js"></script>
+    <script src="~/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+}
