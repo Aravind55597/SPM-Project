@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\spm-project\SPM-Project.csproj" />
+    <ProjectReference Include="..\spm-project\spm-project.csproj" />
   </ItemGroup>
 
 </Project>
