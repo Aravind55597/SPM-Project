@@ -11,21 +11,46 @@ using SPM_ProjectTests.Extensions;
 
 namespace SPM_Project.Controllers.Tests
 {
+  
     public class AdministratorControllerTests
     {
-        //[Fact()]
-        //public void HRTest()
-        //{
-        //    var controller = new AdministratorController().WithIdentity("Administrator");
 
-        //    var result = controller.HR() as ViewResult;
+        //SHUM CHIN NING 
+        [Fact()]
+        public void ViewEngineersTestWhenAdmin()
+        {
+            var controller = new AdministratorController().WithIdentity("Administrator");
 
-        //    var checkAttribute = controller.GetType().GetMethod("HR").GetCustomAttributes(typeof(AuthorizeAttribute), true);
+            var result = controller.ViewEngineers() as ViewResult;
 
-        //    Assert.Equal(typeof(AuthorizeAttribute),checkAttribute[0].GetType()); 
-        //    Assert.NotNull(result); 
-        //    Assert.Equal("HR",result.ViewName);
-          
-        //}
+            var checkAttribute = controller.GetType().GetMethod("ViewEngineers").GetCustomAttributes(typeof(AuthorizeAttribute), true);
+
+            Assert.NotNull(result);
+            Assert.Equal(typeof(AuthorizeAttribute), checkAttribute[0].GetType());
+            Assert.Equal("ViewEngineers", result.ViewName);
+
+        }
+
+
+        //SHUM CHIN NING
+        [Fact()]
+        public void ViewAllCoursesTestWhenAdmin()
+        {
+            var controller = new AdministratorController().WithIdentity("Administrator");
+
+            var result = controller.ViewAllCourses() as ViewResult;
+
+            var checkAttribute = controller.GetType().GetMethod("ViewAllCourses").GetCustomAttributes(typeof(AuthorizeAttribute), true);
+
+            Assert.NotNull(result);
+            Assert.Equal(typeof(AuthorizeAttribute), checkAttribute[0].GetType());
+            Assert.Equal("ViewAllCourses", result.ViewName);
+        }
+
+
+
+
+
+
     }
 }
