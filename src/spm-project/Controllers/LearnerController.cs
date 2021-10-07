@@ -10,9 +10,9 @@ namespace SPM_Project.Controllers
     public class LearnerController : Controller
     {
         [Authorize(Roles = "Learner")]
-        public IActionResult ViewLearnerCourses()
+        public IActionResult ViewCourses()
         {
-            return View("ViewLearnerCourses");
+            return View("ViewCourses");
         }
     }
 }
