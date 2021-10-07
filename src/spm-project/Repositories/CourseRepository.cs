@@ -23,15 +23,62 @@ namespace SPM_Project.Repositories
         }
 
 
-        
-        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //--------------------------------------------TABLE FUNCTIONS------------------------------------------------------------------------------------------------------
+
+        //generate IQueryable for manipulation by datatable 
+        private IQueryable<CourseTableData> GetCourseTableQueryable()
+        {
+
+            //var roles = await RetreiveAllRolesAsync(); 
+            var queryable = _context
+            .Course.
+            Select(c =>
+            new CourseTableData()
+            {
+                CourseName = c.Name,
+                NumberOfClasses = c.CourseClass.Count,
+                CreatedDate = c.CreationTimestamp,
+                UpdatedDate = c.UpdateTimestamp,
+                DT_RowId = c.Id
+            }
+            );
+
+
+            return queryable;
+        }
+
+
         public async Task<DTResponse<CourseTableData>> GetCoursesDataTable(DTParameterModel dTParameterModel)
         {
 
             var draw = dTParameterModel.Draw;
             var start = dTParameterModel.Start;
             var length = dTParameterModel.Start;
-            var sortColumn = dTParameterModel.Columns[dTParameterModel.Order[0].Column].Name;
+            var sortColumn = dTParameterModel.Columns[dTParameterModel.Order[0].Column].Data;
             var sortColumnDirection = dTParameterModel.Order[0].Dir;
             var searchValue = dTParameterModel.Search.Value;
             int pageSize = dTParameterModel.Length;
@@ -43,19 +90,7 @@ namespace SPM_Project.Repositories
             int recordsFiltered = 0;
 
 
-            var queryable = _context
-                .Course.
-                Select(c =>
-                new CourseTableData()
-                {
-                    CourseName=c.Name,
-                    NumberOfClasses=c.CourseClass.Count, 
-                    CreatedDate= c.CreationTimestamp,
-                    UpdatedDate=c.UpdateTimestamp,
-                    DT_RowId = c.Id
-                }
-                ); 
-            
+            var queryable = GetCourseTableQueryable(); 
 
             recordsTotal = queryable.Count();
 

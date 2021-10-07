@@ -10,7 +10,7 @@ namespace SPM_Project.Services.Interfaces
 {
     public interface IUserManagementService
     {
-        public Task<DTResponse<EngineersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel); 
+        public Task<DTResponse<LMSUsersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel); 
 
 
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,9 +11,10 @@ namespace SPM_Project.EntityModels
 
         public int Id { get; set; }
 
-
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime CreateTimestamp { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdatedTimestamp { get; set; }
 
 

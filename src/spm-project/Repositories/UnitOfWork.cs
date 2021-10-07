@@ -1,4 +1,7 @@
-﻿using SPM_Project.Data;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using SPM_Project.Data;
+using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -9,17 +12,16 @@ namespace SPM_Project.Repositories
 {
     public class UnitOfWork:IUnitOfWork
     {
-        private readonly ApplicationDbContext _context;
-
-        public UnitOfWork(ApplicationDbContext context)
+        private readonly ApplicationDbContext _context; 
+        public UnitOfWork(ApplicationDbContext context , IHttpContextAccessor hcontext, UserManager<ApplicationUser> userManager , RoleManager<IdentityRole> roleManager)
         {
-            _context = context;
+            _context = context; 
             // ApplicationUserRepository = new ApplicationUserRepository(context);
             ChapterRepository = new ChapterRepository(context);
             ClassEnrollmentRecordRepository = new ClassEnrollmentRecordRepository(context);
             CourseClassRepository = new CourseClassRepository(context);
             CourseRepository = new CourseRepository(context);
-            LMSUserRepository = new LMSUserRepository(context);
+            LMSUserRepository = new LMSUserRepository(context, userManager , hcontext , roleManager);
             ProgressTrackerRepository = new ProgressTrackerRepository(context);
             QuizRepository = new QuizRepository(context);
             ResourceRepository = new ResourceRepository(context);

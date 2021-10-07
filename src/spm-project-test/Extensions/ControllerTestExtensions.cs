@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -79,6 +80,28 @@ namespace SPM_ProjectTests.Extensions
 
             return controller;
         }
+
+
+
+        //check authorise attribute 
+        public static AuthorizeAttribute GetAuthoriseAttribute<T>(this T controller , string method) where T : Controller
+        {
+                return typeof(T).GetMethod(method).GetCustomAttributes(typeof(AuthorizeAttribute), true)
+                    .Cast<AuthorizeAttribute>()
+                        .FirstOrDefault();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

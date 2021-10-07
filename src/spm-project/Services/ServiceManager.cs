@@ -29,7 +29,7 @@ namespace SPM_Project.Services
 
         public IProgressManagementService ProgressManagementService { get; set; }
 
-
+        public IClassManagementService ClassManagementService { get; set; }
 
         public IUserManagementService UserManagementService { get; set; }
     }

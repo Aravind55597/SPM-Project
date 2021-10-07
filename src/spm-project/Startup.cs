@@ -68,8 +68,8 @@ namespace SPM_Project
             //servicemanager
             services.AddScoped<IServiceManager, ServiceManager>();
 
-
-
+            //allow access to httpcontext 
+            services.AddHttpContextAccessor();
 
 
 
