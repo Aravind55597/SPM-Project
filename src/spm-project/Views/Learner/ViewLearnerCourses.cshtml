@@ -33,17 +33,42 @@
 <div class="container">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Enrolled Courses</button>
+            <button class="nav-link active" id="view-courses-tab" data-bs-toggle="tab" data-bs-target="#view-courses" type="button" role="tab" aria-controls="view-courses" aria-selected="true">Discover Courses</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Eligible Courses</button>
+            <button class="nav-link" id="my-courses-tab" data-bs-toggle="tab" data-bs-target="#my-courses" type="button" role="tab" aria-controls="my-courses" aria-selected="false">My Courses</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Contact</button>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+        <!-- Start of Eligible course -->
+        <div class="tab-pane fade" id="view-courses" role="tabpanel" aria-labelledby="view-courses-tab">
+            <!-- card design -->
+            <div class="row">
+                <div class="col"></div>
+                <div class="col-6">
+                    <div id="wrapper">
+                        <section>
+                            <div class="data-container"></div>
+                            <div id="pagination-demo1"></div>
+                            <div class="data-container"></div>
+                            <div id="pagination-demo2"></div>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="col">
+
+                </div>
+            </div>
+
+        </div>
+        <!-- End of Eligible course -->
+
+        <div class="tab-pane fade show active" id="my-courses" role="tabpanel" aria-labelledby="my-courses-tab">
             <!--Start of DataTable-->
             <div class="row">
                 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
@@ -177,30 +202,6 @@
             @*url for retrieving customers*@
             <input type="hidden" id="retreive-customers" value="@Url.RouteUrl("RetrieveCustomers")">
         </div>
-
-        <!-- Start of Eligible course -->
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            <!-- card design -->
-            <div class="row">
-                <div class="col"></div>
-                <div class="col-6">
-                    <div id="wrapper">
-                        <section>
-                            <div class="data-container"></div>
-                            <div id="pagination-demo1"></div>
-                            <div class="data-container"></div>
-                            <div id="pagination-demo2"></div>
-                        </section>
-                    </div>
-                </div>
-                
-                <div class="col">
-
-                </div>
-            </div>
-
-        </div>
-        <!-- End of Eligible course -->
 
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">there</div>
     </div>
