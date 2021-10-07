@@ -15,17 +15,17 @@ namespace SPM_Project.Controllers.Tests
     {
         //Xian Wei
         [Fact()]
-        public void ViewLearnerCoursesTestWhenLearner()
+        public void ViewCoursesTestWhenLearner()
         {
             var controller = new LearnerController().WithIdentity("Learner");
 
-            var result = controller.ViewLearnerCourses() as ViewResult;
+            var result = controller.ViewCourses() as ViewResult;
 
-            var checkAttribute = controller.GetType().GetMethod("ViewLearnerCourses").GetCustomAttributes(typeof(AuthorizeAttribute), true);
+            var checkAttribute = controller.GetType().GetMethod("ViewCourses").GetCustomAttributes(typeof(AuthorizeAttribute), true);
 
             Assert.NotNull(result);
             Assert.Equal(typeof(AuthorizeAttribute), checkAttribute[0].GetType());
-            Assert.Equal("ViewLearnerCourses", result.ViewName);
+            Assert.Equal("ViewCourses", result.ViewName);
         }
     }
 }
