@@ -21,13 +21,13 @@ namespace SPM_Project.Controllers.Tests
         {
             var controller = new AdministratorController().WithIdentity("Administrator");
 
-            var result = controller.ViewEngineers() as ViewResult;
+            var result = controller.ViewAllEngineers() as ViewResult;
 
-            var checkAttribute = controller.GetType().GetMethod("ViewEngineers").GetCustomAttributes(typeof(AuthorizeAttribute), true);
+            var checkAttribute = controller.GetType().GetMethod("ViewAllEngineers").GetCustomAttributes(typeof(AuthorizeAttribute), true);
 
             Assert.NotNull(result);
             Assert.Equal(typeof(AuthorizeAttribute), checkAttribute[0].GetType());
-            Assert.Equal("ViewEngineers", result.ViewName);
+            Assert.Equal("ViewAllEngineers", result.ViewName);
 
         }
 
