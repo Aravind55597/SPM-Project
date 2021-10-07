@@ -17,14 +17,14 @@ using SPM_Project.DataTableModels.DataTableRequest;
 namespace SPM_Project.Services.Tests
 {
     //SHUM CHIN NING TESTS
-    public class CourseManagementServiceTests:IDisposable
+    public class CourseManagementServiceTests : IDisposable
     {
 
-         public CourseManagementService _service;
+        public CourseManagementService _service;
 
-         public Mock<IUnitOfWork> _mockUnitOfWork;
+        public Mock<IUnitOfWork> _mockUnitOfWork;
 
-         public Mock<ICourseRepository> _mockCourseRepository;
+        public Mock<ICourseRepository> _mockCourseRepository;
 
 
 
@@ -48,7 +48,7 @@ namespace SPM_Project.Services.Tests
         public void Dispose()
         {
             _mockUnitOfWork = null;
-            _service = null; 
+            _service = null;
         }
 
         //[Fact()]
@@ -174,7 +174,7 @@ namespace SPM_Project.Services.Tests
 
             //Do your asserts 
             Assert.NotNull(result);
-            Assert.IsType<DTResponse<CourseTableData>>(result); 
+            Assert.IsType<DTResponse<CourseTableData>>(result);
 
 
 
@@ -189,13 +189,41 @@ namespace SPM_Project.Services.Tests
 
 
 
-     
+
             //var result = await _service.GetCoursesForAdminDataTable(input.Object);
 
             //Assert.NotNull(result);
             //Assert.IsType<DTResponse<CourseTableData>>(result);
 
 
+        }
+
+        //Xian Wei unit test
+        [Fact()]
+        public async Task GetEligibleCoursesTest()
+        {
+            var correctInput = new Object();
+
+            //moq sets up the values for the property 
+            var input = new Object();
+
+            var output = new Object();
+
+
+            //return the object as indicated when i pass the input
+            _mockUnitOfWork.Setup(l => l.CourseRepository).Returns(_mockCourseRepository.Object).Verifiable();
+            _mockCourseRepository.Setup(l => l.GetEligibleCourses(input)).ReturnsAsync(output).Verifiable();
+
+            //call the function 
+            var result = await _service.GetEligibleCourses(input);
+
+            //verify that the mocks are called 
+            _mockUnitOfWork.Verify();
+            _mockCourseRepository.Verify();
+
+            //Do your asserts 
+            Assert.NotNull(result);
+            Assert.IsType(result);
         }
    
     
