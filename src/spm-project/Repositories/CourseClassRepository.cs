@@ -24,13 +24,12 @@ namespace SPM_Project.Repositories
 
 
 
-        //get classes for a trainer ->Accessed by a Trainer
-        public async Task<DTResponse<CourseClassTableData>> GetCourseClassesForTrainerDataTable(DTParameterModel dTParameterModel, int LMSId)
+        //get classes
+        public async Task<DTResponse<CourseClassTableData>> GetCourseClassesDataTable(DTParameterModel dTParameterModel, int LMSId)
         {
 
 
             //LMSId is validated to be a Trainer Id in the service layer 
-
 
             var draw = dTParameterModel.Draw;
             var start = dTParameterModel.Start;
@@ -44,13 +43,12 @@ namespace SPM_Project.Repositories
             //number of records to be skipped
             int skip = dTParameterModel.Start;
             int recordsTotal = 0;
-
+            int recordsFiltered = 0; 
 
             //retrieve course classes for the Trainer 
             var queryable = _context.CourseClass.
                 Where(cc => cc.ClassTrainer.Id == LMSId).
                 Select(cc=>new CourseClassTableData() { 
-                
                     CourseName= cc.Course.Name, 
                     ClassName=cc.Name,
                     StartDate=cc.StartClass, 
@@ -59,6 +57,9 @@ namespace SPM_Project.Repositories
                     NumOfStudents = cc.ClassEnrollmentRecords.Where(ce=>ce.Approved).Count(),
                     DT_RowId=cc.Id
                 });
+
+            recordsTotal = queryable.Count();
+
 
             //if sortcolumn and sort colum direction are not empty 
             if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
@@ -75,17 +76,17 @@ namespace SPM_Project.Repositories
                                             );
             }
 
-            recordsTotal = queryable.Count();
+            recordsFiltered = queryable.Count();
 
 
 
             var data = await queryable.Skip(skip).Take(pageSize).ToListAsync();
 
-
+            //repeated
             var dtResponse = new DTResponse<CourseClassTableData>()
             {
                 Draw = draw,
-                RecordsFiltered = recordsTotal,
+                RecordsFiltered = recordsFiltered,
                 RecordsTotal = recordsTotal,
                 Data = data,
             };
