@@ -18,7 +18,7 @@ namespace SPM_Project.Services.Tests
         public DTParameterModel _engineersDataTableInput;
 
         //output
-        public DTResponse<EngineersTableData> _engineersDataTableOutput;
+        public DTResponse<LMSUsersTableData> _engineersDataTableOutput;
 
         public Mock<IUnitOfWork> _mockUnitOfWork;
 
@@ -125,7 +125,7 @@ namespace SPM_Project.Services.Tests
                     },
             };
 
-            _engineersDataTableOutput = new DTResponse<EngineersTableData>();
+            _engineersDataTableOutput = new DTResponse<LMSUsersTableData>();
 
 
             _mockLMSUserRepository = new Mock<ILMSUserRepository>();
@@ -170,7 +170,7 @@ namespace SPM_Project.Services.Tests
 
             //verify that you did not get null as a result 
             Assert.NotNull(actual);
-            Assert.IsType<DTResponse<EngineersTableData>>(actual);
+            Assert.IsType<DTResponse<LMSUsersTableData>>(actual);
 
         }
 

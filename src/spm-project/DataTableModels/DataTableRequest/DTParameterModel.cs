@@ -14,6 +14,7 @@ namespace SPM_Project.DataTableModels
         /// Draw counter. This is used by DataTables to ensure that the Ajax returns from 
         /// server-side processing requests are drawn in sequence by DataTables 
         /// </summary>
+        
         public int Draw { get; set; }
 
         /// <summary>

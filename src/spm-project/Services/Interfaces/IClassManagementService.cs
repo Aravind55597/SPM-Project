@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.Services.Interfaces
 {
-    public interface ICourseManagementService
+    public interface IClassManagementService
     {
 
 
-       
-        public Task<DTResponse<CourseTableData>> GetCoursesDataTable(DTParameterModel dTParameterModel); 
+        public Task<DTResponse<CourseClassTableData>> GetCourseClassesDataTable(DTParameterModel dTParameterModel);
+
+
+
     }
 }

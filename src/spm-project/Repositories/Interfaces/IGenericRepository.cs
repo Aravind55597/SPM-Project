@@ -13,9 +13,9 @@ namespace SPM_Project.Repositories.Interfaces
         Task AddRangeAsync(IEnumerable<T> entities);
 
 
-        Task RemoveAsync(T entity);
+        Task RemoveByEntityAsync(T entity);
 
-        Task RemoveRange(IEnumerable<T> entities);
+        Task RemoveRangeByEntityAsync(IEnumerable<T> entities);
 
 
         //Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression);
@@ -33,7 +33,7 @@ namespace SPM_Project.Repositories.Interfaces
 
         Task RemoveByIdAsync(int id);
 
-        Task RemoveRangeAsync(List<int> ids);
+        Task RemoveRangeByIdAsync(List<int> ids);
 
     }
 }

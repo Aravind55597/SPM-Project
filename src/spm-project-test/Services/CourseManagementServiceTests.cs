@@ -26,7 +26,7 @@ namespace SPM_Project.Services.Tests
 
          public Mock<ICourseRepository> _mockCourseRepository;
 
-
+        public Mock<ILMSUserRepository> _mockLMSUserRepository;
 
         //setup------------------------------------------------------------------
 
@@ -36,13 +36,10 @@ namespace SPM_Project.Services.Tests
         {
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _mockCourseRepository = new Mock<ICourseRepository>();
+            _mockLMSUserRepository = new Mock<ILMSUserRepository>(); 
             _service = new CourseManagementService(_mockUnitOfWork.Object);
         }
 
-        private T DbContextOptions<T>()
-        {
-            throw new NotImplementedException();
-        }
 
         //tear down-----------------------------------------------------------------------------
         public void Dispose()
@@ -51,17 +48,12 @@ namespace SPM_Project.Services.Tests
             _service = null; 
         }
 
-        //[Fact()]
-        //public async Task GetCourseClassesForTrainerDataTableTest()
-        //{
-        //    Assert.True(false, "This test needs an implementation");
-        //}
-
+  
 
 
         //if you are not validating your input or manipulate it ; just mock it 
         [Fact()]
-        public async Task GetCourseDataTableTest()
+        public async Task GetCourseDataTableTest_Check_If_Function_Returns_Object_Returned_By_Repository()
         {
             var correctInput = new DTParameterModel()
             {
@@ -198,6 +190,10 @@ namespace SPM_Project.Services.Tests
 
         }
    
-    
+        
+
+
+
+
     }
 }
