@@ -37,8 +37,6 @@ namespace SPM_Project.Repositories
         //READ------------------------------------------------------------------------------------------------
 
 
-        //retrieve all values (stupid to use on large data sets )
-        //NEED To implement pagination later 
         public async virtual Task<IEnumerable<T>> GetAllAsync(
             //lambda to filter
             Expression<Func<T, bool>> filter = null,
@@ -102,13 +100,13 @@ namespace SPM_Project.Repositories
         //DELETE------------------------------------------------------------------------------------------------
 
         //remove an enitity  
-        public virtual async Task RemoveAsync(T entity)
+        public virtual async Task RemoveByEntityAsync(T entity)
         {
             _context.Set<T>().Remove(entity);
         }
 
         //remove range of entities from the parent entity 
-        public virtual async Task RemoveRange(IEnumerable<T> entities)
+        public virtual async Task RemoveRangeByEntityAsync(IEnumerable<T> entities)
         {
             _context.Set<T>().RemoveRange(entities);
         }
@@ -124,7 +122,7 @@ namespace SPM_Project.Repositories
         }
 
         //remove range of entities by Id
-        public virtual async Task RemoveRangeAsync(List<int> ids)
+        public virtual async Task RemoveRangeByIdAsync(List<int> ids)
         {
             for (int i = 0; i < ids.Count; i++)
             {

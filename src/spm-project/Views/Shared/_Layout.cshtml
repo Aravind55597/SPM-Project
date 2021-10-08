@@ -13,12 +13,14 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700" />
     <!--end::Fonts-->
     <!--begin::Global Stylesheets Bundle(used by all pages)-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" />
     <link href="~/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
     <link href="~/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
     <!--end::Global Stylesheets Bundle-->
-    @*include custom stylesheet for other pages*@
 
+    @*include custom stylesheet for other pages*@
     @RenderSection("styles", required: false)
+
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -73,6 +75,8 @@
     <!--begin::Global Javascript Bundle(used by all pages)-->
     <script src="~/assets/plugins/global/plugins.bundle.js"></script>
     <script src="~/assets/js/scripts.bundle.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <!--end::Global Javascript Bundle-->
     <!--begin::Page Custom Javascript(used by this page)-->
     <script src="~/assets/js/custom/widgets.js"></script>

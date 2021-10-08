@@ -26,7 +26,7 @@ namespace SPM_Project.ApiControllers
         [HttpPost, Route("CourseClassesDataTable", Name = "GetCourseClassesDataTable")]
         public async Task<IActionResult> GetCourseClassesDataTable([FromBody] DTParameterModel dTParameterModel)
         {
-            var response = await _serviceManager.CourseManagementService.GetCourseClassesDataTable(dTParameterModel);
+            var response = await _serviceManager.ClassManagementService.GetCourseClassesDataTable(dTParameterModel);
 
 
             var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
@@ -35,6 +35,6 @@ namespace SPM_Project.ApiControllers
         }
 
 
-
     }
 }
+

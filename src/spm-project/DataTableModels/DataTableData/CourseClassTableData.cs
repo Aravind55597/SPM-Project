@@ -16,6 +16,11 @@ namespace SPM_Project.DataTableModels.DataTableData
 
         public DateTime EndDate { get; set; }
 
+
+        public string TrainerName { get; set; }
+
+        public int Slots { get; set; }
+
         public int NumOfChapters { get; set; }
 
         public int NumOfStudents { get; set; }

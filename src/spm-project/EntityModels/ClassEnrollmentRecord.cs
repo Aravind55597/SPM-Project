@@ -16,5 +16,7 @@ namespace SPM_Project.EntityModels
 
         public CourseClass CourseClass { get; set; }
 
+
+
     }
 }

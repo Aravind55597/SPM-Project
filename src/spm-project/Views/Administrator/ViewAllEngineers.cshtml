@@ -1,7 +1,5 @@
 ﻿@section styles{
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.11.3/r-2.2.9/sl-1.3.3/datatables.min.css" />
-    @*<link href="~/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />*@
-    <link href="~/css/view-engineers.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/HR/view-all-engineers.css" rel="stylesheet" type="text/css" />
 }
 
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
@@ -12,16 +10,6 @@
                 @*header of the table : put tabs here *@
                 <div class="card-header">
 
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="engineer-tab" data-bs-toggle="tab" data-bs-target="#engineer" type="button" role="tab">Engineer List</button>
-                        </li>
-
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="class-tab" data-bs-toggle="tab" data-bs-target="#class" type="button" role="tab">Class List</button>
-                        </li>
-                    </ul>
                 </div>
 
                 @*card body is to add content*@ 
@@ -31,9 +19,10 @@
                         <div class="tab-pane fade show active" id="engineer">
                             <div>
                                 @*add button*@
-
                                 <button class="btn btn-primary">Add role</button>
                             </div>
+                            <br />
+
                             @*begin: Datatable*@
                             <table class="table table-bordered table-hover table-checkable" id="engineer_datatable" style="margin-top: 13px !important">
                                 <thead>
@@ -77,7 +66,5 @@
 </div>
 
 @section scripts {
-    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.11.3/r-2.2.9/sl-1.3.3/datatables.min.js"></script>
-    @*<script src="~/assets/plugins/custom/datatables/datatables.bundle.js"></script>*@
-    <script src="~/js/view-engineers.js"></script>
+    <script src="~/js/HR/view-all-engineers.js"></script>
 }
