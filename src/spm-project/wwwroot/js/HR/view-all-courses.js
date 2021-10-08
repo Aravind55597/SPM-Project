@@ -1,9 +1,149 @@
 ﻿
 $(document).ready(function () {
 	viewClassesDT();
+	closeModal();
+
+
 
 });
 
+
+
+function closeModal() {
+	$(".btn-close").click(function () {
+		$(".overlay").hide();
+		clearForm();
+		$("#couseNameInput").html("");
+
+	});
+}
+
+function clearForm() {
+	$('#addCourseForm').trigger("reset");
+	$('#addClassForm').trigger("reset");
+
+}
+
+
+function openAddCourseModal() {
+	$("#addCoursebtn").click(function () {
+		$(".overlay").show();
+		$("#addCoursePopUp").show();
+		$("#addClassPopUp").hide();
+	});
+}
+
+
+function submitCourseEvent(table) {
+	$("#submitCourse").click(function () {
+		//add ajax post to database
+		//values to be sent in ajax
+		var coursename = $('#coursename').val();
+
+		//ajax success: after ajax is successful 
+		//destroy the current table
+		table.clear().destroy();
+		//initialize the table again 
+		viewClassesDT();
+		//clear form inputs
+		clearForm();
+		//close modal
+		$(".overlay").hide();
+
+		alert("Course Added");
+	});
+
+}
+
+function addCourseEvent(table) {
+	//open modal to add class
+	openAddCourseModal();
+	submitCourseEvent(table);
+}
+
+
+
+function openAddClassModal() {
+	$(".overlay").show();
+	$("#addCoursePopUp").hide();
+	$("#addClassPopUp").show();
+
+}
+
+
+
+function submitClassEvent(table) {
+	$("#submitClass").click(function () {
+		//add ajax post to database
+
+		//values to be sent in ajax
+		var coursename = $("#couseNameInput").val();
+		var classname = $("#classname").val();
+		var slots = $("#inputSlots").val();
+
+
+
+		//ajax success: after ajax is successful 
+		//destroy the current table
+		table.clear().destroy();
+		//initialize the table again 
+		viewClassesDT();
+		//clear form inputs
+		clearForm();
+		//close modal
+		$(".overlay").hide();
+
+		alert("Class Added");
+		
+
+	});
+
+}
+
+function addClassEvent(table) {
+
+	//event handler for add classes 
+	table.on('click', '.addClassbtn', function () {
+		var row = $(this).parents('tr')[0];
+		//for row data
+		var row_data = table.row(row).data();
+		console.log(row_data)
+
+		var course = row_data.CourseName;
+		$("#couseNameInput").html(course);
+
+		//open modal to add class
+		openAddClassModal();
+
+		//submit event 
+		submitClassEvent(table);
+
+
+
+	});
+
+}
+
+
+function deleteCourseEvent(table) {
+
+	table.on('click', '.deleteCoursebtn', function () {
+		var row = $(this).parents('tr')[0];
+		//for row data
+		var row_data = table.row(row).data();
+		//var course = row_data.CourseName;
+		console.log(row_data)
+
+		//ajax success: after ajax is successful 
+
+
+		//destroy the current table
+		table.clear().destroy();
+		//initialize the table again 
+		viewClassesDT();
+		alert("Course deleted");
+	});
+}
 
 
 function viewClassesDT() {
@@ -31,17 +171,6 @@ function viewClassesDT() {
 		//enable server side 
 		serverSide: true,
 
-		//enable select in the table 
-		/*
-		select: {
-			//allow us to select multiple rows
-			style: 'multi',
-			//retricts which cells in the table that will trigger table selection 
-			//td first child (for each td tag , only the first item (cell) will allow selection. Within the cell , the element with .checkable class is only allowed)
-			//this is essentially a css selector used here 
-			selector: 'td:first-child .checkable',
-		},
-		*/
 
 		//send ajax request to server to Retrieve customers
 		ajax: {
@@ -56,19 +185,6 @@ function viewClassesDT() {
 		},
 
 
-		//every time the table get initialised (draw or ajax.reload()) , 
-		//render this for the header 
-		//in this case , render a checkbox for the first header 
-
-		/*
-		headerCallback: function (thead, data, start, end, display) {
-			thead.getElementsByTagName('th')[0].innerHTML = `
-                    <label class="checkbox checkbox-single checkbox-solid checkbox-primary mb-0">
-                        <input type="checkbox" value="" class="group-checkable"/>
-                        <span></span>
-                    </label>`;
-		},
-		*/
 
 
 		//default order and sort. In this case ,order by ID in ascending order (Id is column number 1)
@@ -99,17 +215,7 @@ function viewClassesDT() {
 		//define the properties of each column (very similar function as columns option above.Don't need to define all the column )
 		//I suggest to use this just to render stuff such as buttons/any elements OR processign the result to display in diff format eg. format date string
 		columnDefs: [
-			//{
-			//	//target first collumn 
-			//	targets: 0,
-			//	render: function (data, type, full, meta) {
-			//		return `
-   //                     <label class="checkbox checkbox-single checkbox-primary mb-0">
-   //                         <input type="checkbox" value="" class="checkable"/>
-   //                         <span></span>
-   //                     </label>`;
-			//	},
-			//},
+
 
 			{
 				targets: [2,3] ,
@@ -127,10 +233,10 @@ function viewClassesDT() {
 				//target last column
 				targets: -1,
 				render: function (data, type, full, meta) {
-					return `<a href="javascript:;" ><i class="fas fa-cogs"></i>Add Class</a>
-							<a href="javascript:;" ><i class="fas fa-cogs"></i>Delete Course</a>
+					return `<a  class="btn btn-success addClassbtn"> Add Class</a>
+							<a class="btn btn-danger deleteCoursebtn" > Delete Course</a>
 							`
-						;
+					;
 				},
 			},
 
@@ -143,8 +249,8 @@ function viewClassesDT() {
 		//Retrieve DT_RowData from data and add the object to row using jquery (read the serversiderendering of datatables )
 		createdRow: function (row, data, dataIndex) {
 
-			//i am sending the data for the row again just for testing purposes (just id , firstname , lastname)
 			$(row).data(data.DT_RowData);
+
 
 			//can use DT_RowAttr for toher stuff (check https://datatables.net/manual/server-side)
 		},
@@ -153,31 +259,15 @@ function viewClassesDT() {
 
 	});
 
-	//check box 
-	/*
-	table.on('change', '.group-checkable', function () {
 
-
-		var set = $(this).closest('table').find('td:first-child .checkable');
-		var checked = $(this).is(':checked');
-
-
-
-		$(set).each(function () {
-			if (checked) {
-				$(this).prop('checked', true);
-				table.rows($(this).closest('tr')).select();
-				
-
-			}
-			else {
-				$(this).prop('checked', false);
-				table.rows($(this).closest('tr')).deselect();
-			}
-		});
-	});
-	*/
-
+	//event handlers
+	addClassEvent(table);
+	addCourseEvent(table);
+	//deleteCourseEvent(table);
 
 }
+
+
+
+
 

@@ -8,62 +8,40 @@
             <div class="card card-custom">
 
                 @*header of the table : put tabs here *@
-                <div class="card-header">
-
-                </div>
+                <div class="card-header"></div>
 
                 @*card body is to add content*@ 
                 <div class="card-body">
 
-                    <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active" id="engineer">
-                            <div>
-                                @*add button*@
-                                <button class="btn btn-primary">Add role</button>
-                            </div>
-                            <br />
 
-                            @*begin: Datatable*@
-                            <table class="table table-bordered table-hover table-checkable" id="engineer_datatable" style="margin-top: 13px !important">
-                                <thead>
-                                    <tr>
-                                        @*add checkbox*@
-                                        <th></th>
-                                        <th>Id</th>
-                                        <th>Name</th>
-                                        <th>Role</th>
-                                        @*add button*@
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                            @*end: Datatable*@
-                        </div>
-                        <div class="tab-pane fade" id="class">
-                            <div>
-                                @*add button*@
-                            
-                            </div>
-                            @*begin: Datatable*@
-                            <table class="table table-bordered table-hover table-checkable" id="class_datatable" style="margin-top: 13px !important">
-                                <thead>
-                                    <tr>
-                                        <th>Course Name</th>
-                                        <th>Class Number</th>
-                                        @*add button*@
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                            @*end: Datatable*@
-                        </div>
-                    </div>
+                    @*add button*@
+                    <button class="btn btn-primary">Add role</button>
+              
+                    <br />
 
+                    @*begin: Datatable*@
+                    <table class="table table-bordered table-hover table-checkable" id="engineer_datatable" style="margin-top: 13px !important">
+                        <thead>
+                            <tr>
+                                @*add checkbox*@
+                                <th></th>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Role</th>
+                                @*add button*@
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    @*end: Datatable*@
                 </div>
+
             </div>
+
         </div>
     </div>
 </div>
+
 
 @section scripts {
     <script src="~/js/HR/view-all-engineers.js"></script>
