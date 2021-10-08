@@ -11,9 +11,27 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace SPM_Project.Controllers.Tests
 {
-    public class LearnerControllerTests
+
+    public class LearnerControllerTests: IDisposable
     {
-        //Xian Wei
+        public LearnerController _controller;
+
+        //setup--------------------------------------------------
+        public LearnerControllerTests()
+        {
+            _controller = new LearnerController();
+        }
+
+        //setup--------------------------------------------------
+
+
+        //tear down-----------------------------------------------------------------------------
+        public void Dispose()
+        {
+            _controller = null;
+        }
+
+        //Pung Xian Wei
         [Fact()]
         public void ViewCoursesTestWhenLearner()
         {
@@ -26,6 +44,20 @@ namespace SPM_Project.Controllers.Tests
             Assert.NotNull(result);
             Assert.Equal(typeof(AuthorizeAttribute), checkAttribute[0].GetType());
             Assert.Equal("ViewCourses", result.ViewName);
+        }
+
+        [Fact()]
+        public void ViewCoursesTest_Check_If_Non_Learner_Users_Can_Access()
+        {
+            var attribute = _controller.GetAuthoriseAttribute("ViewCourses");
+            Assert.NotNull(attribute);
+
+            var checkTrainer = attribute.CheckRoleAccess("Trainer");
+            Assert.False(checkTrainer);
+
+            var checkAdministrator = attribute.CheckRoleAccess("Administrator");
+            Assert.False(checkAdministrator);
+
         }
     }
 }
