@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SPM_Project.DataTableModels;
-using SPM_Project.Services.Interfaces;
+using SPM_Project.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,19 +14,20 @@ namespace SPM_Project.ApiControllers
     public class CoursesController : ControllerBase
     {
 
-        public IServiceManager _serviceManager;
+        public IUnitOfWork _unitOfWork;
 
-        public CoursesController(IServiceManager serviceManager)
+        public CoursesController(IUnitOfWork unitOfWork)
         {
-            _serviceManager = serviceManager;
+            _unitOfWork = unitOfWork;
         }
 
+
         [HttpPost, Route("CoursesDataTable", Name = "GetCoursesDataTable")]
-        public async Task<IActionResult> GetCourseDataTable([FromBody] DTParameterModel dTParameterModel)
+        public async Task<IActionResult> GetCoursesDataTable([FromBody] DTParameterModel dTParameterModel)
         {
 
-            
-            var response = await _serviceManager.CourseManagementService.GetCoursesDataTable(dTParameterModel);
+
+            var response = await _unitOfWork.CourseRepository.GetCoursesDataTable(dTParameterModel);
 
 
             var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);

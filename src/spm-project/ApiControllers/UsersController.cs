@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SPM_Project.DataTableModels;
 using SPM_Project.DataTableModels.DataTableResponse;
-using SPM_Project.Services.Interfaces;
+using SPM_Project.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +15,13 @@ namespace SPM_Project.ApiControllers
     public class UsersController : ControllerBase
     {
 
-        public IServiceManager _serviceManager; 
 
-        public UsersController(IServiceManager serviceManager)
+        public IUnitOfWork _unitOfWork;
+
+        public UsersController(IUnitOfWork unitOfWork)
         {
-            _serviceManager = serviceManager; 
+            _unitOfWork = unitOfWork;
         }
-
 
 
 
@@ -31,7 +31,9 @@ namespace SPM_Project.ApiControllers
         [HttpPost, Route("EngineersDataTable", Name = "GetEngineersDataTable")]
         public async Task<IActionResult> GetEngineersDataTable([FromBody]DTParameterModel dTParameterModel)
         {
-            var response = await _serviceManager.UserManagementService.GetEngineersDataTable(dTParameterModel);
+            var response = await _unitOfWork.LMSUserRepository.GetEngineersDataTable(dTParameterModel);
+
+            
 
             var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
             return Ok(responseJson);
