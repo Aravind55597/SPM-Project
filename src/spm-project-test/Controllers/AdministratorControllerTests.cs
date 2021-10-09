@@ -39,18 +39,22 @@ namespace SPM_Project.Controllers.Tests
         [Fact()]
         public void ViewEngineersTest_Check_If_Correct_Page_Is_Returned()
         {
-           
-            var result = _controller.ViewEngineers() as ViewResult;
+            var controller = new AdministratorController().WithIdentity("Administrator");
+
+            var result = controller.ViewAllEngineers() as ViewResult;
+
+            var checkAttribute = controller.GetType().GetMethod("ViewAllEngineers").GetCustomAttributes(typeof(AuthorizeAttribute), true);
 
             Assert.NotNull(result);
-            Assert.Equal("ViewEngineers", result.ViewName);
+            Assert.Equal(typeof(AuthorizeAttribute), checkAttribute[0].GetType());
+            Assert.Equal("ViewAllEngineers", result.ViewName);
 
         }
 
         [Fact()]
         public void ViewEngineersTest_Check_If_Non_Admin_Users_Can_Access()
         {
-            var attribute = _controller.GetAuthoriseAttribute("ViewEngineers");
+            var attribute = _controller.GetAuthoriseAttribute("ViewAllEngineers");
             Assert.NotNull(attribute);
 
             var checkTrainer = attribute.CheckRoleAccess("Trainer");

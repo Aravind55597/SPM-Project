@@ -1,0 +1,43 @@
+﻿@section styles{
+    <link href="~/css/HR/view-all-requests.css" rel="stylesheet" type="text/css" />
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="d-flex flex-column-fluid">
+        <div class="container">
+            <div class="card card-custom">
+
+                @*header of the table : put tabs here *@
+                <div class="card-header">
+                </div>
+
+                @*card body is to add content*@
+                <div class="card-body">
+                      
+                    @*begin: Datatable*@
+                    <table class="table table-bordered table-hover table-checkable" id="request_datatable" style="margin-top: 13px !important">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Request Date</th>
+                                <th>Request Type</th>
+                                <th>Request Details</th>
+                                <th>Request Status</th>
+                                <th>Requestor ID</th>
+                                <th>Requestor Name</th>
+                                @*add button*@
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    @*end: Datatable*@
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/js/HR/view-all-requests.js"></script>
+}
