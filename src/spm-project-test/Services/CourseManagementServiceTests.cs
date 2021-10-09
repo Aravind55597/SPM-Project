@@ -46,7 +46,7 @@ namespace SPM_Project.Services.Tests
   
         //if you are not validating your input or manipulate it ; just mock it 
         [Fact()]
-        public async Task GetCourseDataTableTest_Check_If_Function_Returns_Object_Returned_By_Repository()
+        public async Task GetCourseDataTableTest_FunctionReturnsObjectReturnedByRepository_Returns_DTResponse()
         {
             var correctInput = new DTParameterModel()
             {

@@ -18,6 +18,11 @@ namespace SPM_Project.Services
             _unitOfWork = UnitOfWork;
         }
 
+
+
+        //--------------------------------------------------------------------------------------------------------------DATATABLE--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
         public async Task<DTResponse<CourseClassTableData>> GetCourseClassesDataTable(DTParameterModel dTParameterModel, int? courseId, int? lmsUserId, bool isTrainer, bool isLearner)
         {
             var response = new DTResponse<CourseClassTableData>();
@@ -28,6 +33,7 @@ namespace SPM_Project.Services
             if (lmsUserId==null)
             {
                 userId = await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
+
             }
 
             //if lmsUserId is not null , check if user exists 
@@ -46,6 +52,8 @@ namespace SPM_Project.Services
 
                     throw notFoundExp;
                 }
+                //use lmsuserId supplied 
+                userId = (int)lmsUserId;
             }
 
 
@@ -70,8 +78,7 @@ namespace SPM_Project.Services
             }
 
 
-            //use lmsuserId supplied 
-            userId = (int)lmsUserId; 
+
 
 
             ////retrieve roles of the user
