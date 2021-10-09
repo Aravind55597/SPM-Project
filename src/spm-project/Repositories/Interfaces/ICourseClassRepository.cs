@@ -13,7 +13,7 @@ namespace SPM_Project.Repositories.Interfaces
     {
 
         
-        public Task<DTResponse<CourseClassTableData>> GetCourseClassesDataTable(DTParameterModel dTParameterModel, int lmsId, string role);
+        public Task<DTResponse<CourseClassTableData>> GetCourseClassesDataTable(DTParameterModel dTParameterModel, int? courseId,int userId,  bool isTrainer, bool isLearner);
 
 
 

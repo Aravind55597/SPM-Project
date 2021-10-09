@@ -24,6 +24,7 @@ namespace SPM_Project.ApiControllers
         [HttpPost, Route("CoursesDataTable", Name = "GetCoursesDataTable")]
         public async Task<IActionResult> GetCourseDataTable([FromBody] DTParameterModel dTParameterModel)
         {
+
             
             var response = await _serviceManager.CourseManagementService.GetCoursesDataTable(dTParameterModel);
 

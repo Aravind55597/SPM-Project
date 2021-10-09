@@ -13,6 +13,7 @@ using SPM_Project.DataTableModels.DataTableResponse;
 using SPM_Project.Repositories;
 using SPM_Project.Data;
 using SPM_Project.DataTableModels.DataTableRequest;
+using SPM_ProjectTests.Mocks;
 
 namespace SPM_Project.Services.Tests
 {
@@ -20,13 +21,9 @@ namespace SPM_Project.Services.Tests
     public class CourseManagementServiceTests:IDisposable
     {
 
-         public CourseManagementService _service;
+        private UOWMocker _uowMocker;
 
-         public Mock<IUnitOfWork> _mockUnitOfWork;
-
-         public Mock<ICourseRepository> _mockCourseRepository;
-
-        public Mock<ILMSUserRepository> _mockLMSUserRepository;
+        private CourseManagementService _service; 
 
         //setup------------------------------------------------------------------
 
@@ -34,23 +31,19 @@ namespace SPM_Project.Services.Tests
         //In this case we have to mock the unit of work & course repository 
         public CourseManagementServiceTests()
         {
-            _mockUnitOfWork = new Mock<IUnitOfWork>();
-            _mockCourseRepository = new Mock<ICourseRepository>();
-            _mockLMSUserRepository = new Mock<ILMSUserRepository>(); 
-            _service = new CourseManagementService(_mockUnitOfWork.Object);
+            _uowMocker = new UOWMocker(); 
+            _service = new CourseManagementService(_uowMocker.mockUnitOfWork.Object);
         }
 
 
         //tear down-----------------------------------------------------------------------------
         public void Dispose()
         {
-            _mockUnitOfWork = null;
+            _uowMocker = null;
             _service = null; 
         }
 
   
-
-
         //if you are not validating your input or manipulate it ; just mock it 
         [Fact()]
         public async Task GetCourseDataTableTest_Check_If_Function_Returns_Object_Returned_By_Repository()
@@ -153,16 +146,16 @@ namespace SPM_Project.Services.Tests
 
 
             //return the object as indicated when i pass the input
-            _mockUnitOfWork.Setup(l => l.CourseRepository).Returns(_mockCourseRepository.Object).Verifiable();
-            _mockCourseRepository.Setup(l => l.GetCoursesDataTable(input)).ReturnsAsync(output).Verifiable();
+            _uowMocker.mockUnitOfWork.Setup(l => l.CourseRepository).Returns(_uowMocker.mockCourseRepository.Object).Verifiable();
+            _uowMocker.mockCourseRepository.Setup(l => l.GetCoursesDataTable(input)).ReturnsAsync(output).Verifiable();
 
 
             //call the function 
             var result = await _service.GetCoursesDataTable(input);
 
             //verify that the mocks are called 
-            _mockUnitOfWork.Verify();
-            _mockCourseRepository.Verify();
+            _uowMocker.mockUnitOfWork.Verify();
+            _uowMocker.mockCourseRepository.Verify();
 
             //Do your asserts 
             Assert.NotNull(result);
