@@ -22,28 +22,32 @@ namespace SPM_Project.Repositories
 
         }
 
+        public async Task<int> GetCoursePreReq(LMSUser user,Course course)
+        {
+
+            //get courses that user has completed
+            _context.LMSUser.Select(u => u.Id == user.Id).First();
+
+            //get the course prereq for current course
 
 
 
+            //retreive app user id
+            var queryable = _context
+             .Course.
+             Select(c =>
+             new CourseTableData()
+             {
+                 CourseName = c.Name,
+                 NumberOfClasses = c.CourseClass.Count,
+                 CreatedDate = c.CreationTimestamp,
+                 UpdatedDate = c.UpdateTimestamp,
+                 DT_RowId = c.Id
+             }
+             );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            return lmsUserId;
+        }
 
 
 
