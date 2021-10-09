@@ -47,7 +47,7 @@ namespace SPM_Project.ApiControllers
            var courseclass =  await _unitOfWork.CourseClassRepository.GetByIdAsync(classId);
             if (courseclass != null)
             {
-                if (cclass.EndRegistration < DateTime.Today || cclass.StartRegistration > DateTime.Today)
+                if (courseclass.EndRegistration < DateTime.Today || courseclass.StartRegistration > DateTime.Today)
                 {
                     var errorDict = new Dictionary<string, string>()
                     {
