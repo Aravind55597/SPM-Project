@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.ApiControllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class CourseClassesController : ControllerBase
@@ -23,11 +24,26 @@ namespace SPM_Project.ApiControllers
 
 
 
-        [HttpPost, Route("CourseClassesDataTable", Name = "GetCourseClassesDataTable")]
-        public async Task<IActionResult> GetCourseClassesDataTable([FromBody] DTParameterModel dTParameterModel)
-        {
-            var response = await _serviceManager.ClassManagementService.GetCourseClassesDataTable(dTParameterModel);
 
+
+
+
+        [HttpPost, Route("CourseClassesDataTable", Name = "GetCourseClassesDataTable")]
+        //query : isTrainer (bool) -> retreive trainer specific 
+        //query : isLearner (bool) -> retreive learner spedific 
+        //query : courseId (int) -> retreive class for a particular course 
+        //query : lmsUserId(int) -> for a particular user 
+        public async Task<IActionResult> GetCourseClassesDataTable(
+
+            [FromBody] DTParameterModel dTParameterModel , 
+            [FromQuery] int? courseId ,
+            [FromQuery] int? lmsUserId,
+            [FromQuery] bool isTrainer=false , 
+            [FromQuery] bool isLearner=false
+            )
+        {
+
+            var response = await _serviceManager.ClassManagementService.GetCourseClassesDataTable(dTParameterModel, courseId , lmsUserId, isTrainer , isLearner);
 
             var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
             return Ok(responseJson);

@@ -26,5 +26,8 @@ namespace SPM_Project.EntityModels
         public List<ProgressTracker> ProgressTrackers  { get; set; }
 
         public List<Quiz> Quizzes { get; set; }
+
+
+
     }
 }
