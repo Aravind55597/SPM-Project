@@ -60,6 +60,11 @@ namespace SPM_ProjectTests.Mocks
             mockUnitOfWork.Setup(l => l.QuizRepository).Returns(mockQuizRepository.Object).Verifiable("Mock QuizQuestion Repository is NOT returned");
             mockUnitOfWork.Setup(l => l.ResourceRepository).Returns(mockResourceRepository.Object).Verifiable("Mock Resource Repository is NOT returned");
             mockUnitOfWork.Setup(l => l.UserAnswerRepository).Returns(mockUserAnswerRepository.Object).Verifiable("Mock UserAnswer Repository is NOT returned");
+
+
+            //set up save changes savechanges returns an integer 
+            mockUnitOfWork.Setup(l => l.CompleteAsync()).ReturnsAsync(1); 
+
         }
 
 

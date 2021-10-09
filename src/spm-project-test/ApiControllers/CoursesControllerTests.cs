@@ -150,8 +150,6 @@ namespace SPM_Project.ApiControllers.Tests
             //call the function 
             var result = await _controller.GetCoursesDataTable(_inputDTModel);
 
-            //verify that the mocks are called 
-            _uowMocker.mockUnitOfWork.Verify();
             _uowMocker.mockCourseRepository.Verify();
 
             //Do your asserts 
