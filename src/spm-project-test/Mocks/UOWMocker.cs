@@ -46,7 +46,9 @@ namespace SPM_ProjectTests.Mocks
             mockQuizQuestionRepository = new Mock<IQuizQuestionRepository>();
             mockQuizRepository = new Mock<IQuizRepository>();
             mockResourceRepository = new Mock<IResourceRepository>();
-            mockUserAnswerRepository = new Mock<IUserAnswerRepository>(); 
+            mockUserAnswerRepository = new Mock<IUserAnswerRepository>();
+
+
         }
 
 
