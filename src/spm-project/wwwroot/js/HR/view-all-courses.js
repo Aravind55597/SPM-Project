@@ -1,10 +1,7 @@
 ﻿
 $(document).ready(function () {
-	viewClassesDT();
-	closeModal();
-
-
-
+	viewCoursesDT();
+	
 });
 
 
@@ -31,26 +28,33 @@ function openAddCourseModal() {
 		$("#addCoursePopUp").show();
 		$("#addClassPopUp").hide();
 	});
+	closeModal();
 }
 
 
 function submitCourseEvent(table) {
 	$("#submitCourse").click(function () {
+		event.preventDefault();
 		//add ajax post to database
 		//values to be sent in ajax
 		var coursename = $('#coursename').val();
 
 		//ajax success: after ajax is successful 
-		//destroy the current table
-		table.clear().destroy();
-		//initialize the table again 
-		viewClassesDT();
+
+		//reload table
+		table.ajax.reload();
+
 		//clear form inputs
 		clearForm();
 		//close modal
 		$(".overlay").hide();
 
-		alert("Course Added");
+		$.notify("Successfully added New Course", {
+			className: 'success',
+			globalPosition: 'top center'
+		});
+
+
 	});
 
 }
@@ -67,6 +71,7 @@ function openAddClassModal() {
 	$(".overlay").show();
 	$("#addCoursePopUp").hide();
 	$("#addClassPopUp").show();
+	closeModal();
 
 }
 
@@ -74,6 +79,7 @@ function openAddClassModal() {
 
 function submitClassEvent(table) {
 	$("#submitClass").click(function () {
+		event.preventDefault();
 		//add ajax post to database
 
 		//values to be sent in ajax
@@ -84,17 +90,20 @@ function submitClassEvent(table) {
 
 
 		//ajax success: after ajax is successful 
-		//destroy the current table
-		table.clear().destroy();
-		//initialize the table again 
-		viewClassesDT();
+
+		//reload the table again 
+		table.ajax.reload();
+
 		//clear form inputs
 		clearForm();
 		//close modal
 		$(".overlay").hide();
 
-		alert("Class Added");
-		
+	
+		$.notify("Successfully added New Class", {
+			className: 'success',
+			globalPosition: 'top center'
+		});
 
 	});
 
@@ -115,12 +124,11 @@ function addClassEvent(table) {
 		//open modal to add class
 		openAddClassModal();
 
-		//submit event 
-		submitClassEvent(table);
-
-
-
 	});
+
+
+	//submit event 
+	submitClassEvent(table);
 
 }
 
@@ -131,22 +139,25 @@ function deleteCourseEvent(table) {
 		var row = $(this).parents('tr')[0];
 		//for row data
 		var row_data = table.row(row).data();
-		//var course = row_data.CourseName;
+		var course = row_data.CourseName;
 		console.log(row_data)
 
 		//ajax success: after ajax is successful 
 
 
-		//destroy the current table
-		table.clear().destroy();
-		//initialize the table again 
-		viewClassesDT();
-		alert("Course deleted");
+		//reload table
+		table.ajax.reload();
+
+
+		$.notify("Successfully Deleted Course", {
+			className: 'success',
+			globalPosition: 'top center'
+		});
 	});
 }
 
 
-function viewClassesDT() {
+function viewCoursesDT() {
 
 	var RetrieveCourses = $("#get-courses-datatable").val();
 
@@ -263,7 +274,7 @@ function viewClassesDT() {
 	//event handlers
 	addClassEvent(table);
 	addCourseEvent(table);
-	//deleteCourseEvent(table);
+	deleteCourseEvent(table);
 
 }
 
