@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SPM_Project.CustomExceptions;
 using SPM_Project.EntityModels;
-using SPM_Project.Services.Interfaces;
+using SPM_Project.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,83 +15,98 @@ namespace SPM_Project.ApiControllers
     public class ClassEnrollmentRecordController : ControllerBase
     {
 
-        public IServiceManager _serviceManager;
+        public IUnitOfWork _unitOfWork;
 
-        public ClassEnrollmentRecordController(IServiceManager serviceManager)
+        public ClassEnrollmentRecordController (IUnitOfWork unitOfWork)
         {
-            _serviceManager = serviceManager;
+            _unitOfWork = unitOfWork;
         }
 
 
 
-        [HttpPost, Route("Add",Name = "GetClassEnrollmentRecord")]
-        public Task<bool> AddEnrollmentRecord()
+
+        [HttpPost, Route("Add",Name = "AddClassEnrollmentRecord")]
+        public async  Task<IActionResult> AddEnrollmentRecord([FromQuery] int classId)
         {
-            //firstly retreive class from classservice (check if class exists)
 
+            var userId =await  _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
+
+            var user =await  _unitOfWork.LMSUserRepository.GetByIdAsync(userId);
+
+            //var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(classId); 
+
+            await AddEnrollmentRecord(user,classId); 
+
+            return Ok();
+        }
+
+        public async Task AddEnrollmentRecord(LMSUser user, int classId)
+        {
+
+            //firstly retrieve class from classservice (check if class exists)
+           var courseclass =  await _unitOfWork.CourseClassRepository.GetByIdAsync(classId);
+            if (courseclass != null)
+            {
+                if (cclass.EndRegistration < DateTime.Today || cclass.StartRegistration > DateTime.Today)
+                {
+                    var errorDict = new Dictionary<string, string>()
+                    {
+                        {"Class", $"Class of  {courseclass.Id} registration is over" }
+                    };
+
+                    var notFoundExp = new NotFoundException("Class registration period is over", errorDict);
+
+                    throw notFoundExp;
+                }
+            }
+            else {
+                var errorDict = new Dictionary<string, string>()
+                    {
+                        {"Class", $"Class of  Id {courseclass.Id} does not exist" }
+                    };
+
+                var notFoundExp = new NotFoundException("Class does not exist", errorDict);
+
+                throw notFoundExp;
+            }
             //Secondly use classenrollmentrecordservice to check eligibility 
+            if (!await new CoursesController(_unitOfWork).GetCourseEligiblity(user, courseclass.Course)) {
+                var errorDict = new Dictionary<string, string>()
+                    {
+                        {"Class", $"Class of  Id {courseclass.Id} does not exist" }
+                    };
 
+                var notFoundExp = new NotFoundException("Class does not exist", errorDict);
+
+                throw notFoundExp;
+            }
+
+
+            //check if enrolled 
+
+            if (await _unitOfWork.ClassEnrollmentRecordRepository.hasEnrollmentRecord(user, courseclass))
+            {
+                var errorDict = new Dictionary<string, string>()
+                    {
+                        {"Class", $"User has class of Id {courseclass.Id}  exist" }
+                    };
+
+                var notFoundExp = new NotFoundException("User has existing enrollment record with this class", errorDict);
+
+                throw notFoundExp;
+            }
             //Create classenrollment record for the user
 
-            //pass in user & enrollment record 
-
-            return true;
-        }
-
-
-
-        public async Task<bool> EnrollUserIntoClass(LMSUser user, CourseClass courseclass)
-        {
-
-            if (_serviceManager.CourseManagementService.GetCourseEligiblity(user, courseclass.Course))
+            var record = new ClassEnrollmentRecord
             {
-                //user is eligible
+                CourseClass = courseclass
+                
+            };
 
-
-                //enroll user
-                //_serviceManager.ClassManagementService
-                //call classenrollment add
-
-                return true;
-            }
-            else
-            {
-                //do smth since user is not eligible
-
-                return false;
-            }
-
-
+            user.Enrollments.Add(record);
+            await _unitOfWork.CompleteAsync();
 
         }
-
-        public async Task<bool> AddEnrollmentRecord(LMSUser user, CourseClass courseclass)
-        {
-
-            //- Send user id and class id for send an enrollment request
-
-
-
-            //- I can't enroll in the same class again if I already sent a request 
-
-
-
-            //- I can't enrolled in other classes IF they teach the same course as the class I am already enrolled into
-
-
-
-
-            //- i can't enrol into classes outside of the course registration period "
-
-           
-
-            return true;
-        }
-
-
-
-
-
 
 
     }

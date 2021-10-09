@@ -113,11 +113,9 @@ namespace SPM_Project.Repositories
 
         }
 
-
-
-
-
-
-
+        object ICourseRepository.GetCoursePreReq(Course course)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

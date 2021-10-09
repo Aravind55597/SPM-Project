@@ -34,6 +34,16 @@ namespace SPM_Project.Repositories
         }
 
 
+        public override async Task<LMSUser> GetByIdAsync(int id)
+        {
+            var data =  _context.LMSUser.Include(l=>l.Enrollments).FirstOrDefault();
+            return data;
+        }
+
+
+
+
+
         //retrieve lMSUser id of current user 
         public async Task<int> RetrieveCurrentUserIdAsync()
         {
