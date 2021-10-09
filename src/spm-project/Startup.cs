@@ -15,8 +15,6 @@ using SPM_Project.EntityModels;
 using SPM_Project.Extensions;
 using SPM_Project.Repositories;
 using SPM_Project.Repositories.Interfaces;
-using SPM_Project.Services;
-using SPM_Project.Services.Interfaces;
 using SPM_Project.Utility;
 using System;
 using System.Collections.Generic;
@@ -91,7 +89,7 @@ namespace SPM_Project
 
 
             //servicemanager
-            services.AddScoped<IServiceManager, ServiceManager>();
+            //services.AddScoped<IServiceManager, ServiceManager>();
 
             //allow access to httpcontext 
             services.AddHttpContextAccessor();
