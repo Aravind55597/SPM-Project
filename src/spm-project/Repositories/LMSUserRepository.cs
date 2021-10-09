@@ -65,7 +65,6 @@ namespace SPM_Project.Repositories
 
 
         //retreive all roles as a dictionary 
-
         public async Task<Dictionary<string,string>> RetreiveAllRolesAsync()
         {
             return await _roleManager.
@@ -77,8 +76,8 @@ namespace SPM_Project.Repositories
 
                 ); 
         }
-
-
+        
+       
 
 
         //--------------------------------------------TABLE FUNCTIONS------------------------------------------------------------------------------------------------------
@@ -168,10 +167,9 @@ namespace SPM_Project.Repositories
 
         }
 
-
-
-        
-     
-
+        object ILMSUserRepository.GetCompletedProgressTracker(LMSUser user)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

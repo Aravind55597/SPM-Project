@@ -5,18 +5,61 @@ using SPM_Project.DataTableModels.DataTableResponse;
 using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
 using SPM_Project.Services.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace SPM_Project.Services
 {
-    public class ClassManagementService : IClassManagementService
+    public class ClassEnrollmentManagementService : IClassEnrollmentRecord
     {
         public IUnitOfWork _unitOfWork;
 
-        public ClassManagementService(IUnitOfWork UnitOfWork)
+        public ClassEnrollmentManagementService(IUnitOfWork UnitOfWork)
         {
             _unitOfWork = UnitOfWork;
+        }
+
+        public Task AddAsync(EntityModels.ClassEnrollmentRecord entity)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        //add enrollment record -> all business 
+
+
+
+
+
+        public async Task<bool> AddClassEnrollmentRecord(LMSUser user, ClassEnrollmentRecord record)
+        {
+            user.Enrollments.Add(new ClassEnrollmentRecord
+            {
+
+
+
+            });
+
+            return true;
+
+        }
+
+        public Task AddRangeAsync(IEnumerable<EntityModels.ClassEnrollmentRecord> entities)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<EntityModels.ClassEnrollmentRecord>> GetAllAsync(Expression<Func<EntityModels.ClassEnrollmentRecord, bool>> filter, Func<IQueryable<EntityModels.ClassEnrollmentRecord>, IOrderedQueryable<EntityModels.ClassEnrollmentRecord>> orderBy, string includeProperties, int pageNumber, int pageSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<EntityModels.ClassEnrollmentRecord> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
         }
 
 
@@ -93,6 +136,26 @@ namespace SPM_Project.Services
             response = await _unitOfWork.CourseClassRepository.GetCourseClassesDataTable(dTParameterModel, courseId, userId, isTrainer, isLearner);
 
             return response;
+        }
+
+        public Task RemoveByEntityAsync(EntityModels.ClassEnrollmentRecord entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveRangeByEntityAsync(IEnumerable<EntityModels.ClassEnrollmentRecord> entities)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveRangeByIdAsync(List<int> ids)
+        {
+            throw new NotImplementedException();
         }
     }
 }

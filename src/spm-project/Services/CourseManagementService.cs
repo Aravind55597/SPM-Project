@@ -1,6 +1,7 @@
 ﻿using SPM_Project.DataTableModels;
 using SPM_Project.DataTableModels.DataTableData;
 using SPM_Project.DataTableModels.DataTableResponse;
+using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
 using SPM_Project.Services.Interfaces;
 using System;
@@ -17,7 +18,8 @@ namespace SPM_Project.Services
 
         public CourseManagementService(IUnitOfWork UnitOfWork)
         {
-            _unitOfWork = UnitOfWork; 
+            _unitOfWork = UnitOfWork;
+           
         }
 
 
@@ -36,11 +38,27 @@ namespace SPM_Project.Services
 
         }
 
+        public async Task<bool> GetCourseEligiblity(LMSUser user, Course course)
+        {
 
+            //get courses that user has completed
+            var completed_progresstrackers = (List<ProgressTracker>)_unitOfWork.LMSUserRepository.GetCompletedProgressTracker(user);
+            var completed_courses = new List<Course>();
+            foreach (var tracker in completed_progresstrackers)
+            {
+                completed_courses.Add(tracker.Course);
+            }
+            //get the course prereq for current course
+            var course_prereq = _unitOfWork.CourseRepository.GetCoursePreReq(course);
 
+            //check if the prereq are fufilled
 
-
-
+            if (completed_courses.Equals(course_prereq))
+            {
+                return true;
+            }
+            return false;
+        }
 
 
 

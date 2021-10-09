@@ -1,6 +1,7 @@
 ﻿using SPM_Project.DataTableModels;
 using SPM_Project.DataTableModels.DataTableData;
 using SPM_Project.DataTableModels.DataTableResponse;
+using SPM_Project.EntityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace SPM_Project.Services.Interfaces
 
 
        
-        public Task<DTResponse<CourseTableData>> GetCoursesDataTable(DTParameterModel dTParameterModel); 
+        public Task<DTResponse<CourseTableData>> GetCoursesDataTable(DTParameterModel dTParameterModel);
+        bool GetCourseEligiblity(LMSUser user, Course course);
     }
 }

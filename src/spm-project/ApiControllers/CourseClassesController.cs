@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SPM_Project.DataTableModels;
+using SPM_Project.EntityModels;
 using SPM_Project.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -21,11 +22,6 @@ namespace SPM_Project.ApiControllers
         {
             _serviceManager = serviceManager;
         }
-
-
-
-
-
 
 
         [HttpPost, Route("CourseClassesDataTable", Name = "GetCourseClassesDataTable")]
@@ -49,6 +45,8 @@ namespace SPM_Project.ApiControllers
             return Ok(responseJson);
 
         }
+
+            
 
 
     }
