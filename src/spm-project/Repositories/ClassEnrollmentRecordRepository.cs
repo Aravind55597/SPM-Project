@@ -24,7 +24,7 @@ namespace SPM_Project.Repositories
         //    var result = _context.ClassEnrollmentRecord.Include(cr=>cr.)
         //}
 
-        public async Task<bool> hasEnrollmentRecord(LMSUser user, CourseClass courseclass)
+        public async Task<bool> HasEnrollmentRecord(LMSUser user, CourseClass courseclass)
         {
             var enrollments = _context.LMSUser.SelectMany(l => l.Enrollments);
 

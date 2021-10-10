@@ -15,6 +15,6 @@ namespace SPM_Project.Repositories.Interfaces
 
 
         //remove learner -> pass id of the learner & remove the learner 
-        Task<bool> hasEnrollmentRecord(LMSUser user, CourseClass courseclass);
+        Task<bool> HasEnrollmentRecord(LMSUser user, CourseClass courseclass);
     }
 }
