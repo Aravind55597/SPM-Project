@@ -21,8 +21,6 @@ namespace SPM_Project.ApiControllers
 
 
         [HttpPost, Route("CoursesDataTable", Name = "GetCoursesDataTable")]
-
-
         public async Task<IActionResult> GetCoursesDataTable([FromBody] DTParameterModel dTParameterModel)
         {
 
@@ -34,7 +32,9 @@ namespace SPM_Project.ApiControllers
             return Ok(responseJson);
 
         }
-
+        
+        
+        [NonAction]
         public async Task<bool> GetCourseEligiblity(LMSUser user, Course course)
         {
 

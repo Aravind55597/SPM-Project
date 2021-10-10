@@ -42,6 +42,12 @@ namespace SPM_Project.ApiControllers
             //with class id -> retreive every one in the class 
             //iwhtout clas id -> retreive everyone
             //istrainer , islearn can only be used in conjuection with is eligible
+
+            //retreive all user 
+            //retreive users in a particular class 
+
+            //isEligible= true , isLearner=True , classid = 1
+            // val()+"?isEligble=true&isLearner=True&classId=1" 
             )
 
         {

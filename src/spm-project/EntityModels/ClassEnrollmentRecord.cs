@@ -28,6 +28,8 @@ namespace SPM_Project.EntityModels
         public decimal PercentageScore { get; set; }
 
 
+        //TODO: Add a function to calculate & return state of the request (using the creation & update timestamp)
+
 
     }
 }

@@ -40,6 +40,7 @@ namespace SPM_Project.ApiControllers
             return Ok();
         }
 
+        [NonAction]
         public async Task AddEnrollmentRecord(LMSUser user, int classId)
         {
 
@@ -70,7 +71,8 @@ namespace SPM_Project.ApiControllers
                 throw notFoundExp;
             }
             //Secondly use classenrollmentrecordservice to check eligibility 
-            if (!await new CoursesController(_unitOfWork).GetCourseEligiblity(user, courseclass.Course)) {
+            if (!await new CoursesController(_unitOfWork).GetCourseEligiblity(user, courseclass.Course))
+            {
                 var errorDict = new Dictionary<string, string>()
                     {
                         {"Class", $"Class of  Id {courseclass.Id} does not exist" }
