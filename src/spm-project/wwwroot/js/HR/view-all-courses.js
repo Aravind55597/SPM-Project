@@ -293,7 +293,7 @@ function viewCoursesDT() {
 		//Retrieve DT_RowData from data and add the object to row using jquery (read the serversiderendering of datatables )
 		createdRow: function (row, data, dataIndex) {
 
-			$(row).data(data.DT_RowData);
+			//$(row).data("DT_RowId" , data.DT_RowId);
 
 
 			//can use DT_RowAttr for toher stuff (check https://datatables.net/manual/server-side)
@@ -338,6 +338,9 @@ function viewCoursesDT() {
 
 	//individual select checkbox
 	table.on('change', '.checkable', function () {
+
+		//RETREIVE row where select was triiggered (check whether it is selceted )
+		//$(row).data("DT_RowId")  -> COURSE ID 
 		var selectedList = [];
 
 		var NumSelected = $('.selected').length;

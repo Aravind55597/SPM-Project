@@ -35,6 +35,7 @@ namespace SPM_Project.ApiControllers
 
         }
 
+        [NonAction]
         public async Task<bool> GetCourseEligiblity(LMSUser user, Course course)
         {
 
