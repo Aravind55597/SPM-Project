@@ -266,5 +266,10 @@ namespace SPM_Project.Repositories
 
             return dtResponse;
         }
+
+        public object GetCompletedProgressTracker(LMSUser user)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
