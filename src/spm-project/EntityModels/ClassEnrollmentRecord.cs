@@ -22,7 +22,6 @@ namespace SPM_Project.EntityModels
 
         public bool Withdrawm { get; set; }
 
-
         public CourseClass CourseClass { get; set; }
 
         //to set the score for the class 

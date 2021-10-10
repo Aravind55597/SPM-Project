@@ -159,7 +159,14 @@ namespace SPM_Project.Repositories
                     //check the prerequisite of the class 
                     var preReq = _context.CourseClass.Where(cc => cc.Id == classId).Select(cc => cc.Course).SelectMany(c => c.PreRequisites).Select(p => p.Id);
                     //return Queryable
-                    
+
+                    if (preReq.Count()==0)
+                    {
+                        return queryable; 
+                    }
+
+
+
                     //check if all  the prereq course ids are present in 
                     queryable.
                         Where(q => preReq.All(    _context.LMSUser.Where(l => l.Id == q.Id).SelectMany(l => l.Enrollments).Where(e=>e.CompletionStatus).Select(e => e.CourseClass.Course.Id).Contains    )    
@@ -168,6 +175,8 @@ namespace SPM_Project.Repositories
 
                 if (isTrainer)
                 {
+
+                    //TODO: Check with prof if we need to implement eligible trainers
                     throw new NotImplementedException("We have not implemented the functionality to check for eligible trainers"); 
                 }
 
@@ -192,10 +201,7 @@ namespace SPM_Project.Repositories
         }
 
        
-        
-        
-        
-        
+       
         
         
         //if courseId is 0 , dont have to check eligibility
