@@ -86,7 +86,7 @@ namespace SPM_Project.ApiControllers
             var course = await _unitOfWork.CourseClassRepository.GetByIdAsync((int)classId);
             course.ClassTrainer = trainer;
 
-            _unitOfWork.CompleteAsync();
+            await _unitOfWork.CompleteAsync();
            
       
             return Ok();
