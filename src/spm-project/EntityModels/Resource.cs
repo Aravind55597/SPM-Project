@@ -16,10 +16,10 @@ namespace SPM_Project.EntityModels
         public ContentType Content { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreationTimestamp { get; set; }
+        public DateTime CreationTimestamp { get; private set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime UpdateTimestamp { get; set; }
+        public DateTime UpdateTimestamp { get; private set; }
 
 
         public Chapter Chapter { get; set; }

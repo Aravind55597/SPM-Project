@@ -21,10 +21,10 @@ namespace SPM_Project.EntityModels
         public string Description { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreationTimeStamp { get; set; }
+        public DateTime CreationTimeStamp { get; private set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime UpdateTimeStamp { get; set; }
+        public DateTime UpdateTimeStamp { get; private set; }
 
 
         //check if it is graded 

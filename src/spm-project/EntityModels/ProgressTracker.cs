@@ -11,9 +11,9 @@ namespace SPM_Project.EntityModels
         public int Id { get; private set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreateTimestamp { get; set; }
+        public DateTime CreateTimestamp { get; private  set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime UpdateTimestamp { get; set; }
+        public DateTime UpdateTimestamp { get; private set; }
 
         public Course Course { get; set; }
         public Chapter Chapter { get; set; }

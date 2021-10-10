@@ -13,10 +13,10 @@ namespace SPM_Project.EntityModels
         public string Name { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreationTimeStamp { get; set; }
+        public DateTime CreationTimeStamp { get; private set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime UpdateTimeStamp { get; set; }
+        public DateTime UpdateTimeStamp { get; private set; }
 
 
         public DateTime StartRegistration  { get; set; }

@@ -15,10 +15,10 @@ namespace SPM_Project.EntityModels
 
         public Departments Department { get; set; }
 
-        public DateTime DOB { get; set; }
+        public DateTime DOB { get; private set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreationTimestamp { get; set; }
+        public DateTime CreationTimestamp { get; private set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdateTimestamp { get; set; }
 
