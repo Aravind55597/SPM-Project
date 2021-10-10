@@ -108,6 +108,47 @@ namespace SPM_Project.ApiControllers
 
         }
 
+        //approve enrollment request 
+
+        public async Task<IActionResult> ApproveEnrollmentRequest(LMSUser user, CourseClass courseclass)
+        {
+
+       
+            //LMSUser learner, int classId
+            //assign user to class
+            await new UsersController(_unitOfWork).AssignLearnertoClass(user, courseclass.Id);
+
+            //TODO: trigger notification for approval
+
+            
+
+
+            return Ok();
+
+        }
+
+        //decline enrollment request 
+
+        public async Task<IActionResult> DeclineEnrollmentRequest(ClassEnrollmentRecord record)
+        {
+
+
+            record.Approved = false ;
+
+
+            //TODO: trigger notification for decline
+
+            //save changes
+            await _unitOfWork.CompleteAsync();
+
+
+            return Ok();
+
+        }
+
+
+
+
 
     }
 }

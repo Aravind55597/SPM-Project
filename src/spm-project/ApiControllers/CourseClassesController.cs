@@ -25,12 +25,6 @@ namespace SPM_Project.ApiControllers
             _unitOfWork = unitOfWork;
         }
 
-
-
-
-
-
-
         [HttpPost, Route("CourseClassesDataTable", Name = "GetCourseClassesDataTable")]
         //query : isTrainer (bool) -> retreive trainer specific 
         //query : isLearner (bool) -> retreive learner spedific 

@@ -93,6 +93,34 @@ namespace SPM_Project.ApiControllers
 
         }
 
+        //Assignment of Single Learner to Class
+        public async Task<IActionResult> AssignLearnertoClass(LMSUser learner, int classId)
+        {
+
+            //if courseID is not null
+            if (classId == null)
+            {
+                throw new NotFoundException("Class does not exist");
+
+            }
+
+            //retrieve course 
+            var course = await _unitOfWork.CourseClassRepository.GetByIdAsync((int)classId);
+            var enrollment = learner.Enrollments.Where(e => e.Id == classId).FirstOrDefault();
+            if (enrollment == null) {
+
+                throw new NotFoundException("no such enrollment"); 
+            }
+
+            enrollment.Approved = true;
+
+            await _unitOfWork.CompleteAsync();
+
+
+            return Ok();
+
+        }
+
 
     }
 }
