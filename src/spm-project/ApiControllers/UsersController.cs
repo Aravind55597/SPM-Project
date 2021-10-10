@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SPM_Project.CustomExceptions;
 using SPM_Project.DataTableModels;
 using SPM_Project.DataTableModels.DataTableResponse;
+using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -23,20 +24,6 @@ namespace SPM_Project.ApiControllers
         {
             _unitOfWork = unitOfWork;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -84,6 +71,27 @@ namespace SPM_Project.ApiControllers
       
         }
 
+        //Assignment of Single Trainer
+        public async Task<IActionResult> AssignTrainertoClass(LMSUser trainer, int classId)
+        {
+
+            //if courseID is not null
+            if (classId == null)
+            {
+                throw new NotFoundException("Class does not exist");
+
+            }
+
+            //retrieve course 
+            var course = await _unitOfWork.CourseClassRepository.GetByIdAsync((int)classId);
+            course.ClassTrainer = trainer;
+
+            _unitOfWork.CompleteAsync();
+           
+      
+            return Ok();
+
+        }
 
 
     }
