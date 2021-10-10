@@ -51,9 +51,9 @@ namespace SPM_Project.Repositories
 
         public IUserAnswerRepository UserAnswerRepository { get; }
 
-        public async Task CompleteAsync()
+        public async Task<int> CompleteAsync()
         {
-            await _context.SaveChangesAsync(); 
+            return await _context.SaveChangesAsync(); 
 
         }
 

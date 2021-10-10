@@ -35,7 +35,7 @@ namespace SPM_Project.Repositories.Interfaces
         public IUserAnswerRepository UserAnswerRepository { get;  }
 
         //function to end database transaction 
-        public Task CompleteAsync();
+        public Task<int> CompleteAsync();
 
     }
 }

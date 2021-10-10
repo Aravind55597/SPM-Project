@@ -32,11 +32,6 @@ namespace SPM_Project.ApiControllers.Tests
             _inputDTModel = new DTParameterModel();
             _outputDTModel = new DTResponse<CourseClassTableData>();
 
-
-            _uowMocker.mockUnitOfWork.Setup(l => l.CourseRepository).Returns(_uowMocker.mockCourseRepository.Object).Verifiable("Mock Course Repository is NOT returned");
-            _uowMocker.mockUnitOfWork.Setup(l => l.CourseClassRepository).Returns(_uowMocker.mockCourseClassRepository.Object).Verifiable("Mock CourseClass Repository is NOT returned");
-            _uowMocker.mockUnitOfWork.Setup(l => l.LMSUserRepository).Returns(_uowMocker.mockLMSUserRepository.Object).Verifiable("Mock LMSUser Repository is NOT returned");
-
             //mock when GetCouseClassesDataTable is called
             _uowMocker.mockCourseClassRepository.Setup(l => l.GetCourseClassesDataTable(_inputDTModel, It.IsAny<int?>(), It.IsAny<int>(), true, true)).ReturnsAsync(_outputDTModel);
 
@@ -73,19 +68,16 @@ namespace SPM_Project.ApiControllers.Tests
 
             var result = await _controller.GetCourseClassesDataTable(_inputDTModel, 1, null, true, true);
 
-
-            //verify that unit of wrok setup went through 
-            _uowMocker.mockUnitOfWork.VerifyAll();
             //verify that id of the current user is retreived 
-            _uowMocker.mockLMSUserRepository.VerifyAll();
+            _uowMocker.mockLMSUserRepository.Verify(l => l.RetrieveCurrentUserIdAsync());
             //verify that course is retreived 
-            _uowMocker.mockCourseRepository.VerifyAll();
+            _uowMocker.mockCourseRepository.Verify(l => l.GetByIdAsync(It.IsAny<int>()));
             //verify that function returns a DTResposne form repostiory 
             Assert.IsAssignableFrom<ActionResult>(result);
 
         }
 
-        //Course does not exist , function throws badrequest
+        //Course does not exist , function throws not found
         [Fact()]
         public async Task GetCourseClassesDataTableTest_CourseDoesNotExist_ThrowNotFound()
         {
@@ -101,19 +93,15 @@ namespace SPM_Project.ApiControllers.Tests
             Func<Task> action = (async () => await _controller.GetCourseClassesDataTable(_inputDTModel, 1, 1, true, true));
 
 
-            //pass if function is not implemented (COMMNENT THIS OUT AFTER THE FUNCTION IS IMPLEMENTED)
             await Assert.ThrowsAsync<NotFoundException>(action);
 
 
             //verify that id of the current user is retreived 
-            _uowMocker.mockLMSUserRepository.VerifyAll();
+            _uowMocker.mockLMSUserRepository.Verify(l => l.GetByIdAsync(It.IsAny<int>()));
 
             //verify that all mockCourseRepository setup is called
-            _uowMocker.mockCourseRepository.VerifyAll();
+            _uowMocker.mockCourseRepository.Verify(l => l.GetByIdAsync(It.IsAny<int>()));
 
-            //verfiy mock uow 
-            _uowMocker.mockUnitOfWork.Verify(l => l.CourseRepository);
-            _uowMocker.mockUnitOfWork.Verify(l => l.LMSUserRepository);
 
         }
 
@@ -134,18 +122,14 @@ namespace SPM_Project.ApiControllers.Tests
             Func<Task> action = (async () => await _controller.GetCourseClassesDataTable(_inputDTModel, 1, 1, true, true));
 
 
-            //pass if function is not implemented (COMMNENT THIS OUT AFTER THE FUNCTION IS IMPLEMENTED)
+   
             await Assert.ThrowsAsync<NotFoundException>(action);
 
 
             //verify that id of the current user is retreived 
-            _uowMocker.mockLMSUserRepository.VerifyAll();
+            _uowMocker.mockLMSUserRepository.Verify(l => l.GetByIdAsync(It.IsAny<int>()));
 
-            //verify that all mockCourseRepository setup is called
-            _uowMocker.mockCourseRepository.VerifyAll();
 
-            //verfiy mock uow 
-            _uowMocker.mockUnitOfWork.Verify(l => l.LMSUserRepository);
 
         }
 

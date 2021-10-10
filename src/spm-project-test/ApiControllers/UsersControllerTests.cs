@@ -11,44 +11,31 @@ using SPM_Project.DataTableModels.DataTableData;
 using SPM_Project.Repositories.Interfaces;
 using Moq;
 using Microsoft.AspNetCore.Mvc;
+using SPM_ProjectTests.Mocks;
+using SPM_Project.EntityModels;
+using SPM_Project.CustomExceptions;
 
 namespace SPM_Project.ApiControllers.Tests
 {
     public class UsersControllerTests:IDisposable
     {
 
-        //input
-        public DTParameterModel _engineersDataTableInput;
+        private DTParameterModel _inputDTModel;
 
-        //output
-        public DTResponse<LMSUsersTableData> _engineersDataTableOutput;
+        private DTResponse<LMSUsersTableData> _outputDTModel;
 
-        public Mock<IUnitOfWork> _mockUnitOfWork;
-
-        public Mock<ILMSUserRepository> _mockLMSUserRepository;
+        private UOWMocker _uowMocker;
 
         public UsersController _controller;
 
 
-
-
         public UsersControllerTests()
         {
-
-
-            _engineersDataTableOutput = new DTResponse<LMSUsersTableData>();
-
-
-            _mockLMSUserRepository = new Mock<ILMSUserRepository>();
-            _mockLMSUserRepository.Setup(l => l.GetEngineersDataTable(_engineersDataTableInput)).ReturnsAsync(_engineersDataTableOutput).Verifiable();
-
-
-            _mockUnitOfWork = new Mock<IUnitOfWork>();
-            _mockUnitOfWork.Setup(u => u.LMSUserRepository).Returns(_mockLMSUserRepository.Object);
-
-
-            //create the service object & pass the mock unitofwork 
-            _controller = new UsersController(_mockUnitOfWork.Object);
+            _uowMocker = new UOWMocker();
+            _controller = new UsersController(_uowMocker.mockUnitOfWork.Object);
+            _inputDTModel = new DTParameterModel();
+            _outputDTModel = new DTResponse<LMSUsersTableData>();
+            _uowMocker.mockLMSUserRepository.Setup(l => l.GetEngineersDataTable(_inputDTModel, true, true , It.IsAny<int?>())).ReturnsAsync(_outputDTModel);
         }
 
 
@@ -56,32 +43,63 @@ namespace SPM_Project.ApiControllers.Tests
         //TEARDOWN-------------------------------------------------------------------
         public void Dispose()
         {
-            _engineersDataTableInput = null;
-            _mockLMSUserRepository = null;
-            _mockUnitOfWork = null;
+            _uowMocker = null;
             _controller = null;
         }
 
 
 
+
+        //GetCourseClassesDataTable-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
         [Fact]
-        public async Task GetEngineersDataTableTest()
+        public async Task GetEngineersDataTableTest_ClassDoesNotExist_ThrowNotFound()
         {
+
+            //setup
+
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((CourseClass)null);
+
 
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
 
-            var actual = await _controller.GetEngineersDataTable(_engineersDataTableInput);
+            Func<Task> action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, true, true));
+
 
             //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
 
-            //verify that GetEngineersDataTable was called!!!!!!!!!!!!!!!
-            _mockLMSUserRepository.Verify();
+            await Assert.ThrowsAsync<NotFoundException>(action);
 
-            //verify that you did not get null as a result 
-            Assert.NotNull(actual);
-            Assert.IsAssignableFrom<ActionResult>(actual);
 
         }
+
+
+
+        [Fact]
+        public async Task GetEngineersDataTableTest_ClassExists_ReturnOK()
+        {
+            //setup 
+
+
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new CourseClass());
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+
+            var result = await _controller.GetEngineersDataTable(_inputDTModel, 1,true ,true ) as OkObjectResult;
+
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+            //verify that you did not get null as a result 
+            Assert.NotNull(result);
+            Assert.IsType<OkObjectResult>(result);
+            var items = Assert.IsType<DTResponse<LMSUsersTableData>>(result.Value);
+
+        }
+
+
+
+
 
         //        _engineersDataTableInput = new DTParameterModel()
         //        {
