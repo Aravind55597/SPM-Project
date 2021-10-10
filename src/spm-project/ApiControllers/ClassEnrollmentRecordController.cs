@@ -40,6 +40,7 @@ namespace SPM_Project.ApiControllers
             return Ok();
         }
 
+        [NonAction]
         public async Task AddEnrollmentRecord(LMSUser user, int classId)
         {
 

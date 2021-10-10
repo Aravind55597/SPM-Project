@@ -44,6 +44,8 @@ namespace SPM_Project.ApiControllers
             [FromQuery] int? lmsUserId,
             [FromQuery] bool isTrainer=false , 
             [FromQuery] bool isLearner=false
+
+            
             )
         {
 
