@@ -293,12 +293,11 @@ function viewCoursesDT() {
 		//Retrieve DT_RowData from data and add the object to row using jquery (read the serversiderendering of datatables )
 		createdRow: function (row, data, dataIndex) {
 
-			//$(row).data("DT_RowId" , data.DT_RowId);
+			$(row).data(data.DT_RowData);
 
 
 			//can use DT_RowAttr for toher stuff (check https://datatables.net/manual/server-side)
 		},
-
 
 
 	});
