@@ -13,7 +13,7 @@ namespace SPM_Project.Repositories.Interfaces
     {
 
         //retrieve data to display all engineers present
-        public Task<DTResponse<LMSUsersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel, bool isTrainer, bool isLearner, int? classId);
+        public Task<DTResponse<LMSUsersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel, bool isTrainer, bool isLearner, bool isEligible, int? classId);
 
      
         public Task<int> RetrieveCurrentUserIdAsync();

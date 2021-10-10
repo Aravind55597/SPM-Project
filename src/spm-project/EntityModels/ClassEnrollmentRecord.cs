@@ -8,7 +8,7 @@ namespace SPM_Project.EntityModels
 {
     public class ClassEnrollmentRecord
     {
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
         public bool CompletionStatus { get; set; }
         
@@ -21,11 +21,14 @@ namespace SPM_Project.EntityModels
 
         public bool Approved { get; set; }
 
-        public CourseClass CourseClass { get; set; }
+        public bool Withdrawm { get; set; }
 
+        public CourseClass CourseClass { get; set; }
 
         //to set the score for the class 
         public decimal PercentageScore { get; set; }
+
+
 
     }
 }

@@ -8,7 +8,7 @@ namespace SPM_Project.EntityModels
 {
     public class Resource
     {
-        public int Id { get; set; }
+        public int Id { get; private set;  }
 
         public string ContentUrl { get; set; }
 

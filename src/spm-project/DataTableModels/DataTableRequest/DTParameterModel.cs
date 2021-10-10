@@ -54,5 +54,9 @@ namespace SPM_Project.DataTableModels
         public List<DTColumn> Columns { get; set; }
 
        
-    }
+        public List<DTFilter> Filter { get; set; }
+
+
+
+}
 }

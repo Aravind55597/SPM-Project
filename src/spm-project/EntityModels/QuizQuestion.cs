@@ -13,19 +13,17 @@ namespace SPM_Project.EntityModels
         //values for discriminator
         // present in the table 
         [NotMapped]
-        public List<string> Discriminators { get {
+        public static List<string> Discriminators { get {
 
                 var dList = new List<string>()
                 {
                    "TFQuestion","McqQuestion"
                 };
                 return dList;
-            
-            
             } }
 
 
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
         [Url(ErrorMessage = "Invalid URL!")]
         public string ImageUrl { get; set; }

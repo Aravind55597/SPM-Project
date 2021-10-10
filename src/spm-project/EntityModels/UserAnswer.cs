@@ -9,7 +9,7 @@ namespace SPM_Project.EntityModels
     public class UserAnswer
     {
 
-        public int Id { get; set; }
+        public int Id { get; private set;  }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime CreateTimestamp { get; set; }
@@ -26,6 +26,8 @@ namespace SPM_Project.EntityModels
 
         //check if the ans is corect 
         public bool IsCorrect { get; set; }
+
+
 
     }
 }

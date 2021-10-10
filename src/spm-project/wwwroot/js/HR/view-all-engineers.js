@@ -52,6 +52,11 @@ function viewEngineerDT() {
 				return JSON.stringify(d);
 			}
 		},
+		drawCallback: function (settings) {
+			// Here the response
+			var response = settings.json;
+			console.log(response);
+		},
 
 
 		//every time the table get initialised (draw or ajax.reload()) , 

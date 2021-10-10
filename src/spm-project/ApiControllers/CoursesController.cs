@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SPM_Project.DataTableModels;
 using SPM_Project.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SPM_Project.ApiControllers
@@ -36,6 +32,21 @@ namespace SPM_Project.ApiControllers
             return Ok(responseJson);
 
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     }

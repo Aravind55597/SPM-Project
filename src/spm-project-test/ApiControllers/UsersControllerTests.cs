@@ -28,14 +28,17 @@ namespace SPM_Project.ApiControllers.Tests
 
         public UsersController _controller;
 
-
+        //function namming follows 
+        //https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices
         public UsersControllerTests()
         {
             _uowMocker = new UOWMocker();
             _controller = new UsersController(_uowMocker.mockUnitOfWork.Object);
             _inputDTModel = new DTParameterModel();
             _outputDTModel = new DTResponse<LMSUsersTableData>();
-            _uowMocker.mockLMSUserRepository.Setup(l => l.GetEngineersDataTable(_inputDTModel, true, true , It.IsAny<int?>())).ReturnsAsync(_outputDTModel);
+            //the input for this function does not matter for testing as the datatable function jsut calls this to return the result ; the valiadation of the input to this 
+            //class is handled by the datatabale function
+            _uowMocker.mockLMSUserRepository.Setup(l => l.GetEngineersDataTable(_inputDTModel, true, true , true , It.IsAny<int?>())).ReturnsAsync(_outputDTModel);
         }
 
 
@@ -51,6 +54,14 @@ namespace SPM_Project.ApiControllers.Tests
 
 
         //GetCourseClassesDataTable-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
 
         [Fact]
         public async Task GetEngineersDataTableTest_ClassDoesNotExist_ThrowNotFound()
@@ -72,9 +83,6 @@ namespace SPM_Project.ApiControllers.Tests
 
 
         }
-
-
-
         [Fact]
         public async Task GetEngineersDataTableTest_ClassExists_ReturnOK()
         {
@@ -85,7 +93,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
 
-            var result = await _controller.GetEngineersDataTable(_inputDTModel, 1,true ,true ) as OkObjectResult;
+            var result = await _controller.GetEngineersDataTable(_inputDTModel, 1) as OkObjectResult;
 
             //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -93,11 +101,95 @@ namespace SPM_Project.ApiControllers.Tests
             //verify that you did not get null as a result 
             Assert.NotNull(result);
             Assert.IsType<OkObjectResult>(result);
-            var items = Assert.IsType<DTResponse<LMSUsersTableData>>(result.Value);
+            var items = Assert.IsType<string>(result.Value);
 
         }
+        [Fact]
+        public async Task GetEngineersDataTableTest_PermutationsOfInputClassExists_ThrowBadRequest()
+        {
+            //setup 
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new CourseClass());
 
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            // true for trainer , learner , eligible
+            Func<Task> action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, true, true , true));
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            await Assert.ThrowsAsync<BadRequestException>(action);
 
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            // false for trainer,learner, true for eligible
+             action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, false, false, true));
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            await Assert.ThrowsAsync<BadRequestException>(action);
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            //false for trainer , learner , treu for eligible
+            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, false, false, true));
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            await Assert.ThrowsAsync<BadRequestException>(action);
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            //false for trainer , true for learner , false for eligible
+            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, false, true, false));
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            await Assert.ThrowsAsync<BadRequestException>(action);
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            //true for trainer , true for learner , false for eligible
+            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, true, true, false));
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            await Assert.ThrowsAsync<BadRequestException>(action);
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            //false for trainer , true for learner , false for eligible
+            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, false, true, false));
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            await Assert.ThrowsAsync<BadRequestException>(action);
+
+        }
+        [Fact]
+        public async Task GetEngineersDataTableTest_PermutationsOfInputNoClassId_ThrowBadRequest()
+        {
+            //setup 
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new CourseClass());
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            // true for trainer , learner , eligible
+            Func<Task> action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, null, true, true, true));
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            await Assert.ThrowsAsync<BadRequestException>(action);
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            // false for trainer,learner, true for eligible
+            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, null, false, false, true));
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            await Assert.ThrowsAsync<BadRequestException>(action);
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            //false for trainer , learner , treu for eligible
+            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, null, false, false, true));
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            await Assert.ThrowsAsync<BadRequestException>(action);
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            //false for trainer , true for learner , false for eligible
+            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, null, false, true, false));
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            await Assert.ThrowsAsync<BadRequestException>(action);
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            //true for trainer , true for learner , false for eligible
+            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, null, true, true, false));
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            await Assert.ThrowsAsync<BadRequestException>(action);
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            //false for trainer , true for learner , false for eligible
+            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, null, false, true, false));
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            await Assert.ThrowsAsync<BadRequestException>(action);
+
+        }
 
 
 
@@ -191,5 +283,7 @@ namespace SPM_Project.ApiControllers.Tests
         //                    },
         //                },
         //        };
+
+
     }
 }

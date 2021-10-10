@@ -15,7 +15,7 @@ namespace SPM_Project.EntityModels
         }
 
 
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
         public string Name { get; set; }
 
