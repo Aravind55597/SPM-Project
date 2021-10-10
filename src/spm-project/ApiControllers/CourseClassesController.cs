@@ -65,14 +65,8 @@ namespace SPM_Project.ApiControllers
 
                 if (user == null)
                 {
-                    var errorDict = new Dictionary<string, string>()
-                    {
-                        {"lmsUserId", $"LMS User of Id {lmsUserId} does not exist" }
-                    };
 
-                    var notFoundExp = new NotFoundException("lmsUser does not exist", errorDict);
-
-                    throw notFoundExp;
+                    throw new NotFoundException("lmsUser does not exist"); 
                 }
                 //use lmsuserId supplied 
                 userId = (int)lmsUserId;
@@ -88,14 +82,8 @@ namespace SPM_Project.ApiControllers
                 //course does not exist
                 if (course == null)
                 {
-                    var errorDict = new Dictionary<string, string>()
-                    {
-                        {"CourseId", $"Course of Id {courseId} does not exist" }
-                    };
 
-                    var notFoundExp = new NotFoundException("Course does not exist", errorDict);
-
-                    throw notFoundExp;
+                    throw new NotFoundException($"Course of Id {courseId} does not exist");
                 }
             }
             ////retrieve roles of the user

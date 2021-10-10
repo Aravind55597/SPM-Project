@@ -63,7 +63,7 @@ namespace SPM_Project.ApiControllers
                 if (courseClass == null)
                 {
                    
-                    throw new NotFoundException("Class does not exist"); ;
+                    throw new NotFoundException("Class does not exist"); 
                 }
 
 
