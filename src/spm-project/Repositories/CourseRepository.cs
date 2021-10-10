@@ -22,31 +22,16 @@ namespace SPM_Project.Repositories
 
         }
 
+        public async Task<List<Course>> GetCoursePreReq(Course course)
+        {
 
 
+            var _course = _context.Course.Where(c => c.Id == course.Id).First();
 
+            //get the course prereq for current course
+            return _course.PreRequisites;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        }
         //--------------------------------------------TABLE FUNCTIONS------------------------------------------------------------------------------------------------------
 
         //generate IQueryable for manipulation by datatable 
@@ -128,11 +113,9 @@ namespace SPM_Project.Repositories
 
         }
 
-
-
-
-
-
-
+        object ICourseRepository.GetCoursePreReq(Course course)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

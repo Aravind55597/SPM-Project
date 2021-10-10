@@ -19,15 +19,6 @@ namespace SPM_Project.Repositories
 
 
 
-
-
-
-
-
-
-
-
-
         //--------------------------------------------TABLE FUNCTIONS------------------------------------------------------------------------------------------------------
 
         //generate IQueryable for manipulation by datatable
