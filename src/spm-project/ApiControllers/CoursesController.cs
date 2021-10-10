@@ -46,6 +46,7 @@ namespace SPM_Project.ApiControllers
             {
                 completed_courses.Add(tracker.Course);
             }
+
             //get the course prereq for current course
             var course_prereq = _unitOfWork.CourseRepository.GetCoursePreReq(course);
 
