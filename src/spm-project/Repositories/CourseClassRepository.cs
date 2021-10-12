@@ -76,7 +76,6 @@ namespace SPM_Project.Repositories
         }
 
 
-
         public async Task<DTResponse<CourseClassTableData>> GetCourseClassesDataTable(DTParameterModel dTParameterModel, int? courseId,int userId ,  bool isTrainer=false, bool isLearner=false)
         {
            

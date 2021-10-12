@@ -20,14 +20,11 @@ namespace SPM_Project.EntityModels
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdateTimeStamp { get; private set; }
 
-        
         public List<Resource> Resources { get; set; }
 
         public List<ProgressTracker> ProgressTrackers  { get; set; }
 
         public List<Quiz> Quizzes { get; set; }
-
-
 
     }
 }

@@ -29,7 +29,7 @@ namespace SPM_Project.Repositories.Interfaces
              int pageSize
             );
 
-        Task<T> GetByIdAsync(int id);
+        Task<T> GetByIdAsync(int id , string includeProperties = "");
 
         Task RemoveByIdAsync(int id);
 

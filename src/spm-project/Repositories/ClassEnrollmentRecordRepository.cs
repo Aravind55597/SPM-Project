@@ -31,7 +31,6 @@ namespace SPM_Project.Repositories
             var record = enrollments.Where(e => e.CourseClass.Id == courseclass.Id).FirstOrDefault();
             if (record!=null)
             {
-
                 return true;
             }
             else { 

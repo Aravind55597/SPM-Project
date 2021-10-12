@@ -69,7 +69,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             //setup
 
-            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((CourseClass)null);
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync((CourseClass)null);
 
 
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -89,7 +89,7 @@ namespace SPM_Project.ApiControllers.Tests
             //setup 
 
 
-            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new CourseClass());
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(new CourseClass());
 
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -108,7 +108,7 @@ namespace SPM_Project.ApiControllers.Tests
         public async Task GetEngineersDataTableTest_PermutationsOfInputClassExists_ThrowBadRequest()
         {
             //setup 
-            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new CourseClass());
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(new CourseClass());
 
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
             // true for trainer , learner , eligible
@@ -151,7 +151,7 @@ namespace SPM_Project.ApiControllers.Tests
         public async Task GetEngineersDataTableTest_PermutationsOfInputNoClassId_ThrowBadRequest()
         {
             //setup 
-            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new CourseClass());
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>(),It.IsAny<string>())).ReturnsAsync(new CourseClass());
 
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
             // true for trainer , learner , eligible

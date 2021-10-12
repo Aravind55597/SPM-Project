@@ -83,9 +83,19 @@ namespace SPM_Project.Repositories
 
 
         //Retrieve data by Id 
-        public virtual async Task<T> GetByIdAsync(int id)
+        public virtual async Task<T> GetByIdAsync(int id , string includeProperties = "")
         {
-            var data = await _context.Set<T>().FindAsync(id);
+            IQueryable<T> query = _context.Set<T>();
+            if (includeProperties!="")
+            {
+                foreach (var includeProperty in includeProperties.Split
+                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            var data = await query.FirstOrDefaultAsync(); 
             return data;
         }
 
@@ -93,7 +103,7 @@ namespace SPM_Project.Repositories
 
 
 
-
+        //JUST USE SAVECHANGES
 
 
 
@@ -104,13 +114,14 @@ namespace SPM_Project.Repositories
         {
             _context.Set<T>().Remove(entity);
         }
+        
+
 
         //remove range of entities from the parent entity 
         public virtual async Task RemoveRangeByEntityAsync(IEnumerable<T> entities)
         {
             _context.Set<T>().RemoveRange(entities);
         }
-
 
 
         //remove data by Id
@@ -120,6 +131,7 @@ namespace SPM_Project.Repositories
           _context.Set<T>().Remove(data); 
 
         }
+
 
         //remove range of entities by Id
         public virtual async Task RemoveRangeByIdAsync(List<int> ids)
