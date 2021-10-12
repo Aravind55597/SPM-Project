@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.EntityModels
 {
-    public class ProgressTracker
+    public class ProgressTracker: IEntityWithId
     {
         public int Id { get; private set; }
 

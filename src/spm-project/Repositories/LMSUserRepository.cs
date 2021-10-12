@@ -36,14 +36,6 @@ namespace SPM_Project.Repositories
         }
 
 
-
-
-
-
-
-
-
-
         //retreive all roles as a dictionary
 
 
@@ -58,6 +50,15 @@ namespace SPM_Project.Repositories
 
                 );
         }
+
+
+
+        public object GetCompletedProgressTracker(LMSUser user)
+        {
+            throw new System.NotImplementedException();
+        }
+
+
 
 
         //--------------------------------------------CURRENT-USER------------------------------------------------------------------------------------------------------
@@ -86,9 +87,6 @@ namespace SPM_Project.Repositories
 
             return (List<string>)roles;
         }
-
-
-
 
 
         //--------------------------------------------TABLE FUNCTIONS------------------------------------------------------------------------------------------------------
@@ -162,13 +160,13 @@ namespace SPM_Project.Repositories
                     
                     //check if all  the prereq course ids are present in 
                     queryable.
-                        Where(q => preReq.All(    _context.LMSUser.Where(l => l.Id == q.Id).SelectMany(l => l.Enrollments).Where(e=>e.CompletionStatus).Select(e => e.CourseClass.Course.Id).Contains    )    
+                        Where(q => preReq.All(_context.LMSUser.Where(l => l.Id == q.Id).SelectMany(l => l.Enrollments).Where(e=>e.CompletionStatus).Select(e => e.CourseClass.Course.Id).Contains    )    
                     ); 
                 }
 
                 if (isTrainer)
                 {
-                    throw new NotImplementedException("We have not implemented the functionality to check for eligible trainers"); 
+                    queryable.Where(q => q.Role == "Trainer");
                 }
 
 
@@ -191,85 +189,56 @@ namespace SPM_Project.Repositories
             return queryable;
         }
 
-       
-        
-        
-        
-        
-        
-        
-        //if courseId is 0 , dont have to check eligibility
-        //if classId is 0 , dont have to retreive based on class only
-        // bool isTrainer, bool isLearner, bool isEligible, int? classId
+        private IQueryable<LMSUsersTableData> GlobalTableSearcher(IQueryable<LMSUsersTableData> queryable , DTRequestHandler<LMSUsersTableData> dtH)
+        {
+            //if search value is not empty
+            if (!string.IsNullOrEmpty(dtH.SearchValue))
+            {
+                queryable = queryable.Where(m => m.Name.Contains(dtH.SearchValue)
+                                            || m.Role.Contains(dtH.SearchValue));
+            }
+
+            return queryable; 
+        }
+
+
         public async Task<DTResponse<LMSUsersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel, bool isTrainer, bool isLearner, bool isEligible , int? classId)
         {
-            var draw = dTParameterModel.Draw;
-            var start = dTParameterModel.Start;
-            var length = dTParameterModel.Start;
-            var sortColumn = dTParameterModel.Columns[dTParameterModel.Order[0].Column].Data;
-            var sortColumnDirection = dTParameterModel.Order[0].Dir;
-            var searchValue = dTParameterModel.Search.Value;
-            int pageSize = dTParameterModel.Length;
-            List<DTFilter> filterList = dTParameterModel.Filter; 
 
-            //number of records to be skipped
-            int skip = dTParameterModel.Start;
-            int recordsTotal = 0;
-            int recordsFiltered = 0;
+            var dtH = new DTRequestHandler<LMSUsersTableData>(dTParameterModel); 
+
 
             //Retrieve all userid + roleid pair that has either learnerRole or trainer role
             var queryable = GetLMSUsersTableQueryable(isTrainer, isLearner, isEligible , classId).Where(q => q.Role == "Learner" || q.Role == "Trainer");
 
-            recordsTotal = queryable.Count();
-
-       
-            //if sortcolumn and sort colum direction are not empty
-            if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
-            {
-                queryable = queryable.OrderBy(sortColumn + " " + sortColumnDirection);
-            }
-
-            //if search value is not empty
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                queryable = queryable.Where(m => m.Name.Contains(searchValue)
-                                            || m.Role.Contains(searchValue));
-            }
+            dtH.RecordsCounter(queryable); 
+            
+            queryable = dtH.TableSorter(queryable); 
 
 
-            //filter 
-            if (filterList!=null)
-            {
-                foreach (DTFilter filter in filterList)
-                {
-                    if (filter.Column!=null && filter.Value != null)
-                    {
-                        queryable.Where("@0 = @1", filter.Column, filter.Value); 
-                    }
-
-                }
-            }
+            queryable = GlobalTableSearcher(queryable , dtH); 
 
 
-            recordsFiltered = queryable.Count();
+            queryable = dtH.TableFilterer(queryable);
+
+            dtH.FilteredRecordsCounter(queryable); 
+
 
             //skip 'start' records & Retrieve 'pagesize' records
-            var data = await queryable.Skip(skip).Take(pageSize).ToListAsync();
+            var data = await dtH.TablePager(queryable).ToListAsync();
+
 
             var dtResponse = new DTResponse<LMSUsersTableData>()
             {
-                Draw = draw,
-                RecordsFiltered = recordsTotal,
-                RecordsTotal = recordsFiltered,
+                Draw = dtH.Draw,
+                RecordsFiltered = dtH.RecordsTotal,
+                RecordsTotal = dtH.RecordsFiltered,
                 Data = data,
             };
 
             return dtResponse;
         }
 
-        public object GetCompletedProgressTracker(LMSUser user)
-        {
-            throw new System.NotImplementedException();
-        }
+
     }
 }

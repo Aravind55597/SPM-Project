@@ -2,6 +2,7 @@
 using SPM_Project.Data;
 using SPM_Project.DataTableModels;
 using SPM_Project.DataTableModels.DataTableData;
+using SPM_Project.DataTableModels.DataTableRequest;
 using SPM_Project.DataTableModels.DataTableResponse;
 using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
@@ -67,54 +68,52 @@ namespace SPM_Project.Repositories
 
         }
 
-
-
-        public async Task<DTResponse<CourseClassTableData>> GetCourseClassesDataTable(DTParameterModel dTParameterModel, int? courseId,int userId ,  bool isTrainer=false, bool isLearner=false)
+        private IQueryable<CourseClassTableData> GlobalTableSearcher(IQueryable<CourseClassTableData> queryable, DTRequestHandler<CourseClassTableData> dtH)
         {
-           
 
-            var draw = dTParameterModel.Draw;
-            var start = dTParameterModel.Start;
-            var length = dTParameterModel.Start;
-            var sortColumn = dTParameterModel.Columns[dTParameterModel.Order[0].Column].Name;
-            var sortColumnDirection = dTParameterModel.Order[0].Dir;
-            var searchValue = dTParameterModel.Search.Value;
-            int pageSize = dTParameterModel.Length;
-
-            //number of records to be skipped
-            int skip = dTParameterModel.Start;
-            int recordsTotal = 0;
-            int recordsFiltered = 0;
-
-            var queryable = GetCourseClassTableQueryable(courseId, userId , isTrainer , isLearner);
-
-            recordsTotal = queryable.Count();
-
-            //if sortcolumn and sort colum direction are not empty
-            if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
-            {
-                queryable = queryable.OrderBy(sortColumn + " " + sortColumnDirection);
-            }
 
             //if search value is not empty
-            if (!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(dtH.SearchValue))
             {
-                queryable = queryable.Where(m => m.CourseName.Contains(searchValue)
-                                            || m.ClassName.Contains(searchValue)
-                                            || m.TrainerName.Contains(searchValue)
+                queryable = queryable.Where(m => m.CourseName.Contains(dtH.SearchValue)
+                                            || m.ClassName.Contains(dtH.SearchValue)
+                                            || m.TrainerName.Contains(dtH.SearchValue)
                                             );
             }
 
-            recordsFiltered = queryable.Count();
+            return queryable;
+        }
 
-            var data = await queryable.Skip(skip).Take(pageSize).ToListAsync();
+        public async Task<DTResponse<CourseClassTableData>> GetCourseClassesDataTable(DTParameterModel dTParameterModel, int? courseId,int userId ,  bool isTrainer=false, bool isLearner=false)
+        {
 
-            //repeated
+
+            var dtH = new DTRequestHandler<CourseClassTableData>(dTParameterModel);
+
+            var queryable = GetCourseClassTableQueryable(courseId, userId , isTrainer , isLearner);
+
+            dtH.RecordsCounter(queryable);
+
+            queryable = dtH.TableSorter(queryable);
+
+
+            queryable = GlobalTableSearcher(queryable, dtH);
+
+
+            queryable = dtH.TableFilterer(queryable);
+
+            dtH.FilteredRecordsCounter(queryable);
+
+
+            //skip 'start' records & Retrieve 'pagesize' records
+            var data = await dtH.TablePager(queryable).ToListAsync();
+
+
             var dtResponse = new DTResponse<CourseClassTableData>()
             {
-                Draw = draw,
-                RecordsFiltered = recordsFiltered,
-                RecordsTotal = recordsTotal,
+                Draw = dtH.Draw,
+                RecordsFiltered = dtH.RecordsTotal,
+                RecordsTotal = dtH.RecordsFiltered,
                 Data = data,
             };
 

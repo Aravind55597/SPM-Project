@@ -37,7 +37,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             //returns 1
             //_uowMocker.mockLMSUserRepository.Setup(l => l.RetrieveCurrentUserIdAsync()).ReturnsAsync(1);
-            //_uowMocker.mockLMSUserRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new LMSUser()); 
+            //_uowMocker.mockLMSUserRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync(new LMSUser()); 
             ////course 1 exists , course 2 does not exists
             //_uowMocker.mockCourseRepository.Setup(l => l.GetByIdAsync(1)).ReturnsAsync(new Course());
             //_uowMocker.mockCourseRepository.Setup(l => l.GetByIdAsync(2)).ReturnsAsync(null);
@@ -64,14 +64,14 @@ namespace SPM_Project.ApiControllers.Tests
             _uowMocker.mockLMSUserRepository.Setup(l => l.RetrieveCurrentUserIdAsync()).ReturnsAsync(1).Verifiable("Id of the current user was NOT retreived");
 
             //returns a course (empty object)
-            _uowMocker.mockCourseRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new Course()).Verifiable("Course is NOT retrieved");
+            _uowMocker.mockCourseRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync(new Course()).Verifiable("Course is NOT retrieved");
 
             var result = await _controller.GetCourseClassesDataTable(_inputDTModel, 1, null, true, true);
 
             //verify that id of the current user is retreived 
             _uowMocker.mockLMSUserRepository.Verify(l => l.RetrieveCurrentUserIdAsync());
             //verify that course is retreived 
-            _uowMocker.mockCourseRepository.Verify(l => l.GetByIdAsync(It.IsAny<int>()));
+            _uowMocker.mockCourseRepository.Verify(l => l.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>()));
             //verify that function returns a DTResposne form repostiory 
             Assert.IsAssignableFrom<ActionResult>(result);
 
@@ -83,11 +83,11 @@ namespace SPM_Project.ApiControllers.Tests
         {
 
             //returns user based on the ID passed 
-            _uowMocker.mockLMSUserRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new LMSUser()).Verifiable("GetByIdAsync LMSUser was not called");
+            _uowMocker.mockLMSUserRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync(new LMSUser()).Verifiable("GetByIdAsync LMSUser was not called");
 
 
             //returns null
-            _uowMocker.mockCourseRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((Course)null).Verifiable("GetByIdAsync Course was not called");
+            _uowMocker.mockCourseRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync((Course)null).Verifiable("GetByIdAsync Course was not called");
 
             //create a passable function 
             Func<Task> action = (async () => await _controller.GetCourseClassesDataTable(_inputDTModel, 1, 1, true, true));
@@ -97,10 +97,10 @@ namespace SPM_Project.ApiControllers.Tests
 
 
             //verify that id of the current user is retreived 
-            _uowMocker.mockLMSUserRepository.Verify(l => l.GetByIdAsync(It.IsAny<int>()));
+            _uowMocker.mockLMSUserRepository.Verify(l => l.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>()));
 
             //verify that all mockCourseRepository setup is called
-            _uowMocker.mockCourseRepository.Verify(l => l.GetByIdAsync(It.IsAny<int>()));
+            _uowMocker.mockCourseRepository.Verify(l => l.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>()));
 
 
         }
@@ -112,11 +112,11 @@ namespace SPM_Project.ApiControllers.Tests
         {
 
             //returns user based on the ID passed 
-            _uowMocker.mockLMSUserRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((LMSUser)null).Verifiable("GetByIdAsync LMSUser was not called");
+            _uowMocker.mockLMSUserRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync((LMSUser)null).Verifiable("GetByIdAsync LMSUser was not called");
 
 
             //returns empty course
-            //_uowMocker.mockCourseRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new Course()).Verifiable("GetByIdAsync Course was not called");
+            //_uowMocker.mockCourseRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync(new Course()).Verifiable("GetByIdAsync Course was not called");
 
             //create a passable function 
             Func<Task> action = (async () => await _controller.GetCourseClassesDataTable(_inputDTModel, 1, 1, true, true));
@@ -127,7 +127,7 @@ namespace SPM_Project.ApiControllers.Tests
 
 
             //verify that id of the current user is retreived 
-            _uowMocker.mockLMSUserRepository.Verify(l => l.GetByIdAsync(It.IsAny<int>()));
+            _uowMocker.mockLMSUserRepository.Verify(l => l.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>()));
 
 
 

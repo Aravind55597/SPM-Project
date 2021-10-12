@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.EntityModels
 {
-    public class CourseClass
+    public class CourseClass : IEntityWithId
     {
         public int Id { get; private set; }
 

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.EntityModels
 {
-    public class LMSUser
+    public class LMSUser : IEntityWithId
     {
         //this is to form relationships with other tables , we leave the ApplicationUser just for Authntication & Authorization
         //also for data that rarely changes 

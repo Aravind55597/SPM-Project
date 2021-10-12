@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.EntityModels
 {
-    public class QuizQuestion
+    public class QuizQuestion : IEntityWithId
     {
 
         //values for discriminator
