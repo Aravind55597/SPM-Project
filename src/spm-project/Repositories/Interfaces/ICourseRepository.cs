@@ -12,9 +12,8 @@ namespace SPM_Project.Repositories.Interfaces
     public interface ICourseRepository: IGenericRepository<Course>
     {
 
-        public Task<DTResponse<CourseTableData>> GetCoursesDataTable(DTParameterModel dTParameterModel); 
-
-
+        public Task<DTResponse<CourseTableData>> GetCoursesDataTable(DTParameterModel dTParameterModel);
+        object GetCoursePreReq(Course course);
     }
 
 }

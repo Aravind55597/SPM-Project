@@ -6,19 +6,45 @@
     <div class="d-flex flex-column-fluid">
 
         <div class="container">
+
+
             <div class="card card-custom">
-                @*header of the table : put tabs here *@
+          
                 <div class="card-header">
+                
+                
                 </div>
 
-                @*card body is to add content*@
+                  @*card body is to add content*@
                 <div class="card-body">
+
+                    <div style="display: inline-block;">Filter By : </div>
+
+                    <div style="display: inline-block;">
+                        @*add filter*@
+                        <select id="courseFilter" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                            <option value="">No Filter</option>
+                            <option value="Course 1">Course 1</option>
+                            <option value="Course 2">Course 2</option>
+                            <option value="Course 3">Course 3</option>
+                        </select>
+                    </div>
+
+
+                    <div style="display: inline-block;">
+                        @*add button*@
+                        <button id="addCoursebtn" class="btn btn-primary">Add New Course</button>
+                        <br />
+                    </div>
+
+
 
 
                     @*begin: Datatable*@
                     <table class="table table-bordered table-hover table-checkable" id="course_datatable" style="margin-top: 13px !important">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Course Name</th>
                                 <th>Classes</th>
                                 <th>Created Date</th>
@@ -45,43 +71,65 @@
 @*begin: overlay*@
 
 @*<div class="overlay" style="display:none">*@
-<div class="overlay" style="z-index: 999 !important;">
+<div class="overlay" style="display:none">
+
+    <div class="content d-flex flex-column flex-column-fluid">
+        <div class="d-flex flex-column-fluid">
+            <div class="container">
+                @*Add Course Modal*@
+                <div id="addCoursePopUp" class="card card-custom" style="width: 50rem; margin: 0 auto;">
+
+                    <button style="margin-left:5px;" type="button" class="btn-close" aria-label="Close"></button>
+
+                    <div class="card-body">
+                        <form id="addCourseForm">
+                            <div class="form-group">
+                                <h1>New Course</h1>
+                                <input type="text" class="form-control" id="coursename" placeholder="Enter new course name">
+                            </div>
+                            <br />
+                            <button id="submitCourse"  class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+
+                </div>
+
+                @*Add Class Modal*@
+                <div id="addClassPopUp" class="card card-custom" style="width: 50rem;margin:0 auto;">
+
+                    <button style="margin-left:5px;" type="button" class="btn-close" aria-label="Close"></button>
+
+                    <div class="card-body">
+
+                        <form id="addClassForm">
+                            <div class="form-group">
+                                <h1 style="display:inline">Course : </h1>
+                                <h1 style="display: inline" id="couseNameInput"></h1>
+                            </div>
+                            <br />
+                            <div class="form-group">
+                                <label for="class">Class Name</label>
+                                <input type="text" class="form-control" id="classname" placeholder="Class Name">
+                            </div>
+                            <br />
+                            <div class="form-group">
+                                <label for="slots">Number of Slots in Class</label>
+                                <input type="number" class="form-control" id="inputSlots" placeholder="Enter Slots">
+                            </div>
+                            <br />
+                            <button id="submitClass"  class="btn btn-primary">Submit</button>
+                        </form>
 
 
-    <div id="addCoursePopUp" class="card" style="width: 50rem;margin:0 auto;">
+                    </div>
 
-        <button style="float: right;" type="button" class="btn-close" aria-label="Close"></button>
+                </div>
 
+            </div>
 
-        @*card body is to add content*@
-        <div class="card-body">
-            <h1>Course Name</h1>
-            <input type="text" class="form-control" id="inputCourseName" placeholder="Enter New Course Name" />
-            <br />
-            <button style="float: right;" type="submit" class="btn btn-primary">Submit</button>
         </div>
-
     </div>
 
-    <div id="addClassPopUp" class="card" style="width: 50rem;margin:0 auto;">
-
-        <button style="float: right;" type="button" class="btn-close" aria-label="Close"></button>
-
-
-        @*card body is to add content*@
-        <div class="card-body">
-            <h1>Course Name :</h1>
-            <br />
-            <h1>Class Name</h1>
-            <input type="text" class="form-control" id="inputClassName" placeholder="Enter New Class Name" />
-            <br />
-            <h1>Total Slots</h1>
-            <input type="number" class="form-control" id="inputClassName" placeholder="Enter Slots" />
-            <br />
-            <button style="float: right;" type="submit" class="btn btn-primary">Submit</button>
-        </div>
-
-    </div>
-
+ 
 </div>
 @*end: overlay*@

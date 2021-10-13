@@ -50,6 +50,8 @@ function viewEngineerDT() {
 			data: function (d) {
 				console.log(JSON.stringify(d))
 				return JSON.stringify(d);
+
+				Filter: [{ ColumnName: "", FilterValue: "" }, { ColumnName: "", FilterValue: "" }]
 			}
 		},
 
@@ -131,8 +133,10 @@ function viewEngineerDT() {
 	});
 
 	//check box 
+	//group select checkbox 
 	table.on('change', '.group-checkable', function () {
 
+		var selectedList = [];
 
 		var set = $(this).closest('table').find('td:first-child .checkable');
 		var checked = $(this).is(':checked');
@@ -143,7 +147,8 @@ function viewEngineerDT() {
 			if (checked) {
 				$(this).prop('checked', true);
 				table.rows($(this).closest('tr')).select();
-				
+				//get data of group select rows
+				selectedList.push(table.rows($(this).closest('tr')).data()[0]);
 
 			}
 			else {
@@ -151,6 +156,29 @@ function viewEngineerDT() {
 				table.rows($(this).closest('tr')).deselect();
 			}
 		});
+
+		console.log(selectedList);
+
+	});
+
+	table.on('change', '.checkable', function () {
+
+		var selectedList = [];
+
+		//RETREIVE row where select was triiggered (check whether it is selceted )
+		//$(row).data("DT_RowId")  -> COURSE ID 
+
+
+		var NumSelected = $('.selected').length;
+
+		var indexList = table.rows({ selected: true }).indexes();
+		var rows_data = table.rows(indexList).data();
+
+		for (i = 0; i < NumSelected; i++) {
+			selectedList.push(rows_data[i])
+
+		}
+		console.log(selectedList);
 	});
 
 

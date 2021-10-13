@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.EntityModels
 {
-    public class Quiz
+    public class Quiz : IEntityWithId
     {
 
         public Quiz()
         {
 
         }
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
 
         public string Name { get; set; }

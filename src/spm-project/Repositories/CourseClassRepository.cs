@@ -2,6 +2,7 @@
 using SPM_Project.Data;
 using SPM_Project.DataTableModels;
 using SPM_Project.DataTableModels.DataTableData;
+using SPM_Project.DataTableModels.DataTableRequest;
 using SPM_Project.DataTableModels.DataTableResponse;
 using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
@@ -19,133 +20,100 @@ namespace SPM_Project.Repositories
 
 
 
-
-
-
-
-
-
-
-
-
         //--------------------------------------------TABLE FUNCTIONS------------------------------------------------------------------------------------------------------
 
         //generate IQueryable for manipulation by datatable
-        private IQueryable<CourseClassTableData> GetCourseClassTableQueryable(int lmsId, string role)
+        private IQueryable<CourseClassTableData> GetCourseClassTableQueryable(int? courseId, int userId, bool isTrainer = false, bool isLearner = false)
         {
             //queryable of course class
-   
 
-            switch (role)
+            var queryable = _context.CourseClass.AsQueryable(); 
+
+            if (isTrainer)
             {
-                case "Trainer":
-
-                    var queryableT = _context.CourseClass.Where(cc => cc.ClassTrainer.Id == lmsId).
-                    Select(cc => new CourseClassTableData()
-                    {
-                        CourseName = cc.Course.Name,
-                        ClassName = cc.Name,
-                        StartDate = cc.StartClass,
-                        EndDate = cc.EndClass,
-                        TrainerName = _context.Users.Where(u => u.LMSUser.Id == cc.ClassTrainer.Id).Select(u => u.Name).FirstOrDefault(),
-                        NumOfChapters = cc.Chapters.Count(),
-                        NumOfStudents = cc.ClassEnrollmentRecords.Where(ce => ce.Approved).Count(),
-                        Slots = cc.Slots,
-                        DT_RowId = cc.Id
-                    });
-
-                    return queryableT; 
-
-
-                case "Learner":
-                    var enrollQueryable = _context.LMSUser.
-                        Where(l => l.Id == lmsId).
-                        SelectMany(l=>l.Enrollments).
-                        Where(e=>e.Approved==true);
-
-
-                    var queryableL = enrollQueryable.Select(e=>e.CourseClass).
-                    Select(cc => new CourseClassTableData()
-                    {
-                        CourseName = cc.Course.Name,
-                        ClassName = cc.Name,
-                        StartDate = cc.StartClass,
-                        EndDate = cc.EndClass,
-                        TrainerName = _context.Users.Where(u => u.LMSUser.Id == cc.ClassTrainer.Id).Select(u => u.Name).FirstOrDefault(),
-                        NumOfChapters = cc.Chapters.Count(),
-                        NumOfStudents = cc.ClassEnrollmentRecords.Where(ce => ce.Approved).Count(),
-                        Slots = cc.Slots,
-                        DT_RowId = cc.Id
-                    });
-
-                    return queryableL;
-
-                default:
-                    var queryableA = _context.CourseClass.
-                    Select(cc => new CourseClassTableData()
-                    {
-                        CourseName = cc.Course.Name,
-                        ClassName = cc.Name,
-                        StartDate = cc.StartClass,
-                        EndDate = cc.EndClass,
-                        TrainerName = _context.Users.Where(u => u.LMSUser.Id == cc.ClassTrainer.Id).Select(u => u.Name).FirstOrDefault(),
-                        NumOfChapters = cc.Chapters.Count(),
-                        NumOfStudents = cc.ClassEnrollmentRecords.Where(ce => ce.Approved).Count(),
-                        Slots = cc.Slots,
-                        DT_RowId = cc.Id
-                    });
-                    return queryableA;
+                queryable = queryable.Where(cc => cc.ClassTrainer.Id == userId); 
 
             }
+
+            if (isLearner)
+            {
+                var enrollQueryable = _context.LMSUser.
+                       Where(l => l.Id == userId).
+                       SelectMany(l => l.Enrollments).
+                       Where(e => e.Approved == true);
+
+                queryable = enrollQueryable.Select(e => e.CourseClass); 
+
+            }
+
+            if (courseId!=null)
+            {
+                queryable = queryable.Where(cc=>cc.Course.Id== courseId); 
+            }
+
+            var result = queryable.Select(cc => new CourseClassTableData()
+                    {
+                        CourseName = cc.Course.Name,
+                        ClassName = cc.Name,
+                        StartDate = cc.StartClass,
+                        EndDate = cc.EndClass,
+                        TrainerName = _context.Users.Where(u => u.LMSUser.Id == cc.ClassTrainer.Id).Select(u => u.Name).FirstOrDefault(),
+                        NumOfChapters = cc.Chapters.Count(),
+                        NumOfStudents = cc.ClassEnrollmentRecords.Where(ce => ce.Approved).Count(),
+                        Slots = cc.Slots,
+                        DT_RowId = cc.Id
+                    });
+            
+            return result;
 
         }
 
-        public async Task<DTResponse<CourseClassTableData>> GetCourseClassesDataTable(DTParameterModel dTParameterModel, int lmsId , string role )
+        private IQueryable<CourseClassTableData> GlobalTableSearcher(IQueryable<CourseClassTableData> queryable, DTRequestHandler<CourseClassTableData> dtH)
         {
-            //LMSId is validated to be a Trainer Id in the service layer
 
-            var draw = dTParameterModel.Draw;
-            var start = dTParameterModel.Start;
-            var length = dTParameterModel.Start;
-            var sortColumn = dTParameterModel.Columns[dTParameterModel.Order[0].Column].Name;
-            var sortColumnDirection = dTParameterModel.Order[0].Dir;
-            var searchValue = dTParameterModel.Search.Value;
-            int pageSize = dTParameterModel.Length;
-
-            //number of records to be skipped
-            int skip = dTParameterModel.Start;
-            int recordsTotal = 0;
-            int recordsFiltered = 0;
-
-            var queryable = GetCourseClassTableQueryable(lmsId , role);
-
-            recordsTotal = queryable.Count();
-
-            //if sortcolumn and sort colum direction are not empty
-            if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
-            {
-                queryable = queryable.OrderBy(sortColumn + " " + sortColumnDirection);
-            }
 
             //if search value is not empty
-            if (!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(dtH.SearchValue))
             {
-                queryable = queryable.Where(m => m.CourseName.Contains(searchValue)
-                                            || m.ClassName.Contains(searchValue)
-
+                queryable = queryable.Where(m => m.CourseName.Contains(dtH.SearchValue)
+                                            || m.ClassName.Contains(dtH.SearchValue)
+                                            || m.TrainerName.Contains(dtH.SearchValue)
                                             );
             }
 
-            recordsFiltered = queryable.Count();
+            return queryable;
+        }
 
-            var data = await queryable.Skip(skip).Take(pageSize).ToListAsync();
+        public async Task<DTResponse<CourseClassTableData>> GetCourseClassesDataTable(DTParameterModel dTParameterModel, int? courseId,int userId ,  bool isTrainer=false, bool isLearner=false)
+        {
 
-            //repeated
+
+            var dtH = new DTRequestHandler<CourseClassTableData>(dTParameterModel);
+
+            var queryable = GetCourseClassTableQueryable(courseId, userId , isTrainer , isLearner);
+
+            dtH.RecordsCounter(queryable);
+
+            queryable = dtH.TableSorter(queryable);
+
+
+            queryable = GlobalTableSearcher(queryable, dtH);
+
+
+            queryable = dtH.TableFilterer(queryable);
+
+            dtH.FilteredRecordsCounter(queryable);
+
+
+            //skip 'start' records & Retrieve 'pagesize' records
+            var data = await dtH.TablePager(queryable).ToListAsync();
+
+
             var dtResponse = new DTResponse<CourseClassTableData>()
             {
-                Draw = draw,
-                RecordsFiltered = recordsFiltered,
-                RecordsTotal = recordsTotal,
+                Draw = dtH.Draw,
+                RecordsFiltered = dtH.RecordsTotal,
+                RecordsTotal = dtH.RecordsFiltered,
                 Data = data,
             };
 

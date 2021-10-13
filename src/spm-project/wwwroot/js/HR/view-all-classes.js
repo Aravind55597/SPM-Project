@@ -1,9 +1,25 @@
 ﻿
 $(document).ready(function () {
 	//viewEngineerDT();
+	closeModal();
+	viewClassModal();
 
 });
 
+
+
+
+function closeModal() {
+	$(".btn-close").click(function () {
+		$(".overlay").hide();
+	});
+}
+
+function viewClassModal() {
+	$(".viewClassList").click(function () {
+		$(".overlay").show();
+	});
+}
 
 
 function viewEngineerDT() {

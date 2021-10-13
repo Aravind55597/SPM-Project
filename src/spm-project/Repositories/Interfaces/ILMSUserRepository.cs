@@ -13,7 +13,7 @@ namespace SPM_Project.Repositories.Interfaces
     {
 
         //retrieve data to display all engineers present
-        public Task<DTResponse<LMSUsersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel);
+        public Task<DTResponse<LMSUsersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel, bool isTrainer, bool isLearner, bool isEligible, int? classId);
 
      
         public Task<int> RetrieveCurrentUserIdAsync();
@@ -21,8 +21,6 @@ namespace SPM_Project.Repositories.Interfaces
     
 
         public Task<List<string>> RetreiveUserRolesAsync(int LMSUserId);
-
-
-       
+        object GetCompletedProgressTracker(LMSUser user);
     }
 }
