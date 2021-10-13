@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using SPM_ProjectTests.Mocks;
 using SPM_Project.EntityModels;
 using SPM_Project.CustomExceptions;
+using Newtonsoft.Json;
 
 namespace SPM_Project.ApiControllers.Tests
 {
@@ -35,10 +36,10 @@ namespace SPM_Project.ApiControllers.Tests
             _uowMocker = new UOWMocker();
             _controller = new UsersController(_uowMocker.mockUnitOfWork.Object);
             _inputDTModel = new DTParameterModel();
-            _outputDTModel = new DTResponse<LMSUsersTableData>();
+            _outputDTModel = new DTResponse<LMSUsersTableData>(); 
             //the input for this function does not matter for testing as the datatable function jsut calls this to return the result ; the valiadation of the input to this 
             //class is handled by the datatabale function
-            _uowMocker.mockLMSUserRepository.Setup(l => l.GetEngineersDataTable(_inputDTModel, true, true , true , It.IsAny<int?>())).ReturnsAsync(_outputDTModel);
+            _uowMocker.mockLMSUserRepository.Setup(l => l.GetEngineersDataTable(_inputDTModel, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<int?>())).ReturnsAsync(_outputDTModel).Verifiable("GetEngineersDataTable was not called");
         }
 
 
@@ -61,35 +62,30 @@ namespace SPM_Project.ApiControllers.Tests
 
 
 
-
-
         [Fact]
-        public async Task GetEngineersDataTableTest_ClassDoesNotExist_ThrowNotFound()
+        public async Task GetEngineersDataTableTest_ClassBelongingToClassIdDoesNotExist()
         {
 
             //setup
-
-            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync((CourseClass)null);
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync((CourseClass)null).Verifiable("Retreiving course was not attempted"); ;
 
 
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
 
-            Func<Task> action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, true, true));
+            Func<Task> action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1));
 
 
             //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
 
             await Assert.ThrowsAsync<NotFoundException>(action);
 
-
         }
+
         [Fact]
-        public async Task GetEngineersDataTableTest_ClassExists_ReturnOK()
+        public async Task GetEngineersDataTableTest_ClassBelongingToClassIdDoesExists()
         {
             //setup 
-
-
-            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync(new CourseClass());
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync(new CourseClass()).Verifiable("Retreiving course was not attempted");
 
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -98,57 +94,117 @@ namespace SPM_Project.ApiControllers.Tests
             //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+            //verify that course retreival was attempted 
+            _uowMocker.mockCourseClassRepository.Verify(u => u.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>()));
+
+            //verify that respository is retreived 
+            _uowMocker.mockUnitOfWork.Verify(l => l.LMSUserRepository); 
+
+            //verify that repository functionw as called 
+            _uowMocker.mockLMSUserRepository.Verify(l => l.GetEngineersDataTable(_inputDTModel, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<int?>()));
             //verify that you did not get null as a result 
             Assert.NotNull(result);
+            //check if ok is returned 
             Assert.IsType<OkObjectResult>(result);
+            //check that a json string is passed to the front end 
             var items = Assert.IsType<string>(result.Value);
-
+            //check if DTResponse object is send to front end 
+            var deserializedMessage = JsonConvert.DeserializeObject<DTResponse<LMSUsersTableData>>(items);
+            // Then
+            Assert.IsType<DTResponse<LMSUsersTableData>>(deserializedMessage);
         }
+
         [Fact]
-        public async Task GetEngineersDataTableTest_PermutationsOfInputClassExists_ThrowBadRequest()
+        public async Task GetEngineersDataTableTest_IsEligibleProvided()
         {
             //setup 
-            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync(new CourseClass());
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(new CourseClass()).Verifiable("Retreiving course was not attempted"); ;
 
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
-            // true for trainer , learner , eligible
-            Func<Task> action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, true, true , true));
+
+            var result = await _controller.GetEngineersDataTable(_inputDTModel, 1) as OkObjectResult;
+
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+
+            //verify that course retreival was attempted 
+            _uowMocker.mockCourseClassRepository.Verify(u => u.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>()));
+
+            //verify that respository is retreived 
+            _uowMocker.mockUnitOfWork.Verify(l => l.LMSUserRepository);
+
+            //verify that repository functionw as called 
+            _uowMocker.mockLMSUserRepository.Verify(l => l.GetEngineersDataTable(_inputDTModel, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<int?>()));
+            //verify that you did not get null as a result 
+            Assert.NotNull(result);
+            //check if ok is returned 
+            Assert.IsType<OkObjectResult>(result);
+            //check that a json string is passed to the front end 
+            var items = Assert.IsType<string>(result.Value);
+            //check if DTResponse object is send to front end 
+            var deserializedMessage = JsonConvert.DeserializeObject<DTResponse<LMSUsersTableData>>(items);
+            // Then
+            Assert.IsType<DTResponse<LMSUsersTableData>>(deserializedMessage);
+
+        }
+
+
+        [Fact]
+        public async Task GetEngineersDataTableTest_IsEligbibleNotProvided()
+        {
+            //setup 
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync(new CourseClass()).Verifiable("Retreiving course was not attempted");
+            
+            
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            // true trainer , false learner
+            Func<Task> action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1 , true, false));
             //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
             await Assert.ThrowsAsync<BadRequestException>(action);
 
+
+
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
-            // false for trainer,learner, true for eligible
-             action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, false, false, true));
+            // false trainer , false learner
+            var result = await _controller.GetEngineersDataTable(_inputDTModel, 1) as OkObjectResult;
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            //verify that course retreival was attempted 
+            _uowMocker.mockCourseClassRepository.Verify(u => u.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>()));
+
+            //verify that respository is retreived 
+            _uowMocker.mockUnitOfWork.Verify(l => l.LMSUserRepository);
+
+            //verify that repository functionw as called 
+            _uowMocker.mockLMSUserRepository.Verify(l => l.GetEngineersDataTable(_inputDTModel, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<int?>()));
+            //verify that you did not get null as a result 
+            Assert.NotNull(result);
+            //check if ok is returned 
+            Assert.IsType<OkObjectResult>(result);
+            //check that a json string is passed to the front end 
+            var items = Assert.IsType<string>(result.Value);
+            //check if DTResponse object is send to front end 
+            var deserializedMessage = JsonConvert.DeserializeObject<DTResponse<LMSUsersTableData>>(items);
+            // Then
+            Assert.IsType<DTResponse<LMSUsersTableData>>(deserializedMessage);
+
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            //false for trainer , true for learner 
+            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, false, true));
             //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
             await Assert.ThrowsAsync<BadRequestException>(action);
 
+            
+            
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
-            //false for trainer , learner , treu for eligible
-            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, false, false, true));
+            //true for trainer , true for learner 
+            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, true, true));
             //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
             await Assert.ThrowsAsync<BadRequestException>(action);
 
-            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
-            //false for trainer , true for learner , false for eligible
-            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, false, true, false));
-            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
-            await Assert.ThrowsAsync<BadRequestException>(action);
-
-            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
-            //true for trainer , true for learner , false for eligible
-            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, true, true, false));
-            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
-            await Assert.ThrowsAsync<BadRequestException>(action);
-
-            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
-            //false for trainer , true for learner , false for eligible
-            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, false, true, false));
-            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
-            await Assert.ThrowsAsync<BadRequestException>(action);
 
         }
         [Fact]
-        public async Task GetEngineersDataTableTest_PermutationsOfInputNoClassId_ThrowBadRequest()
+        public async Task GetEngineersDataTableTest_IsEligbibleProvided()
         {
             //setup 
             _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync(new CourseClass());
@@ -171,28 +227,11 @@ namespace SPM_Project.ApiControllers.Tests
             //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
             await Assert.ThrowsAsync<BadRequestException>(action);
 
-            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
-            //false for trainer , true for learner , false for eligible
-            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, null, false, true, false));
-            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
-            await Assert.ThrowsAsync<BadRequestException>(action);
-
-            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
-            //true for trainer , true for learner , false for eligible
-            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, null, true, true, false));
-            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
-            await Assert.ThrowsAsync<BadRequestException>(action);
-
-            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
-            //false for trainer , true for learner , false for eligible
-            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, null, false, true, false));
-            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
-            await Assert.ThrowsAsync<BadRequestException>(action);
 
         }
 
 
-
+        //sample input from front end 
         //        _engineersDataTableInput = new DTParameterModel()
         //        {
         //            Draw = 1,

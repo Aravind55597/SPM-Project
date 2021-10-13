@@ -45,66 +45,44 @@ namespace SPM_Project.ApiControllers
             )
 
         {
-            //if class id is not null
-            if (classId != null)
+
+            var errorTextBadRequest = "When checking eligibility , the parameters you have to provide are : isEligible , classId , isTrainer OR isLearner";
+
+            var errorTextNotFound = "Class does not exist"; 
+
+            if (isEligible)
             {
-                
-                
-                //retreive course 
-                var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync((int)classId);
-
-                //class does not exist
-                if (courseClass == null)
+                if (  (classId == null ) ||  (!isLearner && !isEligible )    ||   (isLearner && isEligible)  )
                 {
-                   
-                    throw new NotFoundException("Class does not exist"); ;
+                    throw new BadRequestException(errorTextBadRequest);
                 }
-
-
-                if (isEligible)
-                {
-                    //cannot be aligible as trainer & learner for a classs
-                    if (isTrainer && isLearner )
-                    {
-                        throw new BadRequestException("Can't be eligible both as Learner & a Trainer"); ;
-
-                    }
-
-
-                    //if user provide iseligible but no istrainer or islearner 
-                    if (!isTrainer && !isLearner)
-                    {
-
-                        throw new BadRequestException("Need to provide either isLearner or isTrainer to check for eligibility");
-                    }
-
-
-                }
-
-                //no eligibility is given 
-                if (isTrainer || isLearner)
-                {
-                    throw new BadRequestException("Need to provide isEligible");
-                }
-                
-
-
-
             }
             else
             {
-                if (isEligible)
+
+                if (isLearner || isTrainer)
                 {
-                    throw new BadRequestException("Need to provide classId to check for eligibility");
+                    throw new BadRequestException(errorTextBadRequest);
                 }
 
-
-                if ( (isTrainer || isLearner) || (isTrainer && isLearner) )
+                if (classId != null)
                 {
-                    throw new BadRequestException("isTrainer or IsLearner can only be used to check for eligibility for a class");
+                    //retreive course 
+                    var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync((int)classId);
+
+                    //class does not exist
+                    if (courseClass == null)
+                    {
+                        throw new NotFoundException(errorTextNotFound); ;
+                    }
                 }
+
 
             }
+
+
+
+
 
             //return the data 
             var response = await _unitOfWork.LMSUserRepository.GetEngineersDataTable(dTParameterModel, isTrainer, isLearner, isEligible, classId);
