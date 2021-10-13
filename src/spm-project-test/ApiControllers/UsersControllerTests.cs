@@ -211,22 +211,50 @@ namespace SPM_Project.ApiControllers.Tests
 
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
             // true for trainer , learner , eligible
-            Func<Task> action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, null, true, true, true));
+            Func<Task> action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, true, true, true));
             //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
             await Assert.ThrowsAsync<BadRequestException>(action);
 
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
             // false for trainer,learner, true for eligible
-            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, null, false, false, true));
+            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, false, false, true));
             //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
             await Assert.ThrowsAsync<BadRequestException>(action);
 
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
             //false for trainer , learner , treu for eligible
-            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, null, false, false, true));
-            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
-            await Assert.ThrowsAsync<BadRequestException>(action);
 
+            var result = await _controller.GetEngineersDataTable(_inputDTModel, 1 , true, false , true) as OkObjectResult;
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            //verify that repository functionw as called 
+            _uowMocker.mockLMSUserRepository.Verify(l => l.GetEngineersDataTable(_inputDTModel, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<int?>()));
+            //verify that you did not get null as a result 
+            Assert.NotNull(result);
+            //check if ok is returned 
+            Assert.IsType<OkObjectResult>(result);
+            //check that a json string is passed to the front end 
+            var items = Assert.IsType<string>(result.Value);
+            //check if DTResponse object is send to front end 
+            var deserializedMessage = JsonConvert.DeserializeObject<DTResponse<LMSUsersTableData>>(items);
+            // Then
+            Assert.IsType<DTResponse<LMSUsersTableData>>(deserializedMessage);
+
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            //false for trainer , learner , treu for eligible
+            result = await _controller.GetEngineersDataTable(_inputDTModel, 1, false, true, true) as OkObjectResult;
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            _uowMocker.mockLMSUserRepository.Verify(l => l.GetEngineersDataTable(_inputDTModel, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<int?>()));
+            //verify that you did not get null as a result 
+            Assert.NotNull(result);
+            //check if ok is returned 
+            Assert.IsType<OkObjectResult>(result);
+            //check that a json string is passed to the front end 
+            items = Assert.IsType<string>(result.Value);
+            //check if DTResponse object is send to front end 
+            deserializedMessage = JsonConvert.DeserializeObject<DTResponse<LMSUsersTableData>>(items);
+            // Then
+            Assert.IsType<DTResponse<LMSUsersTableData>>(deserializedMessage);
 
         }
 

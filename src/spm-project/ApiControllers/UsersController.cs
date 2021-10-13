@@ -52,34 +52,31 @@ namespace SPM_Project.ApiControllers
 
             if (isEligible)
             {
-                if (  (classId == null ) ||  (!isLearner && !isEligible )    ||   (isLearner && isEligible)  )
+                if (  (classId == null ) ||  (!isLearner && !isTrainer )    ||   (isLearner && isTrainer)  )
                 {
                     throw new BadRequestException(errorTextBadRequest);
                 }
             }
             else
             {
-
                 if (isLearner || isTrainer)
                 {
                     throw new BadRequestException(errorTextBadRequest);
                 }
 
-                if (classId != null)
-                {
-                    //retreive course 
-                    var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync((int)classId);
-
-                    //class does not exist
-                    if (courseClass == null)
-                    {
-                        throw new NotFoundException(errorTextNotFound); ;
-                    }
-                }
-
-
             }
 
+            if (classId != null)
+            {
+                //retreive course 
+                var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync((int)classId);
+
+                //class does not exist
+                if (courseClass == null)
+                {
+                    throw new NotFoundException(errorTextNotFound); ;
+                }
+            }
 
 
 
