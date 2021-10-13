@@ -24,6 +24,10 @@ function openViewClassModal() {
 	//modal must always show classlist tab upon open 
 	$(".nav-link").removeClass("active");
 	$('a[href="#ClassList"]').addClass("active");
+
+	$(".tab-pane").removeClass("show active");
+	$('#ClassList').addClass("show active");
+
 	$(".overlay").show();
 	closeModal();
 }
@@ -50,8 +54,6 @@ function viewClassEvent(table) {
 		$("#individual_class_datatable").DataTable().clear().destroy();
 		$("#assign_trainer_datatable").DataTable().clear().destroy();
 		$("#assign_learner_datatable").DataTable().clear().destroy();
-
-
 
 
 		//initialize class list DT using classID
@@ -276,7 +278,7 @@ function generalDT(action, class_ID) {
 	}
 
 	else if (action == "assignLearner") {
-		RetrieveValue = $("#get-engineers-datatable").val();
+		RetrieveValue = $("#get-engineers-datatable").val() + + "?classID=" + class_ID + "&isLearner=True&isEligible=True";
 		htmlTableName = "#assign_learner_datatable";
 		EmptyTableMsg = "Could not find Eligible Learners"
 	}
