@@ -181,6 +181,10 @@ function viewCourseClassDT() {
 			data: function (d) {
 				console.log(JSON.stringify(d))
 				return JSON.stringify(d);
+			},
+			error: function (xhr, error, code) {
+				console.log(xhr);
+				console.log(code);
 			}
 		},
 
@@ -262,6 +266,7 @@ function generalDT(action, class_ID) {
 		
 	}
 
+
 	else if (action == "assignTrainer") {
 		RetrieveValue = $("#get-engineers-datatable").val() + "?classID=" + class_ID + "&isTrainer=True&isEligible=True";
 		console.log(RetrieveValue)
@@ -320,6 +325,10 @@ function generalDT(action, class_ID) {
 			data: function (d) {
 				console.log(JSON.stringify(d))
 				return JSON.stringify(d);
+			},
+			error: function (xhr, error, code) {
+				console.log(xhr);
+				console.log(code);
 			}
 		},
 

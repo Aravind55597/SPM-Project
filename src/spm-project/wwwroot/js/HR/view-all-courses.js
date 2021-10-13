@@ -5,6 +5,15 @@ $(document).ready(function () {
 });
 
 
+function notification(notificationString) {
+
+	$.notify(notificationString, {
+		className: 'success',
+		globalPosition: 'top center'
+	});
+}
+
+
 
 function closeModal() {
 	$(".btn-close").click(function () {
@@ -49,11 +58,7 @@ function submitCourseEvent(table) {
 		//close modal
 		$(".overlay").hide();
 
-		$.notify("Successfully added New Course", {
-			className: 'success',
-			globalPosition: 'top center'
-		});
-
+		notification("Successfully added New Course");
 
 	});
 
@@ -99,11 +104,8 @@ function submitClassEvent(table) {
 		//close modal
 		$(".overlay").hide();
 
+		notification("Successfully added New Class");
 	
-		$.notify("Successfully added New Class", {
-			className: 'success',
-			globalPosition: 'top center'
-		});
 
 	});
 
@@ -148,11 +150,8 @@ function deleteCourseEvent(table) {
 		//reload table
 		table.ajax.reload();
 
+		notification("Successfully Deleted Course");
 
-		$.notify("Successfully Deleted Course", {
-			className: 'success',
-			globalPosition: 'top center'
-		});
 	});
 }
 
@@ -193,6 +192,10 @@ function viewCoursesDT() {
 			data: function (d) {
 				console.log(JSON.stringify(d))
 				return JSON.stringify(d);
+			},
+			error: function (xhr, error, code) {
+				console.log(xhr);
+				console.log(code);
 			}
 		},
 
