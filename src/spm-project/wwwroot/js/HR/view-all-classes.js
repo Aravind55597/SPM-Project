@@ -1,16 +1,9 @@
 ﻿
+
 $(document).ready(function () {
 	viewCourseClassDT();
 
 });
-
-
-
-function closeModal() {
-	$(".btn-close").click(function () {
-		$(".overlay").hide();
-	});
-}
 
 function notification(notificationString) {
 
@@ -19,6 +12,16 @@ function notification(notificationString) {
 		globalPosition: 'top center'
 	});
 }
+
+
+function closeModal() {
+	$(".btn-close").click(function () {
+		$(".overlay").hide();
+
+	});
+}
+
+
 
 function openViewClassModal() {
 	//modal must always show classlist tab upon open 
@@ -29,6 +32,7 @@ function openViewClassModal() {
 	$('#ClassList').addClass("show active");
 
 	$(".overlay").show();
+
 	closeModal();
 }
 
@@ -46,14 +50,12 @@ function viewClassEvent(table) {
 		$(".classNameInput").html(classname);
 
 
-		//get of selected row classID
+		//get selected row classID
 		var classID = row_data.DT_RowId;
 		console.log(classID)
 
 		//destroy previous datatable before you can initialize a new table 
-		$("#individual_class_datatable").DataTable().clear().destroy();
-		$("#assign_trainer_datatable").DataTable().clear().destroy();
-		$("#assign_learner_datatable").DataTable().clear().destroy();
+		destroyDT(["#individual_class_datatable", "#assign_trainer_datatable", "#assign_learner_datatable"]);
 
 
 		//initialize class list DT using classID
@@ -71,6 +73,20 @@ function viewClassEvent(table) {
 
 }
 
+
+
+
+
+
+function destroyDT(list_DT_names) {
+	for (i = 0; i < list_DT_names.length; i++) {
+		// clear and destroy DT
+		$(list_DT_names[i]).DataTable().clear().destroy();
+		//remove event listeners attached to DTs that are destroyed
+		$(list_DT_names[i]).off();
+
+    }
+}
 
 
 
@@ -94,6 +110,13 @@ function deleteClassEvent(table) {
 
 	});
 }
+
+
+function checkboxEventHandler(table) {
+	groupSelectHandler(table);
+	individualSelectHandler(table);
+}
+
 
 //group select checkbox 
 function groupSelectHandler(table) {
@@ -262,7 +285,7 @@ function generalDT(action, class_ID) {
 
 	if (action == "viewClassList") {
 
-		RetrieveValue = $("#get-engineers-datatable").val() + "?classID=" + class_ID
+		RetrieveValue = $("#get-engineers-datatable").val() + "?classId=" + class_ID
 		htmlTableName = "#individual_class_datatable";
 		EmptyTableMsg = "Class is Empty"
 		
@@ -270,18 +293,19 @@ function generalDT(action, class_ID) {
 
 
 	else if (action == "assignTrainer") {
-		RetrieveValue = $("#get-engineers-datatable").val() + "?classID=" + class_ID + "&isTrainer=True&isEligible=True";
-		console.log(RetrieveValue)
+		RetrieveValue = $("#get-engineers-datatable").val() + "?classId=" + class_ID + "&isTrainer=True&isEligible=True";
 		htmlTableName = "#assign_trainer_datatable";
 		EmptyTableMsg = "Could not find Eligible Trainers"
 
 	}
 
 	else if (action == "assignLearner") {
-		RetrieveValue = $("#get-engineers-datatable").val() + + "?classID=" + class_ID + "&isLearner=True&isEligible=True";
+		RetrieveValue = $("#get-engineers-datatable").val() + + "?classId=" + class_ID + "&isLearner=True&isEligible=True";
 		htmlTableName = "#assign_learner_datatable";
 		EmptyTableMsg = "Could not find Eligible Learners"
 	}
+
+	console.log(RetrieveValue)
 
 
 	var table = $(htmlTableName).DataTable({
@@ -402,13 +426,10 @@ function generalDT(action, class_ID) {
 
 	});
 
-
 	//event handlers
+	checkboxEventHandler(table);
 
-	//group select checkbox 
-	groupSelectHandler(table);
-	//individual select checkbox
-	individualSelectHandler(table);
+
 
 }
 
