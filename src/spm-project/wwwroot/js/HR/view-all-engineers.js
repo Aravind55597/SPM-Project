@@ -50,8 +50,10 @@ function viewEngineerDT() {
 			data: function (d) {
 				console.log(JSON.stringify(d))
 				return JSON.stringify(d);
-
-				Filter: [{ ColumnName: "", FilterValue: "" }, { ColumnName: "", FilterValue: "" }]
+			},
+			error: function (xhr, error, code) {
+				console.log(xhr);
+				console.log(code);
 			}
 		},
 

@@ -24,10 +24,6 @@ function openViewClassModal() {
 	//modal must always show classlist tab upon open 
 	$(".nav-link").removeClass("active");
 	$('a[href="#ClassList"]').addClass("active");
-
-	$(".tab-pane").removeClass("show active");
-	$('#ClassList').addClass("show active");
-
 	$(".overlay").show();
 	closeModal();
 }
@@ -48,12 +44,13 @@ function viewClassEvent(table) {
 
 		//get of selected row classID
 		var classID = row_data.DT_RowId;
-		console.log(classID)
 
 		//destroy previous datatable before you can initialize a new table 
 		$("#individual_class_datatable").DataTable().clear().destroy();
 		$("#assign_trainer_datatable").DataTable().clear().destroy();
 		$("#assign_learner_datatable").DataTable().clear().destroy();
+
+
 
 
 		//initialize class list DT using classID
@@ -65,7 +62,7 @@ function viewClassEvent(table) {
 
 		//open modal 
 		openViewClassModal();
-		
+
 
 	});
 
@@ -157,9 +154,9 @@ function viewCourseClassDT() {
 		//width of column siwll be auto 
 		autoWidth: false,
 
-		filter:true,
+		filter: true,
 
-		searching:true,
+		searching: true,
 
 		//make the table responsive 
 		responsive: true,
@@ -183,10 +180,6 @@ function viewCourseClassDT() {
 			data: function (d) {
 				console.log(JSON.stringify(d))
 				return JSON.stringify(d);
-			},
-			error: function (xhr, error, code) {
-				console.log(xhr);
-				console.log(code);
 			}
 		},
 
@@ -226,7 +219,7 @@ function viewCourseClassDT() {
 				},
 			},
 
-			
+
 		],
 
 
@@ -252,35 +245,26 @@ function viewCourseClassDT() {
 
 
 
-function generalDT(action, class_ID) {
+function generalDT(action, optional_ID = 0) {
 
-	//optional_ID can be the class ID or isEligible = true
-	var RetrieveValue = null;
+	var RetrieveValue = null
 	var htmlTableName = null;
-	var EmptyTableMsg = null;
-	
+
 
 	if (action == "viewClassList") {
-
-		RetrieveValue = $("#get-engineers-datatable").val() + "?classID=" + class_ID
+		RetrieveValue = $("#get-engineers-datatable").val();
 		htmlTableName = "#individual_class_datatable";
-		EmptyTableMsg = "Class is Empty"
-		
 	}
 
-
 	else if (action == "assignTrainer") {
-		RetrieveValue = $("#get-engineers-datatable").val() + "?classID=" + class_ID + "&isTrainer=True&isEligible=True";
-		console.log(RetrieveValue)
+		RetrieveValue = $("#get-engineers-datatable").val();
 		htmlTableName = "#assign_trainer_datatable";
-		EmptyTableMsg = "Could not find Eligible Trainers"
 
 	}
 
 	else if (action == "assignLearner") {
-		RetrieveValue = $("#get-engineers-datatable").val() + + "?classID=" + class_ID + "&isLearner=True&isEligible=True";
+		RetrieveValue = $("#get-engineers-datatable").val();
 		htmlTableName = "#assign_learner_datatable";
-		EmptyTableMsg = "Could not find Eligible Learners"
 	}
 
 
@@ -300,8 +284,7 @@ function generalDT(action, class_ID) {
 		processing: true,
 		//sentence to be shown when table is showing that it is retrieving data from the server 
 		language: {
-			processing: "DataTables is currently busy",
-			emptyTable: EmptyTableMsg
+			processing: "DataTables is currently busy"
 		},
 
 		//enable server side 
@@ -327,10 +310,6 @@ function generalDT(action, class_ID) {
 			data: function (d) {
 				console.log(JSON.stringify(d))
 				return JSON.stringify(d);
-			},
-			error: function (xhr, error, code) {
-				console.log(xhr);
-				console.log(code);
 			}
 		},
 

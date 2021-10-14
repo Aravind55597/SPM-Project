@@ -16,18 +16,8 @@
                 @*card body is to add content*@
                 <div class="card-body">
 
-                    <div style="display: inline-block;">
-                        <button class="btn btn-primary viewClassList">View Class List</button>
-                    </div>
-
-                    <div style="display: inline-block;">
-                        <button class="btn btn-danger deleteClass">Delete Class</button>
-                    </div>
-
-
-
                     @*begin: Datatable*@
-                    <table class="table table-bordered table-hover table-checkable" id="class_datatable" style="margin-top: 13px !important">
+                    <table class="table table-bordered table-hover table-checkable" id="course_class_datatable" style="margin-top: 13px !important">
                         <thead>
                             <tr>
                                 <th>Course Name</th>
@@ -54,22 +44,20 @@
 }
 
 @*begin: overlay*@
+<div class="content d-flex flex-column flex-column-fluid">
+    <div class="d-flex flex-column-fluid">
 
-@*<div class="overlay" style="display:none">*@
-<div class="overlay" style="display:none">
-
-
-
-    <div class="content d-flex flex-column flex-column-fluid">
-        <div class="d-flex flex-column-fluid">
+        <div class="overlay" style="display:none">
 
             <div class="container">
 
                 @*view class list Modal*@
-                <div id="viewClassPopUp" class="card card-custom" style="width: 75rem; margin: 0 auto;">
+                <div id="viewClassPopUp" class="card card-custom" style="margin: 0 auto; ">
 
                     <div class="card-header">
                         <button type="button" class="btn-close" aria-label="Close"></button>
+
+                        @*NAV TABS*@
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a href="#ClassList" class="nav-link active" data-bs-toggle="tab">Class List</a>
@@ -94,7 +82,16 @@
                             @*begin: view class list tab*@
                             <div class="tab-pane fade show active" id="ClassList">
 
-                                <button class="btn btn-danger withdraw">Withdraw</button>
+                                <div class="row">
+                                    <div class="col"><button class="btn btn-danger withdraw">Withdraw Learners</button></div>
+                                    <div class="col">
+                                        <div style="margin-left:250px">
+                                            <h3 style="display:inline-block">You are Viewing ClassList of</h3>
+                                            <h3 class="classNameInput" style=" display: inline-block"></h3>
+                                        </div>
+                                    </div>
+                                </div>
+
 
                                 @*begin: Datatable*@
                                 <table class="table table-bordered table-hover table-checkable" id="individual_class_datatable" style="margin-top: 13px !important">
@@ -103,7 +100,6 @@
                                             <th></th>
                                             <th>User ID</th>
                                             <th>Name</th>
-                                            <th>Role in Class</th>
                                         </tr>
 
                                     </thead>
@@ -116,10 +112,20 @@
                             @*begin: assign trainer tab*@
                             <div class="tab-pane fade" id="AssignTrainer">
 
-                                <button class="btn btn-success addTrainer">Add Trainer</button>
+
+                                <div class="row">
+                                    <div class="col"><button class="btn btn-success addTrainer">Add Trainer</button></div>
+                                    <div class="col">
+                                        <div style="margin-left:250px">
+                                            <h3 style="display:inline-block">You are Assigning Trainer for</h3>
+                                            <h3 class="classNameInput" style=" display: inline-block"></h3>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 @*begin: Datatable*@
                                 <table class="table table-bordered table-hover table-checkable" id="assign_trainer_datatable" style="margin-top: 13px !important">
+
                                     <thead>
                                         <tr>
                                             <th></th>
@@ -128,6 +134,7 @@
                                         </tr>
 
                                     </thead>
+
                                 </table>
                                 @*end: Datatable*@
 
@@ -137,10 +144,20 @@
                             @*begin: assign learner tab*@
                             <div class="tab-pane fade" id="AssignLearner">
 
-                                <button class="btn btn-success addLearner">Add Learner</button>
+                                <div class="row">
+                                    <div class="col"><button class="btn btn-success addTrainer">Add Learner</button></div>
+                                    <div class="col">
+                                        
+                                        <div style="margin-left:250px">
+                                            <h3 style="display:inline-block">You are Assigning Learner for</h3>
+                                            <h3 class="classNameInput" style=" display: inline-block"></h3>
+                                        </div>
+   
+                                    </div>
+                                </div>
 
                                 @*begin: Datatable*@
-                                <table class="table table-bordered table-hover table-checkable" id="assign_learner_datatable" style="margin-top: 13px !important">
+                                <table class="table table-bordered table-hover table-checkable" id="assign_learner_datatable" style="margin-top: 13px !important;">
                                     <thead>
                                         <tr>
                                             <th></th>
@@ -168,7 +185,7 @@
             </div>
 
         </div>
-    </div>
 
+    </div>
 </div>
 @*end: overlay*@

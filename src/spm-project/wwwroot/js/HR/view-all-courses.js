@@ -5,6 +5,15 @@ $(document).ready(function () {
 });
 
 
+function notification(notificationString) {
+
+	$.notify(notificationString, {
+		className: 'success',
+		globalPosition: 'top center'
+	});
+}
+
+
 
 function closeModal() {
 	$(".btn-close").click(function () {
@@ -49,11 +58,7 @@ function submitCourseEvent(table) {
 		//close modal
 		$(".overlay").hide();
 
-		$.notify("Successfully added New Course", {
-			className: 'success',
-			globalPosition: 'top center'
-		});
-
+		notification("Successfully added New Course");
 
 	});
 
@@ -99,11 +104,8 @@ function submitClassEvent(table) {
 		//close modal
 		$(".overlay").hide();
 
+		notification("Successfully added New Class");
 	
-		$.notify("Successfully added New Class", {
-			className: 'success',
-			globalPosition: 'top center'
-		});
 
 	});
 
@@ -148,11 +150,8 @@ function deleteCourseEvent(table) {
 		//reload table
 		table.ajax.reload();
 
+		notification("Successfully Deleted Course");
 
-		$.notify("Successfully Deleted Course", {
-			className: 'success',
-			globalPosition: 'top center'
-		});
 	});
 }
 
@@ -182,15 +181,6 @@ function viewCoursesDT() {
 		//enable server side 
 		serverSide: true,
 
-		//enable select in the table 
-		select: {
-			//allow us to select multiple rows
-			style: 'multi',
-			//retricts which cells in the table that will trigger table selection 
-			//td first child (for each td tag , only the first item (cell) will allow selection. Within the cell , the element with .checkable class is only allowed)
-			//this is essentially a css selector used here 
-			selector: 'td:first-child .checkable',
-		},
 
 
 		//send ajax request to server to Retrieve customers
@@ -202,25 +192,17 @@ function viewCoursesDT() {
 			data: function (d) {
 				console.log(JSON.stringify(d))
 				return JSON.stringify(d);
+			},
+			error: function (xhr, error, code) {
+				console.log(xhr);
+				console.log(code);
 			}
 		},
-
-		//every time the table get initialised (draw or ajax.reload()) , 
-		//render this for the header 
-		//in this case , render a checkbox for the first header 
-		headerCallback: function (thead, data, start, end, display) {
-			thead.getElementsByTagName('th')[0].innerHTML = `
-                    <label class="checkbox checkbox-single checkbox-solid checkbox-primary mb-0">
-                        <input type="checkbox" value="" class="group-checkable"/>
-                        <span></span>
-                    </label>`;
-		},
-
 
 
 
 		//default order and sort. In this case ,order by ID in ascending order (Id is column number 1)
-		order: [[1, "asc"]],
+		order: [[0, "asc"]],
 
 
 
@@ -232,12 +214,10 @@ function viewCoursesDT() {
 			//data: null means it is not Retrieveing data from the server
 			//column can't be ordered
 			//regarding name (https://datatables.net/reference/option/columns.name)
-			{ name: 'Checkbox', data: null, orderable: false },
 			{ name: 'CourseName', data: 'CourseName' },
 			{ name: 'NumberofClasses', data: 'NumberOfClasses' },
 			{ name: 'CreatedDate', data: 'CreatedDate' },
 			{ name: 'UpdatedDate', data: 'UpdatedDate' },
-
 
 			//responsive priority is an option to state the priority of the column to be view when the screen is smaller
 			//data: null means it is not Retrieveing data from the server
@@ -248,21 +228,9 @@ function viewCoursesDT() {
 		//I suggest to use this just to render stuff such as buttons/any elements OR processign the result to display in diff format eg. format date string
 		columnDefs: [
 
-			{
-				//target first collumn 
-				targets: 0,
-				render: function (data, type, full, meta) {
-					return `
-                        <label class="checkbox checkbox-single checkbox-primary mb-0">
-                            <input type="checkbox" value="" class="checkable"/>
-                            <span></span>
-                        </label>`;
-				},
-			},
-
 
 			{
-				targets: [3,4] ,
+				targets: [2,3] ,
 				render: function (data, type, full, meta) {
 			
 					return moment(data).format('Do MMMM YYYY, h:mm a')
@@ -308,51 +276,6 @@ function viewCoursesDT() {
 	addCourseEvent(table);
 	deleteCourseEvent(table);
 
-	//group select checkbox 
-	table.on('change', '.group-checkable', function () {
-
-
-		var set = $(this).closest('table').find('td:first-child .checkable');
-		var checked = $(this).is(':checked');
-
-		var selectedList = [];
-
-		$(set).each(function () {
-			if (checked) {
-				$(this).prop('checked', true);
-				table.rows($(this).closest('tr')).select();
-				//get data of group select rows
-				selectedList.push(table.rows($(this).closest('tr')).data()[0]);
-
-			}
-			else {
-				$(this).prop('checked', false);
-				table.rows($(this).closest('tr')).deselect();
-			}
-		});
-
-		console.log(selectedList);
-
-	});
-
-	//individual select checkbox
-	table.on('change', '.checkable', function () {
-
-		//RETREIVE row where select was triiggered (check whether it is selceted )
-		//$(row).data("DT_RowId")  -> COURSE ID 
-		var selectedList = [];
-
-		var NumSelected = $('.selected').length;
-
-		var indexList = table.rows({ selected: true }).indexes();
-		var rows_data = table.rows(indexList).data();
-
-		for (i = 0; i < NumSelected; i++) {
-			selectedList.push(rows_data[i])
-
-		}
-		console.log(selectedList);
-	});
 
 }
 
