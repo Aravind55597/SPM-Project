@@ -33,6 +33,18 @@ namespace SPM_Project.Repositories
             return _course.PreRequisites;
 
         }
+
+
+        public async Task<List<Course>> GetAllCourses()
+        {
+
+
+            var _course =  _context.Course.ToList();
+
+            
+            return _course;
+
+        }
         //--------------------------------------------TABLE FUNCTIONS------------------------------------------------------------------------------------------------------
 
         //generate IQueryable for manipulation by datatable 
@@ -113,5 +125,7 @@ namespace SPM_Project.Repositories
         {
             throw new NotImplementedException();
         }
+
+     
     }
 }

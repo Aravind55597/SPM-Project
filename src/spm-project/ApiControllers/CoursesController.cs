@@ -35,6 +35,24 @@ namespace SPM_Project.ApiControllers
 
         }
 
+
+        [HttpPost, Route("GetEligibleCourses", Name = "GetEligibleCourses")]
+
+
+        public async Task<IActionResult> GetEligibleCourses()
+        {
+
+            //get current user 
+            var userId = await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
+            var user = await _unitOfWork.LMSUserRepository.GetByIdAsync(userId);
+            var response = await GetUserEligibleCourses(user);
+
+
+            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+            return Ok(responseJson);
+
+        }
+
         [NonAction]
         public async Task<bool> GetCourseEligiblity(LMSUser user, Course course)
         {
@@ -59,9 +77,39 @@ namespace SPM_Project.ApiControllers
             return false;
         }
 
+        //get list of course for eligible person
 
 
 
+
+        [NonAction]
+        public async Task<List<Course>> GetUserEligibleCourses(LMSUser user)
+        {
+            List<Course> eligiblecourses = new List<Course>();
+            //get all coursess();
+            var courses = _unitOfWork.CourseRepository.GetAllCourses().Result;
+            //foreach course, check if user is eligible and push to 
+            if (courses.Count > 0) {
+
+                foreach (var course in courses) {
+
+                    var isEligible = await GetCourseEligiblity(user, course);
+                    if (isEligible) {
+                        eligiblecourses.Add(course);
+                    }
+                }
+
+
+            
+            }
+            //return array
+            return eligiblecourses;
+           
+
+
+
+
+        }
 
 
 
