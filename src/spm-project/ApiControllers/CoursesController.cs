@@ -36,7 +36,7 @@ namespace SPM_Project.ApiControllers
         }
 
 
-        [HttpPost, Route("GetEligibleCourses", Name = "GetEligibleCourses")]
+        [HttpGet, Route("GetEligibleCourses", Name = "GetEligibleCourses")]
 
 
         public async Task<IActionResult> GetEligibleCourses()
