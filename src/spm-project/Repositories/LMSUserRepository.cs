@@ -53,13 +53,13 @@ namespace SPM_Project.Repositories
 
 
 
-        public object GetCompletedProgressTracker(LMSUser user)
+        public  List<ProgressTracker> GetCompletedProgressTracker(LMSUser user)
         {
-            throw new System.NotImplementedException();
+            var trackers = _context.ProgressTracker.Where(u => u.LMSUser.Id == user.Id).ToList();
+            return trackers;
         }
 
-
-
+     
 
         //--------------------------------------------CURRENT-USER------------------------------------------------------------------------------------------------------
 
@@ -239,6 +239,6 @@ namespace SPM_Project.Repositories
             return dtResponse;
         }
 
-
+        
     }
 }

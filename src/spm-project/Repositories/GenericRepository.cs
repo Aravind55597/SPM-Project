@@ -94,7 +94,7 @@ namespace SPM_Project.Repositories
 
             return await query.FirstOrDefaultAsync(q=>q.Id==id);
         }
-
+        //GetByIdAsync(1,"PreRequisites")
 
         private IQueryable<T> IncludeFunc(IQueryable<T> query , string includeProperties )
         {

@@ -23,14 +23,26 @@ namespace SPM_Project.Repositories
 
         }
 
-        public async Task<List<Course>> GetCoursePreReq(Course course)
+        //public List<Course> GetCoursePreRe(int  id )
+        //{
+
+
+        //    var _course = _context.Course.Where(c => c.Id == course.Id).First();
+
+        //    //get the course prereq for current course
+        //    return _course.PreRequisites;
+
+        //}
+
+
+        public List<Course> GetAllCourses()
         {
 
 
-            var _course = _context.Course.Where(c => c.Id == course.Id).First();
+            var _course = _context.Course.ToList();
 
-            //get the course prereq for current course
-            return _course.PreRequisites;
+
+            return _course;
 
         }
         //--------------------------------------------TABLE FUNCTIONS------------------------------------------------------------------------------------------------------
@@ -109,9 +121,7 @@ namespace SPM_Project.Repositories
 
         }
 
-        object ICourseRepository.GetCoursePreReq(Course course)
-        {
-            throw new NotImplementedException();
-        }
+
+     
     }
 }
