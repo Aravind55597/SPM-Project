@@ -21,9 +21,13 @@ namespace SPM_Project.ApiControllers
         }
 
 
+
+
+
+
+
+
         [HttpPost, Route("CoursesDataTable", Name = "GetCoursesDataTable")]
-
-
         public async Task<IActionResult> GetCoursesDataTable([FromBody] DTParameterModel dTParameterModel)
         {
 
@@ -37,84 +41,85 @@ namespace SPM_Project.ApiControllers
         }
 
 
-        [HttpGet, Route("GetEligibleCourses", Name = "GetEligibleCourses")]
+        //[HttpGet, Route("GetEligibleCourses", Name = "GetEligibleCourses")]
+        //public async Task<IActionResult> GetEligibleCourses()
+        //{
+
+        //    //get current user 
+        //    var userId = await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
+        //    var user = await _unitOfWork.LMSUserRepository.GetByIdAsync(userId);
+        //    var response = await GetUserEligibleCourses(user);
 
 
-        public async Task<IActionResult> GetEligibleCourses()
-        {
+        //    var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+        //    return Ok(responseJson);
 
-            //get current user 
-            var userId = await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
-            var user = await _unitOfWork.LMSUserRepository.GetByIdAsync(userId);
-            var response = await GetUserEligibleCourses(user);
-
-
-            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
-            return Ok(responseJson);
-
-        }
-
-       
-
-        //get list of course for eligible person
+        //}
 
 
 
-
-        [NonAction]
-        public async Task<List<Course>> GetUserEligibleCourses(LMSUser user)
-        {
-            List<Course> eligiblecourses = new List<Course>();
-            //get all coursess();
-            var courses = _unitOfWork.CourseRepository.GetAllCourses();
-            //foreach course, check if user is eligible and push to 
-            if (courses.Count > 0) {
-
-                foreach (var course in courses) {
-
-                    var isEligible = await GetCourseEligiblity(user, course);
-                    if (isEligible) {
-                        eligiblecourses.Add(course);
-                    }
-                }
-
-
-            
-            }
-            //return array
-            return eligiblecourses;
-           
+        ////get list of course for eligible person
 
 
 
 
-        }
+        //[NonAction]
+        //public async Task<List<Course>> GetUserEligibleCourses(LMSUser user)
+        //{
+        //    List<Course> eligiblecourses = new List<Course>();
+        //    //get all coursess();
+        //    var courses = _unitOfWork.CourseRepository.GetAllCourses();
+        //    //foreach course, check if user is eligible and push to 
+        //    if (courses.Count > 0)
+        //    {
 
-        [NonAction]
-        public async Task<bool> GetCourseEligiblity(LMSUser user, Course course)
-        {
-        //get all the courses including prerequisites
-        //get all completed courses fo a user
-        //
-            //get courses that user has completed
-            var completed_progresstrackers = await _unitOfWork.CourseRepository.GetByIdAsync(course.Id, "PreRequisites");  //find en
-            var completed_courses = new List<Course>();
-            foreach (var tracker in completed_progresstrackers)
-            {
-                completed_courses.Add(tracker.Course);
-            }
+        //        foreach (var course in courses)
+        //        {
 
-            //get the course prereq for current course
-            var courseprereq = await _unitOfWork.CourseRepository.GetByIdAsync(course.Id, "PreRequisites");
+        //            var isEligible = await GetCourseEligiblity(user, course);
+        //            if (isEligible)
+        //            {
+        //                eligiblecourses.Add(course);
+        //            }
+        //        }
 
-            //check if the prereq are fufilled
-            Debug.WriteLine(courseprereq.PreRequisites);
-            if (completed_courses.Equals(courseprereq.PreRequisites))
-            {
-                return true;
-            }
-            return false;
-        }
+
+
+        //    }
+        //    //return array
+        //    return eligiblecourses;
+
+
+
+
+
+        //}
+
+        //[NonAction]
+        //public async Task<bool> GetCourseEligiblity(LMSUser user, Course course)
+        //{
+        //    //get all the courses including prerequisites
+        //    //get all completed courses fo a user
+        //    //
+        //    //get courses that user has completed
+        //    var completed_progresstrackers = await _unitOfWork.CourseRepository.GetByIdAsync(course.Id, "PreRequisites");  //find en
+        //    var completed_courses = new List<Course>();
+        //    foreach (var tracker in completed_progresstrackers)
+        //    {
+        //        completed_courses.Add(tracker.Course);
+        //    }
+
+        //    //get the course prereq for current course
+        //    var courseprereq = await _unitOfWork.CourseRepository.GetByIdAsync(course.Id, "PreRequisites");
+
+        //    //check if the prereq are fufilled
+        //    Debug.WriteLine(courseprereq.PreRequisites);
+        //    if (completed_courses.Equals(courseprereq.PreRequisites))
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
 
 
