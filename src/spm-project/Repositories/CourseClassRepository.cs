@@ -40,7 +40,7 @@ namespace SPM_Project.Repositories
                 var enrollQueryable = _context.LMSUser.
                        Where(l => l.Id == userId).
                        SelectMany(l => l.Enrollments).
-                       Where(e => e.Approved == true);
+                       Where(e => e.Enrollled == true);
 
                 queryable = enrollQueryable.Select(e => e.CourseClass); 
 
@@ -59,7 +59,7 @@ namespace SPM_Project.Repositories
                         EndDate = cc.EndClass,
                         TrainerName = _context.Users.Where(u => u.LMSUser.Id == cc.ClassTrainer.Id).Select(u => u.Name).FirstOrDefault(),
                         NumOfChapters = cc.Chapters.Count(),
-                        NumOfStudents = cc.ClassEnrollmentRecords.Where(ce => ce.Approved).Count(),
+                        NumOfStudents = cc.ClassEnrollmentRecords.Where(ce => ce.Enrollled).Count(),
                         Slots = cc.Slots,
                         DT_RowId = cc.Id
                     });
