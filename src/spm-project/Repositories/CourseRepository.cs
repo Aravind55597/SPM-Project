@@ -35,16 +35,7 @@ namespace SPM_Project.Repositories
         //}
 
 
-        public List<Course> GetAllCourses()
-        {
-
-
-            var _course = _context.Course.ToList();
-
-
-            return _course;
-
-        }
+       
         //--------------------------------------------TABLE FUNCTIONS------------------------------------------------------------------------------------------------------
 
         //generate IQueryable for manipulation by datatable 
