@@ -34,5 +34,19 @@ namespace SPM_Project.EntityModels
 
 
         public decimal PassingPercentage  { get; set; }
+
+
+        public int GetNumCourseClasses()
+        {
+            if (CourseClass!=null) {
+                return CourseClass.Count;
+            }
+            return 0;
+        }
+
+        
+
+
+
     }
 }
