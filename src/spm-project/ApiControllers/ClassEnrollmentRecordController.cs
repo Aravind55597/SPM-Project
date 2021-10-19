@@ -25,89 +25,90 @@ namespace SPM_Project.ApiControllers
 
 
 
-        //[HttpPost, Route("Add",Name = "AddClassEnrollmentRecord")]
-        //public async  Task<IActionResult> AddEnrollmentRecord([FromQuery] int classId)
-        //{
+        [HttpPost, Route("Add", Name = "AddClassEnrollmentRecord")]
+        public async Task<IActionResult> AddEnrollmentRecord([FromQuery] int classId)
+        {
 
-        //    var userId =await  _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
+            var userId = await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
 
-        //    var user =await  _unitOfWork.LMSUserRepository.GetByIdAsync(userId);
+            var user = await _unitOfWork.LMSUserRepository.GetByIdAsync(userId);
 
-        //    //var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(classId); 
+            //var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(classId); 
 
-        //    await AddEnrollmentRecord(user,classId); 
+            await AddEnrollmentRecord(user, classId);
 
-        //    return Ok();
-        //}
+            return Ok();
+        }
 
-        //[NonAction]
-        //public async Task AddEnrollmentRecord(LMSUser user, int classId)
-        //{
+        [NonAction]
+        public async Task AddEnrollmentRecord(LMSUser user, int classId)
+        {
 
-        //    //firstly retrieve class from classservice (check if class exists)
-        //   var courseclass =  await _unitOfWork.CourseClassRepository.GetByIdAsync(classId);
-        //    if (courseclass != null)
-        //    {
-        //        if (courseclass.EndRegistration < DateTime.Today || courseclass.StartRegistration > DateTime.Today)
-        //        {
-        //            var errorDict = new Dictionary<string, string>()
-        //            {
-        //                {"Class", $"Class of  {courseclass.Id} registration is over" }
-        //            };
+            //firstly retrieve class from classservice (check if class exists)
+            var courseclass = await _unitOfWork.CourseClassRepository.GetByIdAsync(classId);
+            if (courseclass != null)
+            {
+                if (courseclass.EndRegistration < DateTime.Today || courseclass.StartRegistration > DateTime.Today)
+                {
+                    var errorDict = new Dictionary<string, string>()
+                    {
+                        {"Class", $"Class of  {courseclass.Id} registration is over" }
+                    };
 
-        //            var notFoundExp = new NotFoundException("Class registration period is over", errorDict);
+                    var notFoundExp = new NotFoundException("Class registration period is over", errorDict);
 
-        //            throw notFoundExp;
-        //        }
-        //    }
-        //    else {
-        //        var errorDict = new Dictionary<string, string>()
-        //            {
-        //                {"Class", $"Class of  Id {courseclass.Id} does not exist" }
-        //            };
+                    throw notFoundExp;
+                }
+            }
+            else
+            {
+                var errorDict = new Dictionary<string, string>()
+                    {
+                        {"Class", $"Class of  Id {courseclass.Id} does not exist" }
+                    };
 
-        //        var notFoundExp = new NotFoundException("Class does not exist", errorDict);
+                var notFoundExp = new NotFoundException("Class does not exist", errorDict);
 
-        //        throw notFoundExp;
-        //    }
-        //    //Secondly use classenrollmentrecordservice to check eligibility 
-        //    if (!await new CoursesController(_unitOfWork).GetCourseEligiblity(user, courseclass.Course)) {
-        //        var errorDict = new Dictionary<string, string>()
-        //            {
-        //                {"Class", $"Class of  Id {courseclass.Id} does not exist" }
-        //            };
+                throw notFoundExp;
+            }
+            //Secondly use classenrollmentrecordservice to check eligibility 
+            if (!await new CoursesController(_unitOfWork).GetCourseEligiblity(user, courseclass.Course))
+            {
+                var errorDict = new Dictionary<string, string>()
+                    {
+                        {"Class", $"Class of  Id {courseclass.Id} does not exist" }
+                    };
 
-        //        var notFoundExp = new NotFoundException("Class does not exist", errorDict);
+                var notFoundExp = new NotFoundException("Class does not exist", errorDict);
 
-        //        throw notFoundExp;
-        //    }
+                throw notFoundExp;
+            }
 
 
-        //    //check if enrolled 
+            //check if enrolled 
+            if (await _unitOfWork.ClassEnrollmentRecordRepository.hasEnrollmentRecord(user, courseclass))
+            {
+                var errorDict = new Dictionary<string, string>()
+                    {
+                        {"Class", $"User has class of Id {courseclass.Id}  exist" }
+                    };
 
-        //    if (await _unitOfWork.ClassEnrollmentRecordRepository.hasEnrollmentRecord(user, courseclass))
-        //    {
-        //        var errorDict = new Dictionary<string, string>()
-        //            {
-        //                {"Class", $"User has class of Id {courseclass.Id}  exist" }
-        //            };
+                var notFoundExp = new NotFoundException("User has existing enrollment record with this class", errorDict);
 
-        //        var notFoundExp = new NotFoundException("User has existing enrollment record with this class", errorDict);
+                throw notFoundExp;
+            }
+            //Create classenrollment record for the user
 
-        //        throw notFoundExp;
-        //    }
-        //    //Create classenrollment record for the user
+            var record = new ClassEnrollmentRecord
+            {
+                CourseClass = courseclass
 
-        //    var record = new ClassEnrollmentRecord
-        //    {
-        //        CourseClass = courseclass
-                
-        //    };
+            };
 
-        //    user.Enrollments.Add(record);
-        //    await _unitOfWork.CompleteAsync();
+            user.Enrollments.Add(record);
+            await _unitOfWork.CompleteAsync();
 
-        //}
+        }
 
 
     }
