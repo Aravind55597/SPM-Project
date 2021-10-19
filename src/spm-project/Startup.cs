@@ -15,6 +15,7 @@ using SPM_Project.EntityModels;
 using SPM_Project.Extensions;
 using SPM_Project.Repositories;
 using SPM_Project.Repositories.Interfaces;
+using SPM_Project;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -135,18 +136,16 @@ namespace SPM_Project
 
 
             //handles exceptions thrown and returns an error reponse based on the type of exception thrown 
-        //    app.UseMiddleware<ErrorHandlerMiddleware>();
-
-
+            //    app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
 
             //Add database seeding code here 
-            //SeedDatabase.Initialize(dbContext);
+
             //handles exceptions thrown and returns an error reponse based on the type of exception thrown 
-           // app.UseMiddleware<ErrorHandlerMiddleware>();
+            // app.UseMiddleware<ErrorHandlerMiddleware>();
 
 
             app.UseEndpoints(endpoints =>

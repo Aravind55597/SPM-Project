@@ -104,27 +104,29 @@ namespace SPM_Project.Repositories
                 new LMSUsersTableData
                 {
                     Id = l.LMSUser.Id,
-                    Name = l.Name,
+                    Name = l.LMSUser.Name,
                     Role = _context.Roles.Where(r => r.Id == ur.RoleId).Select(r => r.Name).FirstOrDefault(),
-                    Department = l.Department.ToString(),
-                    DOB = l.DOB
+                    Department = l.LMSUser.Department.ToString(),
+                    DOB = l.LMSUser.DOB
                 }
                 );
 
 
-            if (classId==null)
+
+
+            if (classId == null)
             {
                 //returns trainer and learner
-                return queryable; 
+                return queryable;
             }
             else
             {
 
                 //class id not null, so return class only trainer and learner?
 
-                if(!isEligible)
+                if (!isEligible)
                 {
-                   //return all class trainer and learner
+                    //return all class trainer and learner
                     var userIdsInClass = _context.LMSUser.
                     Where(l => l.Enrollments.Any(e => e.CompletionStatus == true && e.CourseClass.Id == classId) || l.Id == _context.CourseClass.Where(cc => cc.Id == classId).
                     Select(cc => cc.ClassTrainer.Id).FirstOrDefault()).Select(l => new { Id = l.Id });
@@ -145,7 +147,7 @@ namespace SPM_Project.Repositories
                     );
 
 
-                    return queryable; 
+                    return queryable;
 
                 }
 
@@ -157,11 +159,11 @@ namespace SPM_Project.Repositories
                     //check the prerequisite of the class 
                     var preReq = _context.CourseClass.Where(cc => cc.Id == classId).Select(cc => cc.Course).SelectMany(c => c.PreRequisites).Select(p => p.Id);
                     //return Queryable
-                    
+
                     //check if all  the prereq course ids are present in 
                     queryable.
-                        Where(q => preReq.All(_context.LMSUser.Where(l => l.Id == q.Id).SelectMany(l => l.Enrollments).Where(e=>e.CompletionStatus).Select(e => e.CourseClass.Course.Id).Contains    )    
-                    ); 
+                        Where(q => preReq.All(_context.LMSUser.Where(l => l.Id == q.Id).SelectMany(l => l.Enrollments).Where(e => e.CompletionStatus).Select(e => e.CourseClass.Course.Id).Contains)
+                    );
                 }
 
                 if (isTrainer)
@@ -173,15 +175,15 @@ namespace SPM_Project.Repositories
             }
 
 
-            ////if user chooses Trainer or learner
-            //if (isTrainer)
-            //{
-            //    queryable = queryable.Where(q => q.Role == "Trainer");
-            //}
-            //else if (isLearner)
-            //{
-            //    queryable = queryable.Where(q => q.Role == "Learner");
-            //}
+            //if user chooses Trainer or learner
+            if (isTrainer)
+            {
+                queryable = queryable.Where(q => q.Role == "Trainer");
+            }
+            else if (isLearner)
+            {
+                queryable = queryable.Where(q => q.Role == "Learner");
+            }
 
             //if user chooses a specific class
 
@@ -204,39 +206,46 @@ namespace SPM_Project.Repositories
 
         public async Task<DTResponse<LMSUsersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel, bool isTrainer, bool isLearner, bool isEligible , int? classId)
         {
-
-            var dtH = new DTRequestHandler<LMSUsersTableData>(dTParameterModel); 
-
-
-            //Retrieve all userid + roleid pair that has either learnerRole or trainer role
-            var queryable = GetLMSUsersTableQueryable(isTrainer, isLearner, isEligible , classId).Where(q => q.Role == "Learner" || q.Role == "Trainer");
-
-            dtH.RecordsCounter(queryable); 
-            
-            queryable = dtH.TableSorter(queryable); 
-
-
-            queryable = GlobalTableSearcher(queryable , dtH); 
-
-
-            queryable = dtH.TableFilterer(queryable);
-
-            dtH.FilteredRecordsCounter(queryable); 
-
-
-            //skip 'start' records & Retrieve 'pagesize' records
-            var data = await dtH.TablePager(queryable).ToListAsync();
-
-
-            var dtResponse = new DTResponse<LMSUsersTableData>()
+            try
             {
-                Draw = dtH.Draw,
-                RecordsFiltered = dtH.RecordsTotal,
-                RecordsTotal = dtH.RecordsFiltered,
-                Data = data,
-            };
+                var dtH = new DTRequestHandler<LMSUsersTableData>(dTParameterModel);
 
-            return dtResponse;
+
+                //Retrieve all userid + roleid pair that has either learnerRole or trainer role
+                var queryable = GetLMSUsersTableQueryable(isTrainer, isLearner, isEligible, classId).Where(q => q.Role == "Learner" || q.Role == "Trainer");
+
+                dtH.RecordsCounter(queryable);
+
+                queryable = dtH.TableSorter(queryable);
+
+
+                queryable = GlobalTableSearcher(queryable, dtH);
+
+
+                queryable = dtH.TableFilterer(queryable);
+
+                dtH.FilteredRecordsCounter(queryable);
+
+
+                //skip 'start' records & Retrieve 'pagesize' records
+                var data = await dtH.TablePager(queryable).ToListAsync();
+
+
+                var dtResponse = new DTResponse<LMSUsersTableData>()
+                {
+                    Draw = dtH.Draw,
+                    RecordsFiltered = dtH.RecordsTotal,
+                    RecordsTotal = dtH.RecordsFiltered,
+                    Data = data,
+                };
+                return dtResponse;
+            }
+            catch (Exception ex)
+            {
+                return new DTResponse<LMSUsersTableData>(); 
+            }
+
+            
         }
 
         
