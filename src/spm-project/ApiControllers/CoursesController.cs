@@ -108,9 +108,6 @@ namespace SPM_Project.ApiControllers
             return eligiblecourses;
 
 
-
-
-
         }
 
         [NonAction]
@@ -133,17 +130,6 @@ namespace SPM_Project.ApiControllers
             }
             return false;
         }
-
-
-
-
-
-
-
-
-
-
-
 
 
     }
