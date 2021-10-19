@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,12 +12,6 @@ namespace SPM_Project.EntityModels
 
         public int Id { get; private set; }
 
-        public string Name { get; set; }
-
-        public Department Department { get; set; }
-
-        public DateTime DOB { get; set; } 
-
         //Quiz answers 
         public List<UserAnswer> UserAnswers { get; set; }
 
@@ -30,16 +22,6 @@ namespace SPM_Project.EntityModels
 
         public List<ClassEnrollmentRecord> Enrollments { get; set; }
 
-        public ApplicationUser ApplicationUser { get; set; }
-
-
+        
     }
-
-
-    public enum Department
-    {
-        Human_Resource,
-        Engineering
-    }
-
 }

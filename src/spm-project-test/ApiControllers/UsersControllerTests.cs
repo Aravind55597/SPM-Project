@@ -54,23 +54,25 @@ namespace SPM_Project.ApiControllers.Tests
 
 
 
-        //GetEngineersDataTable-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        //GetCourseClassesDataTable-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-        [Theory]
-        [InlineData(1, false, true, true)]
-        [InlineData(1, true, false, true)]
-        [InlineData(1, false, false, false)]
-        public async Task GetEngineersDataTableTest_ClassDoesNotExist_ThrowNotFoundException(int? classId , bool isTrainer=false , bool isLearner = false , bool isEligible= false )
+
+
+
+
+
+        [Fact]
+        public async Task GetEngineersDataTableTest_ClassBelongingToClassIdDoesNotExist()
         {
 
             //setup
-            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync((CourseClass)null).Verifiable("Retreiving courseClass  was not attempted"); ;
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync((CourseClass)null).Verifiable("Retreiving course was not attempted"); ;
 
 
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
 
-            Func<Task> action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, classId, isTrainer, isLearner, isEligible));
+            Func<Task> action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1));
 
 
             //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -79,25 +81,20 @@ namespace SPM_Project.ApiControllers.Tests
 
         }
 
-
-
-        [Theory]
-        [InlineData(1, false, true, true)]
-        [InlineData(1, true, false, true)]
-        [InlineData(1, false, false, false)]
-        public async Task GetEngineersDataTableTest_ClassExists_ReturnOK(int? classId, bool isTrainer = false, bool isLearner = false, bool isEligible = false)
+        [Fact]
+        public async Task GetEngineersDataTableTest_ClassBelongingToClassIdDoesExists()
         {
             //setup 
             _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync(new CourseClass()).Verifiable("Retreiving course was not attempted");
 
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
 
-            var result = await _controller.GetEngineersDataTable( _inputDTModel, classId, isTrainer, isLearner, isEligible) as OkObjectResult;
+            var result = await _controller.GetEngineersDataTable(_inputDTModel, 1) as OkObjectResult;
 
             //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-            //verify that class retreival was attempted 
+            //verify that course retreival was attempted 
             _uowMocker.mockCourseClassRepository.Verify(u => u.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>()));
 
             //verify that respository is retreived 
@@ -105,7 +102,8 @@ namespace SPM_Project.ApiControllers.Tests
 
             //verify that repository functionw as called 
             _uowMocker.mockLMSUserRepository.Verify(l => l.GetEngineersDataTable(_inputDTModel, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<int?>()));
-
+            //verify that you did not get null as a result 
+            Assert.NotNull(result);
             //check if ok is returned 
             Assert.IsType<OkObjectResult>(result);
             //check that a json string is passed to the front end 
@@ -116,52 +114,242 @@ namespace SPM_Project.ApiControllers.Tests
             Assert.IsType<DTResponse<LMSUsersTableData>>(deserializedMessage);
         }
 
-
-
-        [Theory]
-        [InlineData(null, true, false, true)]
-        [InlineData(null, true, true, true)]
-        [InlineData(null, false, false, true)]
-        [InlineData(null, false, true, true)]
-        [InlineData(1, true, true, true)]
-        [InlineData(1, false, false, true)]
-        public async Task GetEngineersDataTableTest_IsEligibleProvidedWithWrongRequest_ThrowBadRequest(int? classId, bool isTrainer = false, bool isLearner = false, bool isEligible = false)
+        [Fact]
+        public async Task GetEngineersDataTableTest_IsEligibleProvided()
         {
-
+            //setup 
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(new CourseClass()).Verifiable("Retreiving course was not attempted"); ;
 
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
 
-            Func<Task> action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, classId, isTrainer, isLearner, isEligible));
+            var result = await _controller.GetEngineersDataTable(_inputDTModel, 1) as OkObjectResult;
+
             //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
 
+            //verify that course retreival was attempted 
+            _uowMocker.mockCourseClassRepository.Verify(u => u.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>()));
 
-            await Assert.ThrowsAsync<BadRequestException>(action);
+            //verify that respository is retreived 
+            _uowMocker.mockUnitOfWork.Verify(l => l.LMSUserRepository);
+
+            //verify that repository functionw as called 
+            _uowMocker.mockLMSUserRepository.Verify(l => l.GetEngineersDataTable(_inputDTModel, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<int?>()));
+            //verify that you did not get null as a result 
+            Assert.NotNull(result);
+            //check if ok is returned 
+            Assert.IsType<OkObjectResult>(result);
+            //check that a json string is passed to the front end 
+            var items = Assert.IsType<string>(result.Value);
+            //check if DTResponse object is send to front end 
+            var deserializedMessage = JsonConvert.DeserializeObject<DTResponse<LMSUsersTableData>>(items);
+            // Then
+            Assert.IsType<DTResponse<LMSUsersTableData>>(deserializedMessage);
 
         }
 
 
-
-
-
-
-        [Theory]
-        [InlineData(null, false, true, false)]
-        [InlineData(null, true, false, false)]
-        [InlineData(null, true, true, false)]
-        public async Task GetEngineersDataTableTest_IsEligbibleNotProvidedWithWrongRequest__ThrowBadRequest(int? classId, bool isTrainer = false, bool isLearner = false, bool isEligible = false)
+        [Fact]
+        public async Task GetEngineersDataTableTest_IsEligbibleNotProvided()
         {
+            //setup 
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync(new CourseClass()).Verifiable("Retreiving course was not attempted");
+            
             
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
             // true trainer , false learner
-            Func<Task> action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, classId, isTrainer, isLearner, isEligible));
+            Func<Task> action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1 , true, false));
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            await Assert.ThrowsAsync<BadRequestException>(action);
+
+
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            // false trainer , false learner
+            var result = await _controller.GetEngineersDataTable(_inputDTModel, 1) as OkObjectResult;
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            //verify that course retreival was attempted 
+            _uowMocker.mockCourseClassRepository.Verify(u => u.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>()));
+
+            //verify that respository is retreived 
+            _uowMocker.mockUnitOfWork.Verify(l => l.LMSUserRepository);
+
+            //verify that repository functionw as called 
+            _uowMocker.mockLMSUserRepository.Verify(l => l.GetEngineersDataTable(_inputDTModel, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<int?>()));
+            //verify that you did not get null as a result 
+            Assert.NotNull(result);
+            //check if ok is returned 
+            Assert.IsType<OkObjectResult>(result);
+            //check that a json string is passed to the front end 
+            var items = Assert.IsType<string>(result.Value);
+            //check if DTResponse object is send to front end 
+            var deserializedMessage = JsonConvert.DeserializeObject<DTResponse<LMSUsersTableData>>(items);
+            // Then
+            Assert.IsType<DTResponse<LMSUsersTableData>>(deserializedMessage);
+
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            //false for trainer , true for learner 
+            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, false, true));
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            await Assert.ThrowsAsync<BadRequestException>(action);
+
+            
+            
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            //true for trainer , true for learner 
+            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, true, true));
             //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
             await Assert.ThrowsAsync<BadRequestException>(action);
 
 
         }
+        [Fact]
+        public async Task GetEngineersDataTableTest_IsEligbibleProvided()
+        {
+            //setup 
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>() , It.IsAny<string>())).ReturnsAsync(new CourseClass());
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            // true for trainer , learner , eligible
+            Func<Task> action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, true, true, true));
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            await Assert.ThrowsAsync<BadRequestException>(action);
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            // false for trainer,learner, true for eligible
+            action = (async () => await _controller.GetEngineersDataTable(_inputDTModel, 1, false, false, true));
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            await Assert.ThrowsAsync<BadRequestException>(action);
+
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            //false for trainer , learner , treu for eligible
+
+            var result = await _controller.GetEngineersDataTable(_inputDTModel, 1 , true, false , true) as OkObjectResult;
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            //verify that repository functionw as called 
+            _uowMocker.mockLMSUserRepository.Verify(l => l.GetEngineersDataTable(_inputDTModel, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<int?>()));
+            //verify that you did not get null as a result 
+            Assert.NotNull(result);
+            //check if ok is returned 
+            Assert.IsType<OkObjectResult>(result);
+            //check that a json string is passed to the front end 
+            var items = Assert.IsType<string>(result.Value);
+            //check if DTResponse object is send to front end 
+            var deserializedMessage = JsonConvert.DeserializeObject<DTResponse<LMSUsersTableData>>(items);
+            // Then
+            Assert.IsType<DTResponse<LMSUsersTableData>>(deserializedMessage);
 
 
+            //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
+            //false for trainer , learner , treu for eligible
+            result = await _controller.GetEngineersDataTable(_inputDTModel, 1, false, true, true) as OkObjectResult;
+            //ASSERT---------------------------------------------------------------------------------------------------------------------------------------------------
+            _uowMocker.mockLMSUserRepository.Verify(l => l.GetEngineersDataTable(_inputDTModel, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<int?>()));
+            //verify that you did not get null as a result 
+            Assert.NotNull(result);
+            //check if ok is returned 
+            Assert.IsType<OkObjectResult>(result);
+            //check that a json string is passed to the front end 
+            items = Assert.IsType<string>(result.Value);
+            //check if DTResponse object is send to front end 
+            deserializedMessage = JsonConvert.DeserializeObject<DTResponse<LMSUsersTableData>>(items);
+            // Then
+            Assert.IsType<DTResponse<LMSUsersTableData>>(deserializedMessage);
 
+        }
+
+
+        //sample input from front end 
+        //        _engineersDataTableInput = new DTParameterModel()
+        //        {
+        //            Draw = 1,
+        //            Start = 0,
+        //            Length = 5,
+        //            Search = new DTSearch()
+        //            {
+        //                Value = "",
+        //                Regex = false,
+        //            },
+        //            Order = new List<DTOrder>()
+        //                {
+        //                    { new DTOrder(){
+        //                    Column=1,
+        //                    Dir="asc"
+        //                    } }
+        //                },
+
+        //            Columns = new List<DTColumn>()
+        //                {
+        //                    {
+        //                        new DTColumn()
+        //                        {
+        //                            Data= null,
+        //                            Name= "Checkbox",
+        //                            Searchable= true,
+        //                            Orderable= false,
+        //                            Search = new DTSearch(){
+        //                                Value = "",
+        //                                Regex = false,
+        //                            } ,
+        //                        }
+        //                    },
+
+        //                    {
+        //                        new DTColumn()
+        //                        {
+        //                            Data= "Id",
+        //                            Name= "Id",
+        //                            Searchable= true,
+        //                            Orderable= true,
+        //                            Search = new DTSearch(){
+        //                                Value = "",
+        //                                Regex = false,
+        //                            } ,
+        //                        }
+        //                    },
+
+        //                    {
+        //                        new DTColumn()
+        //                        {
+        //                            Data= "Name",
+        //                            Name= "Name",
+        //                            Searchable= true,
+        //                            Orderable= true,
+        //                            Search = new DTSearch(){
+        //                                Value = "",
+        //                                Regex = false,
+        //                            } ,
+        //                        }
+        //                    },
+
+        //                    {
+        //                        new DTColumn()
+        //                        {
+        //                            Data= "Role",
+        //                            Name= "Role",
+        //                            Searchable= true,
+        //                            Orderable= true,
+        //                            Search = new DTSearch(){
+        //                                Value = "",
+        //                                Regex = false,
+        //                            } ,
+        //                        }
+        //                    },
+        //                     {
+        //                        new DTColumn()
+        //                        {
+        //                            Data= "Actions",
+        //                            Name= "Actions",
+        //                            Searchable= true,
+        //                            Orderable= false,
+        //                            Search = new DTSearch(){
+        //                                Value = "",
+        //                                Regex = false,
+        //                            } ,
+        //                        }
+        //                    },
+        //                },
+        //        };
 
 
     }
