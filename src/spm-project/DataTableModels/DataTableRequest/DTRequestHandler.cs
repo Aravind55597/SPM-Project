@@ -118,7 +118,6 @@ namespace SPM_Project.DataTableModels.DataTableRequest
         }
 
         //count fitlered record 
-
         public virtual void FilteredRecordsCounter(IQueryable<T> queryable)
         {
 

@@ -2,6 +2,7 @@
 using SPM_Project.DataTableModels;
 using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -27,6 +28,35 @@ namespace SPM_Project.ApiControllers
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [NonAction]
+        public async Task<IActionResult> RetreiveCourses(int? id)
+        {
+
+            if (id!=null)
+            {
+                throw new NotImplementedException();
+            }
+            throw new NotImplementedException();
+        }
+
+
+
+
+
+
         [HttpPost, Route("CoursesDataTable", Name = "GetCoursesDataTable")]
         public async Task<IActionResult> GetCoursesDataTable([FromBody] DTParameterModel dTParameterModel)
         {
@@ -39,6 +69,13 @@ namespace SPM_Project.ApiControllers
             return Ok(responseJson);
 
         }
+
+
+
+
+
+
+
 
 
         //[HttpGet, Route("GetEligibleCourses", Name = "GetEligibleCourses")]
