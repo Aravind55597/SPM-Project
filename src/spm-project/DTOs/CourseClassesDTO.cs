@@ -17,8 +17,13 @@ namespace SPM_Project.DTOs
             EndRegistration = domain.EndRegistration;
             StartClass = domain.StartClass;
             EndClass = domain.EndClass;
-            TrainerName = "";
-            TrainerId = domain.ClassTrainer.Id;
+
+            if (domain.ClassTrainer!=null)
+            {
+                TrainerName = domain.ClassTrainer.Name;
+                TrainerId = domain.ClassTrainer.Id; 
+            }
+    
             CourseName = domain.Course.Name;
             CourseId = domain.Course.Id;
             Slots = domain.Slots; 
