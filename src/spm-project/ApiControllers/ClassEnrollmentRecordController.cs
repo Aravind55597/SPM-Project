@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SPM_Project.CustomExceptions;
+using SPM_Project.DataTableModels;
 using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
 using System;
@@ -101,14 +102,24 @@ namespace SPM_Project.ApiControllers
         //    var record = new ClassEnrollmentRecord
         //    {
         //        CourseClass = courseclass
-                
+
         //    };
 
         //    user.Enrollments.Add(record);
         //    await _unitOfWork.CompleteAsync();
 
         //}
+        //DATATABLE-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        [HttpPost, Route("ClassEnrollmentRecordsDataTable", Name = "GetCourseClassesDataTable")]
+        public async Task<IActionResult> GetClassEnrollmentRecordsDataTable([FromBody] DTParameterModel dTParameterModel)
+        {
 
+            //return the data 
+            var response = await _unitOfWork.ClassEnrollmentRecordRepository.GetClassEnrollmentRecordsDataTable(dTParameterModel);
+
+            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+            return Ok(responseJson);
+        }
     }
 }
