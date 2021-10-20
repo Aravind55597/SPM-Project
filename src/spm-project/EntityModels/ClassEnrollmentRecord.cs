@@ -30,9 +30,11 @@ namespace SPM_Project.EntityModels
 
         public CourseClass CourseClass { get; set; }
 
+
+        public Course Course { get; set; }
+
         //to set the score for the class 
         public decimal PercentageScore { get; set; }
-
 
 
     }

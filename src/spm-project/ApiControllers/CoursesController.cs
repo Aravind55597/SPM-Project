@@ -5,8 +5,9 @@ using SPM_Project.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
-
+using SPM_Project.DTOs;
 namespace SPM_Project.ApiControllers
 {
     [Route("api/[controller]")]
@@ -20,6 +21,9 @@ namespace SPM_Project.ApiControllers
         {
             _unitOfWork = unitOfWork;
         }
+
+
+
 
 
 
@@ -39,103 +43,99 @@ namespace SPM_Project.ApiControllers
         }
 
 
-
-
-
-
-
-
-
         //[HttpGet, Route("GetEligibleCourses", Name = "GetEligibleCourses")]
         //public async Task<IActionResult> GetEligibleCourses()
         //{
 
-        //    //get current user 
-        //    var userId = await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
-        //    var user = await _unitOfWork.LMSUserRepository.GetByIdAsync(userId);
-        //    var response = await GetUserEligibleCourses(user);
+            //get current user 
+            var userId = await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
+            var user = await _unitOfWork.LMSUserRepository.GetByIdAsync(userId, "Enrollments");
+            var response = await GetUserEligibleCourses(user);
+            var dto = new List<CourseDTO>();
+            foreach (var course in response) {
+                
+                dto.Add(new CourseDTO(course));
 
 
-        //    var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
-        //    return Ok(responseJson);
+            }
 
-        //}
+            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(dto);
+            return Ok(responseJson);
 
-
-
-        ////get list of course for eligible person
+        }
 
 
+        //get list of course for eligible person
 
+        [NonAction]
+        public async Task<List<Course>> GetUserEligibleCourses(LMSUser user)
+        {
+            List<Course> eligiblecourses = new List<Course>();
 
-        //[NonAction]
-        //public async Task<List<Course>> GetUserEligibleCourses(LMSUser user)
-        //{
-        //    List<Course> eligiblecourses = new List<Course>();
-        //    //get all coursess();
-        //    var courses = _unitOfWork.CourseRepository.GetAllCourses();
-        //    //foreach course, check if user is eligible and push to 
-        //    if (courses.Count > 0)
-        //    {
+            //for loop enroolment and check for completionstatus 
 
-        //        foreach (var course in courses)
-        //        {
+            var currentEnrollments = user.Enrollments.Where(e=>e.CompletionStatus == true);
+            //for loop the completed ones to include course class
+            var currentUserEnrollments = new List<ClassEnrollmentRecord>() ;
+            foreach (var enrollment in currentEnrollments) {
+                currentUserEnrollments.Add(await _unitOfWork.ClassEnrollmentRecordRepository.GetByIdAsync(enrollment.Id, "Course"));
+            }
 
-        //            var isEligible = await GetCourseEligiblity(user, course);
-        //            if (isEligible)
-        //            {
-        //                eligiblecourses.Add(course);
-        //            }
-        //        }
+            var currentUserCourses = new List<Course>();
 
+            foreach (var enrollment in currentUserEnrollments)
+            {
+                currentUserCourses.Add(enrollment.Course);
+            }
 
+            //get all coursess();
+            var courses =await  _unitOfWork.CourseRepository.GetAllAsync(null,null, "PreRequisites CourseClass");
+            //foreach course, check if user is eligible and push to 
+            if (courses.Count >0)
+            {
 
-        //    }
-        //    //return array
-        //    return eligiblecourses;
+                foreach (var course in courses)
+                {
+                    //var isEligible = await GetCourseEligiblity(user, course);
+                    if (course.PreRequisites == null || course.PreRequisites.Count == 0 ) {
+                        eligiblecourses.Add(course);
+                    }
 
-
-
-
-
-        //}
-
-        //[NonAction]
-        //public async Task<bool> GetCourseEligiblity(LMSUser user, Course course)
-        //{
-        //    //get all the courses including prerequisites
-        //    //get all completed courses fo a user
-        //    //
-        //    //get courses that user has completed
-        //    var completed_progresstrackers = await _unitOfWork.CourseRepository.GetByIdAsync(course.Id, "PreRequisites");  //find en
-        //    var completed_courses = new List<Course>();
-        //    foreach (var tracker in completed_progresstrackers)
-        //    {
-        //        completed_courses.Add(tracker.Course);
-        //    }
-
-        //    //get the course prereq for current course
-        //    var courseprereq = await _unitOfWork.CourseRepository.GetByIdAsync(course.Id, "PreRequisites");
-
-        //    //check if the prereq are fufilled
-        //    Debug.WriteLine(courseprereq.PreRequisites);
-        //    if (completed_courses.Equals(courseprereq.PreRequisites))
-        //    {
-        //        return true;
-        //    }
-        //    return false;
-        //}
+                    else if (await GetCourseEligiblity(course, currentUserCourses))
+                    {
+                        eligiblecourses.Add(course);
+                    }
+                }
 
 
 
+            }
+            //return array
+            return eligiblecourses;
 
 
+        }
 
+        [NonAction]
+        public async Task<bool> GetCourseEligiblity(Course course,List<Course> courseprereq)
+        {
 
+        
+            //sort arrays then check if equal
+            course.PreRequisites = course.PreRequisites.OrderBy(c => c.Id).ToList();
+            courseprereq = courseprereq.OrderBy(c => c.Id).ToList();
+            //if the count is 0 means got no prereq
+            if (course.PreRequisites.Count == 0 && courseprereq.Count == 0)
+            {
+                return true;
+            }
 
-
-
-
+            if (course.Equals(courseprereq))
+            {
+                return true;
+            }
+            return false;
+        }
 
 
     }

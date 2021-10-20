@@ -14,7 +14,7 @@ namespace SPM_Project.Repositories.Interfaces
 
         public Task<DTResponse<CourseTableData>> GetCoursesDataTable(DTParameterModel dTParameterModel);
         //object GetCoursePreReq(Course course);
-        List<Course> GetAllCourses();
+ 
     }
 
 }

@@ -57,12 +57,12 @@ namespace SPM_Project.Repositories
                         ClassName = cc.Name,
                         StartDate = cc.StartClass,
                         EndDate = cc.EndClass,
-                        TrainerName = _context.Users.Where(u => u.LMSUser.Id == cc.ClassTrainer.Id).Select(u => u.Name).FirstOrDefault(),
+                        TrainerName = cc.ClassTrainer.Name,
                         NumOfChapters = cc.Chapters.Count(),
                         NumOfStudents = cc.ClassEnrollmentRecords.Where(ce => ce.IsEnrollled).Count(),
                         Slots = cc.Slots,
                         DT_RowId = cc.Id
-                    });
+                    });;
             
             return result;
 

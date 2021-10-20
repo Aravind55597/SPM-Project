@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SPM_Project.Data;
 
 namespace SPM_Project.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211019110249_add-fk-lmsuser")]
+    partial class addfklmsuser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,9 +179,6 @@ namespace SPM_Project.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("LMSUserId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -218,10 +217,6 @@ namespace SPM_Project.Data.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LMSUserId")
-                        .IsUnique()
-                        .HasFilter("[LMSUserId] IS NOT NULL");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -278,9 +273,6 @@ namespace SPM_Project.Data.Migrations
                     b.Property<int?>("CourseClassId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CourseId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreationTimestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
@@ -307,8 +299,6 @@ namespace SPM_Project.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CourseClassId");
-
-                    b.HasIndex("CourseId");
 
                     b.HasIndex("LMSUserId");
 
@@ -409,6 +399,9 @@ namespace SPM_Project.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
 
@@ -419,6 +412,10 @@ namespace SPM_Project.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId")
+                        .IsUnique()
+                        .HasFilter("[ApplicationUserId] IS NOT NULL");
 
                     b.ToTable("LMSUser");
                 });
@@ -659,15 +656,6 @@ namespace SPM_Project.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SPM_Project.EntityModels.ApplicationUser", b =>
-                {
-                    b.HasOne("SPM_Project.EntityModels.LMSUser", "LMSUser")
-                        .WithOne("ApplicationUser")
-                        .HasForeignKey("SPM_Project.EntityModels.ApplicationUser", "LMSUserId");
-
-                    b.Navigation("LMSUser");
-                });
-
             modelBuilder.Entity("SPM_Project.EntityModels.Chapter", b =>
                 {
                     b.HasOne("SPM_Project.EntityModels.CourseClass", null)
@@ -681,15 +669,9 @@ namespace SPM_Project.Data.Migrations
                         .WithMany("ClassEnrollmentRecords")
                         .HasForeignKey("CourseClassId");
 
-                    b.HasOne("SPM_Project.EntityModels.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId");
-
                     b.HasOne("SPM_Project.EntityModels.LMSUser", null)
                         .WithMany("Enrollments")
                         .HasForeignKey("LMSUserId");
-
-                    b.Navigation("Course");
 
                     b.Navigation("CourseClass");
                 });
@@ -720,6 +702,15 @@ namespace SPM_Project.Data.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("GradedQuiz");
+                });
+
+            modelBuilder.Entity("SPM_Project.EntityModels.LMSUser", b =>
+                {
+                    b.HasOne("SPM_Project.EntityModels.ApplicationUser", "ApplicationUser")
+                        .WithOne("LMSUser")
+                        .HasForeignKey("SPM_Project.EntityModels.LMSUser", "ApplicationUserId");
+
+                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("SPM_Project.EntityModels.ProgressTracker", b =>
@@ -787,6 +778,11 @@ namespace SPM_Project.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("SPM_Project.EntityModels.ApplicationUser", b =>
+                {
+                    b.Navigation("LMSUser");
+                });
+
             modelBuilder.Entity("SPM_Project.EntityModels.Chapter", b =>
                 {
                     b.Navigation("ProgressTrackers");
@@ -812,8 +808,6 @@ namespace SPM_Project.Data.Migrations
 
             modelBuilder.Entity("SPM_Project.EntityModels.LMSUser", b =>
                 {
-                    b.Navigation("ApplicationUser");
-
                     b.Navigation("ClassesTrained");
 
                     b.Navigation("Enrollments");

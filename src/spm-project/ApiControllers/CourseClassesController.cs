@@ -77,12 +77,13 @@ namespace SPM_Project.ApiControllers
         //query : lmsUserId(int) -> for a particular user
         public async Task<IActionResult> GetCourseClassesDataTable(
 
-            [FromBody] DTParameterModel dTParameterModel,
-            [FromQuery] int? courseId,
+            [FromBody] DTParameterModel dTParameterModel , 
+            [FromQuery] int? courseId ,
             [FromQuery] int? lmsUserId,
-            [FromQuery] bool isTrainer = false,
-            [FromQuery] bool isLearner = false
+            [FromQuery] bool isTrainer=false , 
+            [FromQuery] bool isLearner=false
 
+            
             )
         {
             var response = new DTResponse<CourseClassTableData>();
@@ -102,12 +103,7 @@ namespace SPM_Project.ApiControllers
 
                 if (user == null)
                 {
-                    var errorDict = new Dictionary<string, string>()
-                    {
-                        {"lmsUserId", $"LMS User of Id {lmsUserId} does not exist" }
-                    };
-
-                    var notFoundExp = new NotFoundException("lmsUser does not exist", errorDict);
+                    var notFoundExp = new NotFoundException($"LMS User of Id {lmsUserId} does not exist");
 
                     throw notFoundExp;
                 }
@@ -124,21 +120,13 @@ namespace SPM_Project.ApiControllers
                 //course does not exist
                 if (course == null)
                 {
-                    var errorDict = new Dictionary<string, string>()
-                    {
-                        {"CourseId", $"Course of Id {courseId} does not exist" }
-                    };
 
-                    var notFoundExp = new NotFoundException("Course does not exist", errorDict);
+                    var notFoundExp = new NotFoundException($"Course of Id {courseId} does not exist");
 
                     throw notFoundExp;
                 }
             }
-            ////retrieve roles of the user
-            //List<string> roles = await _unitOfWork.LMSUserRepository.RetreiveUserRolesAsync(userId);
 
-            ////currently a user has one role sowe just take one
-            //var role = roles[0];
 
             //retreive data
             response = await _unitOfWork.CourseClassRepository.GetCourseClassesDataTable(dTParameterModel, courseId, userId, isTrainer, isLearner);
