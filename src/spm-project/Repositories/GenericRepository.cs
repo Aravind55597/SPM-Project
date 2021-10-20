@@ -41,14 +41,15 @@ namespace SPM_Project.Repositories
 
         //refernce : https://docs.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application
         public async virtual Task<List<T>> GetAllAsync(
-            //properties to filter by 
-            string includeProperties = "",
+
             //student => student.LastName == "Smith" 
             //lambda to filter
             Expression<Func<T, bool>> filter = null,
             //lambda to order
             //q => q.OrderBy(s => s.LastName)
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            //properties to filter by 
+            string includeProperties = "",
             //page number
             int pageNumber = 0,
             //size of the page

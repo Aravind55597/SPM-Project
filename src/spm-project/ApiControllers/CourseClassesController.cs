@@ -155,19 +155,7 @@ namespace SPM_Project.ApiControllers
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-        //NON-API FUNCTIONS 
+        //NON-API FUNCTIONS-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
         [NonAction]
         public async Task<CourseClassesDTO> GetCourseClassDTOAsync(int courseClassId)
         {
@@ -196,13 +184,13 @@ namespace SPM_Project.ApiControllers
             
             if (courseId!=null)
             {
-                courseClasses = await _unitOfWork.CourseClassRepository.GetAllAsync("Course ClassTrainer",cc=>cc.Id==(int)courseId);
+                courseClasses = await _unitOfWork.CourseClassRepository.GetAllAsync(cc=>cc.Id==(int)courseId,null, "Course ClassTrainer");
 
                
             }
             else
             {
-                courseClasses = await _unitOfWork.CourseClassRepository.GetAllAsync("Course ClassTrainer");
+                courseClasses = await _unitOfWork.CourseClassRepository.GetAllAsync(null,null,"Course ClassTrainer");
             }
 
            

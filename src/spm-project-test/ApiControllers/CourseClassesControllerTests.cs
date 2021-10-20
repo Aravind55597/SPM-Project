@@ -78,9 +78,10 @@ namespace SPM_Project.ApiControllers.Tests
             //mock when GetCouseClassesDataTable is called
             _uowMocker.mockCourseClassRepository.Setup(l => l.GetCourseClassesDataTable(_inputDTModel, It.IsAny<int?>(), It.IsAny<int>(), true, true)).ReturnsAsync(_outputDTModel);
 
-            _uowMocker.mockCourseClassRepository.Setup(l=>l.GetAllAsync("Course ClassTrainer", c => c.Id == 1,default,default,default)).ReturnsAsync(new List<CourseClass>());
+            _uowMocker.mockCourseClassRepository.Setup(l=>l.GetAllAsync(c => c.Id == 1,default, "Course ClassTrainer" ,default,default)).ReturnsAsync(new List<CourseClass>());
 
-
+           
+            //"Course ClassTrainer"
             _uowMocker.mockCourseClassRepository.
                 Setup(l => l.GetByIdAsync(1,"Course ClassTrainer")).
                 ReturnsAsync(new CourseClass() { 
@@ -117,6 +118,14 @@ namespace SPM_Project.ApiControllers.Tests
             _uowMocker = null;
             _controller = null;
         }
+
+
+
+
+
+
+
+
 
         //GetCourseClassesDTOAPIAsync-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         
