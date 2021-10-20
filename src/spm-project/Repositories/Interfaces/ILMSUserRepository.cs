@@ -21,6 +21,6 @@ namespace SPM_Project.Repositories.Interfaces
     
 
         public Task<List<string>> RetreiveUserRolesAsync(int LMSUserId);
-        object GetCompletedProgressTracker(LMSUser user);
+        public List<ProgressTracker> GetCompletedProgressTracker(LMSUser user);
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SPM_Project.Data;
 
 namespace SPM_Project.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211019122700_mae-lmsfkforappusernullable")]
+    partial class maelmsfkforappusernullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,9 +280,6 @@ namespace SPM_Project.Data.Migrations
                     b.Property<int?>("CourseClassId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CourseId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreationTimestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
@@ -307,8 +306,6 @@ namespace SPM_Project.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CourseClassId");
-
-                    b.HasIndex("CourseId");
 
                     b.HasIndex("LMSUserId");
 
@@ -681,15 +678,9 @@ namespace SPM_Project.Data.Migrations
                         .WithMany("ClassEnrollmentRecords")
                         .HasForeignKey("CourseClassId");
 
-                    b.HasOne("SPM_Project.EntityModels.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId");
-
                     b.HasOne("SPM_Project.EntityModels.LMSUser", null)
                         .WithMany("Enrollments")
                         .HasForeignKey("LMSUserId");
-
-                    b.Navigation("Course");
 
                     b.Navigation("CourseClass");
                 });

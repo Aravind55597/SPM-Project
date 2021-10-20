@@ -19,15 +19,22 @@ namespace SPM_Project.EntityModels
         public DateTime UpdateTimestamp { get; set; }
 
 
-        public bool Approved { get; set; }
+        //check if assigned is true 
+        public bool IsAssigned { get; set; }
 
-        public bool Withdrawm { get; set; }
+        //check if the person is ernrolled 
+        public bool IsEnrollled { get; set; }
+
+        //check if withdrawal request is sent for this class
+        public bool IsWithdrawal { get; set; }
 
         public CourseClass CourseClass { get; set; }
 
+
+        public Course Course { get; set; }
+
         //to set the score for the class 
         public decimal PercentageScore { get; set; }
-
 
 
     }

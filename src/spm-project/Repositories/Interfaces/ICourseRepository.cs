@@ -13,7 +13,8 @@ namespace SPM_Project.Repositories.Interfaces
     {
 
         public Task<DTResponse<CourseTableData>> GetCoursesDataTable(DTParameterModel dTParameterModel);
-        object GetCoursePreReq(Course course);
+        //object GetCoursePreReq(Course course);
+ 
     }
 
 }
