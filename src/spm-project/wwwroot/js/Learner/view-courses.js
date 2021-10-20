@@ -15,14 +15,16 @@
         }();
 
         var options = {
-            dataSource: sources,
+            dataSource: RetrieveCourses,
+            locator: 'items',
             pageSize: 5,
             callback: function (response, pagination) {
-                window.console && console.log(response, pagination);
+               console.log(response, pagination);
 
                 var dataHtml = '';
 
                 $.each(response, function (index, item) {
+                    console.log(item.Name)
                     dataHtml += '<div class="row align-items-center"><div class="col">' + `<div class="card mb-3" style="max-width: 540px;">
                         <div class="row g-0">
                             <div class="col-md-4">
