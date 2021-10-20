@@ -36,6 +36,24 @@ namespace SPM_Project.DTOs
 
         public int NumClasses { get; set; }
 
+       
+
+    }
+
+    public class CourseDTOTable
+    {
+
+        public CourseDTOTable(string title,List<CourseDTO> domain)
+        {
+            this.title = title;
+            this.items = domain;
+
+        }
+        public string title { get; set; }
+        public List<CourseDTO> items { get; set; }
+
+
+
 
     }
 }
