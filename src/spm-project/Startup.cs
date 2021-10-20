@@ -145,7 +145,7 @@ namespace SPM_Project
             //Add database seeding code here 
 
             //handles exceptions thrown and returns an error reponse based on the type of exception thrown 
-            // app.UseMiddleware<ErrorHandlerMiddleware>();
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
 
             app.UseEndpoints(endpoints =>

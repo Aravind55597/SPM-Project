@@ -181,7 +181,7 @@ namespace SPM_Project.ApiControllers
                 courseClasses = await _unitOfWork.CourseClassRepository.GetAllAsync(null,null,"Course ClassTrainer");
             }
 
-           
+            TestCourseClassCreator(); 
 
             return CourseClassesDTOList(courseClasses);
 
@@ -202,6 +202,90 @@ namespace SPM_Project.ApiControllers
             return results;
         }
 
+
+
+        ////create list of test course class 
+        //public List<CourseClass> TestCourseClassListCreator()
+        //{
+
+        //    List<CourseClass> courseClassesList = new List<CourseClass>();
+
+
+        //    for (int i = 0; i < 10; i++)
+        //    {
+        //        CourseClass cc = new TestCourseClassCreator();
+        //        courseClassesList.Add();
+        //    }
+
+        //    return courseClassesList;
+        //}
+
+        public CourseClass ReturnCC()
+        {
+            return TestCourseClassCreator(); 
+        }
+
+        public List<CourseClass> TestCourseClassList()
+        {
+            List<CourseClass> courseClassesList = new List<CourseClass>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                courseClassesList.Add(TestCourseClassCreator()); 
+            }
+
+            return courseClassesList;
+        }
+
+
+
+
+
+        //create 
+        public CourseClass TestCourseClassCreator()
+        {
+
+            Random rnd = new Random();
+            int id = rnd.Next(1, 50);
+
+            var courseClass = new CourseClass()
+            {
+
+
+                Name = $"Test Course Class {id}",
+                StartRegistration = DateTime.Now,
+                EndRegistration = DateTime.Now,
+                StartClass = DateTime.Now,
+                EndClass = DateTime.Now,
+                ClassTrainer = new LMSUser()
+                {
+                    Name = $"Test Trainer {id}",
+                    Department = Department.Human_Resource,
+                    DOB = DateTime.Now,
+
+                },
+                Course = new Course()
+                {
+                    Name = $"Test Course {id}",
+                    Description = "Test Description",
+                    PassingPercentage = (decimal)0.85
+                },
+                Slots = 30
+
+            };
+
+            //set id of the courseClass 
+            typeof(CourseClass).GetProperty(nameof(courseClass.Id)).SetValue(courseClass, id);
+
+            //set id of classtrainer 
+            typeof(LMSUser).GetProperty(nameof(courseClass.ClassTrainer.Id)).SetValue(courseClass.ClassTrainer, id);
+
+            //set id of course 
+            typeof(Course).GetProperty(nameof(courseClass.Course.Id)).SetValue(courseClass.Course, id);
+
+            return courseClass;
+
+        }
 
 
 

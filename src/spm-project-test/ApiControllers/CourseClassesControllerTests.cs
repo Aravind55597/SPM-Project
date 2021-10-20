@@ -27,40 +27,86 @@ namespace SPM_Project.ApiControllers.Tests
         private DTParameterModel _inputDTModel;
 
         private DTResponse<CourseClassTableData> _outputDTModel;
-        
-        
-        
-        
-        //private CourseClass TestCourseClassCreator()
-        //{
-        //    var courseClass = new CourseClass()
-        //    {
-
-        //        Name = "Test Course Class",
-        //        StartRegistration = DateTime.Now,
-        //        EndRegistration = DateTime.Now,
-        //        StartClass = DateTime.Now,
-        //        EndClass = DateTime.Now,
-        //        ClassTrainer = new LMSUser()
-        //        {
-
-        //        },
-        //        Course = new Course()
-        //        {
-        //            Name = "Test Course",
-        //            Description = "Test Description",
-        //            PassingPercentage = (decimal)0.85
-        //        },
 
 
-        //    }; 
-        //} 
-        
-        
-        
-        
-        
-        
+
+
+        //create list of test course class 
+        private List<CourseClass> TestCourseClassListCreator()
+        {
+
+            List<CourseClass> courseClassesList = new List<CourseClass>();
+
+
+            for (int i = 0; i < 10; i++)
+            {
+                var cc = new TestCourseClassCreator(); 
+                courseClassesList.Add();
+            }
+
+            return courseClassesList; 
+        }
+
+
+
+
+
+
+
+
+
+        //create 
+        public CourseClass TestCourseClassCreator()
+        {
+
+            Random rnd = new Random();
+            int id = rnd.Next(1,50); 
+
+            var courseClass = new CourseClass()
+            {
+               
+
+                Name = $"Test Course Class {id}",
+                StartRegistration = DateTime.Now,
+                EndRegistration = DateTime.Now,
+                StartClass = DateTime.Now,
+                EndClass = DateTime.Now,
+                ClassTrainer = new LMSUser()
+                {
+                    Name=$"Test Trainer {id}",
+                    Department=Department.Human_Resource,
+                    DOB=DateTime.Now,
+
+                },
+                Course = new Course()
+                {
+                    Name = $"Test Course {id}",
+                    Description = "Test Description",
+                    PassingPercentage = (decimal)0.85
+                },
+                Slots=30
+
+            };
+
+            //set id of the courseClass 
+            typeof(CourseClass).GetProperty(nameof(courseClass.Id)).SetValue(courseClass,id);
+
+            //set id of classtrainer 
+            typeof(LMSUser).GetProperty(nameof(courseClass.ClassTrainer.Id)).SetValue(courseClass.ClassTrainer, id);
+
+            //set id of course 
+            typeof(Course).GetProperty(nameof(courseClass.Course.Id)).SetValue(courseClass.Course, id);
+
+            return courseClass; 
+            
+        }
+
+
+
+
+
+
+
         public CourseClassesControllerTests()
         {
             _uowMocker = new UOWMocker();
