@@ -84,21 +84,21 @@ namespace SPM_Project.ApiControllers.Tests
             _uowMocker.mockCourseClassRepository.
                 Setup(l => l.GetByIdAsync(1,"Course ClassTrainer")).
                 ReturnsAsync(new CourseClass() { 
-                Name="Test Course Class",
-                StartRegistration=DateTime.Now,
-                EndRegistration = DateTime.Now,
-                StartClass = DateTime.Now,
-                EndClass = DateTime.Now,
-                ClassTrainer = new LMSUser()
-                {
+                    Name="Test Course Class",
+                    StartRegistration=DateTime.Now,
+                    EndRegistration = DateTime.Now,
+                    StartClass = DateTime.Now,
+                    EndClass = DateTime.Now,
+                    ClassTrainer = new LMSUser()
+                    {
 
-                }, 
-                Course = new Course()
-                {
-                    Name="Test Course",
-                    Description= "Test Description",
-                    PassingPercentage = (decimal)0.85
-                },
+                    }, 
+                    Course = new Course()
+                    {
+                        Name="Test Course",
+                        Description= "Test Description",
+                        PassingPercentage = (decimal)0.85
+                    },
 
 
                 });

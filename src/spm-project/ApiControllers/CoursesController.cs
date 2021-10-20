@@ -25,38 +25,6 @@ namespace SPM_Project.ApiControllers
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        [NonAction]
-        public async Task<IActionResult> RetreiveCourses(int? id)
-        {
-
-            if (id!=null)
-            {
-                throw new NotImplementedException();
-            }
-            throw new NotImplementedException();
-        }
-
-
-
-
-
-
         [HttpPost, Route("CoursesDataTable", Name = "GetCoursesDataTable")]
         public async Task<IActionResult> GetCoursesDataTable([FromBody] DTParameterModel dTParameterModel)
         {

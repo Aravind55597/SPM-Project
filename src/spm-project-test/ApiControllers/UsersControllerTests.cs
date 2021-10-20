@@ -56,12 +56,6 @@ namespace SPM_Project.ApiControllers.Tests
 
         //GetCourseClassesDataTable-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-
-
-
-
-
         [Fact]
         public async Task GetEngineersDataTableTest_ClassBelongingToClassIdDoesNotExist()
         {
