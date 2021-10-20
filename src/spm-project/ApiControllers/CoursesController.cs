@@ -43,9 +43,9 @@ namespace SPM_Project.ApiControllers
         }
 
 
-        //[HttpGet, Route("GetEligibleCourses", Name = "GetEligibleCourses")]
-        //public async Task<IActionResult> GetEligibleCourses()
-        //{
+        [HttpGet, Route("GetEligibleCourses", Name = "GetEligibleCourses")]
+        public async Task<IActionResult> GetEligibleCourses()
+        {
 
             //get current user 
             var userId = await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
