@@ -434,47 +434,6 @@ namespace SPM_Project.ApiControllers.Tests
 
 
 
-
-
-
-
-
-
-        ////BLACKBOX
-        //[Fact()]
-        //public async Task GetCourseClassesAsync_NoClassId_ReturnListOfClasses()
-        //{
-
-
-        //    //aasert that a list of classes is returned ; 
-
-        //}
-
-
-
-
-        //[NonAction]
-        //public async Task<IActionResult> RetreiveCourseClasses(int? id)
-        //{
-
-
-        //    if (id != null)
-        //    {
-        //        //check if class exists ; otherwise return not found 
-        //        //return courseclass
-        //    }
-
-        //    //return classes 
-
-        //    throw new NotImplementedException();
-
-        //}
-
-
-
-
-
-
         //GetCourseClassesDataTable------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- PASS
 
         //No User ID is passed 

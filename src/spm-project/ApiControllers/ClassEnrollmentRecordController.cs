@@ -111,7 +111,7 @@ namespace SPM_Project.ApiControllers
         //}
         //DATATABLE-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        [HttpPost, Route("ClassEnrollmentRecordsDataTable", Name = "GetCourseClassesDataTable")]
+        [HttpPost, Route("ClassEnrollmentRecordsDataTable", Name = "GetClassEnrollmentRecordsDataTable")]
         public async Task<IActionResult> GetClassEnrollmentRecordsDataTable([FromBody] DTParameterModel dTParameterModel)
         {
 
@@ -121,5 +121,10 @@ namespace SPM_Project.ApiControllers
             var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
             return Ok(responseJson);
         }
+
+
+
+
+
     }
 }

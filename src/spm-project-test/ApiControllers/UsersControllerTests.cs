@@ -65,7 +65,7 @@ namespace SPM_Project.ApiControllers.Tests
         {
 
             //setup
-            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync((CourseClass)null).Verifiable("Retreiving courseClass  was not attempted"); ;
+            _uowMocker.mockCourseClassRepository.Setup(u => u.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync((CourseClass)null).Verifiable("Retreiving courseClass  was not attempted"); 
 
 
             //ACT----------------------------------------------------------------------------------------------------------------------------------------------------
