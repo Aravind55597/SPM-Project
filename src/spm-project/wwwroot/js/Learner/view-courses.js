@@ -1,18 +1,61 @@
-﻿$(function () {
+﻿function view_classes(course_id) {
+    var RetrieveCoursesClasses = $("#get-course-classes").val() + "?courseId=" + course_id;
+    console.log(RetrieveCoursesClasses)
+    $.ajax({
+        url: RetrieveCoursesClasses, success: function (result) {
+            console.log(result)
+            var dataHtml = ``;
+            $.each(result.data, function (index, item) {
+                var className = item.name
+                var trainerName = item.trainerName
+                var startClass = item.startClass.split("T")[0]
+                var startRegistration = item.startClass.split("T")[0]
+                var endClass = item.startClass.split("T")[0]
+                var endRegistration = item.startClass.split("T")[0]
+                var slots = item.slots
+
+                dataHtml += '<div class="row align-items-center"><div class="col">' + `<div class="card mb-3" style="max-width: 540px; background-color: fefaf4;">
+                        <div class="row g-0">
+                            <div class="col">
+                                <div class="card-body">
+                                    <h5 class="card-title">${className}</h5>
+                                    <p class="card-text">Trainer: ${trainerName}</p>
+                                    <p class="card-text">Class Duration: ${startClass} - ${endClass}</p>
+                                    <p class="card-text">Registration Period: ${startRegistration} - ${endRegistration}</p>
+
+                                    <p class="card-text">Slots Available: ${slots}</p>
+
+
+                                    <p class="card-text"><small class="text-muted">Last updated 5 mins ago</small></p>
+                                    <div class="row">
+                                        <div class="col"></div>
+                                        <div class="col-6">
+                                            <button type="button" value="course_id" onclick=""; class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                              Sign up for this class
+                                            </button>
+                                        </div>
+                                        <div class="col"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>` + '</div></div>';;
+            });
+            dataHtml += ``;
+            $("#view_classes").html(dataHtml);
+
+        }
+    });
+
+
+}
+
+$(function () {
     (function (name) {
-        var RetrieveCourses = $("#get-course-classes").val();
+        var RetrieveCourses = $("#get-eligible-courses").val();
         console.log(RetrieveCourses)
         console.log(JSON.stringify(RetrieveCourses))
         var container = $('#pagination-' + name);
-        var sources = function () {
-            var result = [];
-
-            for (var i = 1; i < 196; i++) {
-                result.push(i);
-            }
-
-            return result;
-        }();
 
         var options = {
             dataSource: RetrieveCourses,
@@ -24,7 +67,6 @@
                 var dataHtml = '';
 
                 $.each(response, function (index, item) {
-                    console.log(item.Name)
                     dataHtml += '<div class="row align-items-center"><div class="col">' + `<div class="card mb-3" style="max-width: 540px;">
                         <div class="row g-0">
                             <div class="col-md-4">
@@ -32,10 +74,10 @@
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                    <h5 class="card-title">${item.Name}</h5>
+                                    <p class="card-text">${item.Description}</p>
                                     <p class="card-text"><small class="text-muted">Last updated 5 mins ago</small></p>
-                                    <button type="button" value="course_id" onclick="view_classes('course_id')"; class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    <button type="button" value="course_id" onclick="view_classes(${item.Id})"; class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                       View Classes Available
                                     </button>
                                 </div>
@@ -61,32 +103,5 @@
             window.console && console.log('beforePageOnClick...');
             //return false
         });
-    })('demo1');
-
-    (function (name) {
-        var container = $('#pagination-' + name);
-        container.pagination({
-            dataSource: 'https://api.flickr.com/services/feeds/photos_public.gne?tags=cat&tagmode=any&format=json&jsoncallback=?',
-            locator: 'items',
-            totalNumber: 120,
-            pageSize: 20,
-            ajax: {
-                beforeSend: function () {
-                    container.prev().html('Loading data from flickr.com ...');
-                }
-            },
-            callback: function (response, pagination) {
-                window.console && console.log(22, response, pagination);
-                var dataHtml = '<ul>';
-
-                $.each(response, function (index, item) {
-                    dataHtml += '<li>' + item.title + '</li>';
-                });
-
-                dataHtml += '</ul>';
-
-                container.prev().html(dataHtml);
-            }
-        })
-    })('demo2');
+    })('view-courses');
 })
