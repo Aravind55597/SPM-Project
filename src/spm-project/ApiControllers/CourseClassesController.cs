@@ -54,8 +54,22 @@ namespace SPM_Project.ApiControllers
            
         }
 
+        [HttpPost, Route("AssignTrainerToClass", Name = "AssignTrainerToClass")]
         
-        
+        public async Task<IActionResult> AssignTrainerToClass([FromForm]int trainerId , [FromForm] int classId)
+        {
+
+
+            var response = await AssignTrainer(trainerId, classId);
+
+
+            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+            return Ok(responseJson);
+
+        }
+
+
+
 
 
 
