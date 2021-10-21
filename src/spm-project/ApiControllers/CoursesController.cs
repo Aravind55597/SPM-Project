@@ -119,8 +119,6 @@ namespace SPM_Project.ApiControllers
         [NonAction]
         public async Task<bool> GetCourseEligiblity(Course course,List<Course> courseprereq)
         {
-
-        
             //sort arrays then check if equal
             course.PreRequisites = course.PreRequisites.OrderBy(c => c.Id).ToList();
             courseprereq = courseprereq.OrderBy(c => c.Id).ToList();
