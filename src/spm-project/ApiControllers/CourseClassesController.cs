@@ -54,8 +54,22 @@ namespace SPM_Project.ApiControllers
            
         }
 
+        [HttpPost, Route("AssignTrainerToClass", Name = "AssignTrainerToClass")]
         
-        
+        public async Task<IActionResult> AssignTrainerToClass([FromForm]int trainerId , [FromForm] int classId)
+        {
+
+
+            var response = await AssignTrainer(trainerId, classId);
+
+
+            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+            return Ok(responseJson);
+
+        }
+
+
+
 
 
 
@@ -151,9 +165,27 @@ namespace SPM_Project.ApiControllers
             return new CourseClassesDTO(courseClass);
         }
 
+        [NonAction]
+        public async Task<CourseClassesDTO> AssignTrainer(int trainerId,int courseClassId)
+        {
 
-
-
+            //check if class exists ; otherwise return not found
+            //return courseclass
+            var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(courseClassId, "Course,ClassTrainer");
+            var trainer = await _unitOfWork.LMSUserRepository.GetByIdAsync(trainerId);
+            if (courseClass == null)
+            {
+                throw new NotFoundException($"Course class of id {courseClassId} does not exist");
+            }
+            if (trainer == null)
+            {
+                throw new NotFoundException($"trainer not exist");
+            }
+            courseClass.ClassTrainer = trainer;
+            await _unitOfWork.CompleteAsync();
+            return new CourseClassesDTO(courseClass);
+        }
+           
 
         [NonAction]
         public async Task<List<CourseClassesDTO>> GetCourseClassesDTOAsync(int? courseId)
@@ -203,14 +235,9 @@ namespace SPM_Project.ApiControllers
 
             return results;
         }
-
-
-
-
        
 
 
-
-
+        
     }
 }
