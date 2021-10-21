@@ -138,12 +138,30 @@ function AddWithdrawEvent(table, class_ID, action) {
 		console.log(userID);
 		console.log(classID);
 
-		//ajax success: after ajax is successful 
-
-		//reload table
 		table.ajax.reload();
+		notification(message);
 
-		notification(message)
+		/*
+		var query = "/api/CourseClasses/AssignTrainerToClass" + "?trainerId=" + userID + "&" + "classId=" + classID;
+		console.log(query)
+
+
+		$.ajax({
+			url: query,
+			method: "POST",
+			dataType: "json",
+			headers: { "accept": "application/json" },
+			success: function (data) {
+				table.ajax.reload();
+				notification(message);
+			},
+			error: function (data) {
+				alert("failed");
+			},
+			async: false
+		});
+
+		*/
 
 
 	});
