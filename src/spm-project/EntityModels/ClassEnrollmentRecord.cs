@@ -26,8 +26,7 @@ namespace SPM_Project.EntityModels
         public bool IsEnrollled { get; set; }
 
         //check if withdrawal request is sent for this class
-        public bool IsWithdrawal { get; set; }
-
+      
         public CourseClass CourseClass { get; set; }
 
 
