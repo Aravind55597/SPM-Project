@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SPM_Project.Data;
 
 namespace SPM_Project.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211020135941_add-lms-user-update-database")]
+    partial class addlmsuserupdatedatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -289,6 +291,9 @@ namespace SPM_Project.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsEnrollled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsWithdrawal")
                         .HasColumnType("bit");
 
                     b.Property<int?>("LMSUserId")

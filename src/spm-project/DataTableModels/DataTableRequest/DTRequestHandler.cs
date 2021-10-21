@@ -123,7 +123,6 @@ namespace SPM_Project.DataTableModels.DataTableRequest
 
             RecordsFiltered = queryable.Count();
 
-
         }
 
 

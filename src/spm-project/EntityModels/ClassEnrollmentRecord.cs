@@ -25,8 +25,7 @@ namespace SPM_Project.EntityModels
         //check if the person is ernrolled 
         public bool IsEnrollled { get; set; }
 
-        //check if withdrawal request is sent for this class
-        public bool IsWithdrawal { get; set; }
+
 
         public CourseClass CourseClass { get; set; }
 
@@ -36,6 +35,7 @@ namespace SPM_Project.EntityModels
         //to set the score for the class 
         public decimal PercentageScore { get; set; }
 
+        public LMSUser LMSUser { get; set; }
 
     }
 }
