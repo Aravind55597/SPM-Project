@@ -8,10 +8,11 @@
             $.each(result.data, function (index, item) {
                 var className = item.name
                 var trainerName = item.trainerName
-                var startClass = item.startClass.split("T")[0]
-                var startRegistration = item.startClass.split("T")[0]
-                var endClass = item.startClass.split("T")[0]
-                var endRegistration = item.startClass.split("T")[0]
+                var startClass = ($.format.date(item.startClass, "dd-MMM-yyyy"))
+                var startRegistration = ($.format.date(item.startRegistration, "dd-MMM-yyyy"))
+                var endClass = ($.format.date(item.endClass, "dd-MMM-yyyy"))
+                var endRegistration = ($.format.date(item.endRegistration, "dd-MMM-yyyy"))
+
                 var slots = item.slots
 
                 dataHtml += '<div class="row align-items-center"><div class="col">' + `<div class="card mb-3" style="max-width: 540px; background-color: fefaf4;">
