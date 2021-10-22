@@ -72,7 +72,7 @@ namespace SPM_Project.EntityModels.Tests
             _testQuestionSingleGraded.Answer = "true";
             Assert.True(_testQuestionSingleGraded.GetAnswer());
 
-            //TODO ASSER FOR EXCEPTION WHEN PARSING FAILS 
+            //TODO ASSERT FOR EXCEPTION WHEN PARSING FAILS 
         }
 
 

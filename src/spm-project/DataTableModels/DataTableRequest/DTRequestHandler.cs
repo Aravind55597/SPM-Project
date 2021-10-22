@@ -28,9 +28,6 @@ namespace SPM_Project.DataTableModels.DataTableRequest
             RecordsFiltered = 0;
         }
 
-
-
-
         public int Draw { get; set; }
 
         public int Start { get; set; }

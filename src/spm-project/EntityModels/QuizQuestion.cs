@@ -41,7 +41,7 @@ namespace SPM_Project.EntityModels
             get
             {
                 return _Marks;
-            } 
+            }
             set
             {
                 _Marks = value;
@@ -55,6 +55,9 @@ namespace SPM_Project.EntityModels
         public List<UserAnswer> UserAnswers { get; set; }
 
         public bool IsGraded { get; set; }
+
+
+        public Quiz Quiz { get; set; }
 
         //retrieve discriminators to check
         [NotMapped]
@@ -85,7 +88,7 @@ namespace SPM_Project.EntityModels
 
         public void SetAnswer(bool ans)
         {
-            Answer = ans.ToString(); 
+            Answer = ans.ToString();
         }
     }
 
@@ -135,13 +138,9 @@ namespace SPM_Project.EntityModels
                 {
                     stringAns += ",";
                 }
-
-
             }
 
-
             Answer = stringAns;
-
         }
     }
 }

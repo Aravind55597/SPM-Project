@@ -139,18 +139,6 @@ namespace SPM_Project.EntityModels.Tests
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         [Fact]
         public void McqQuestionTest_AddingMarks()
         {

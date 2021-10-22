@@ -15,6 +15,7 @@ namespace SPM_Project.DTOs
             Description = domain.Description;
             if (PreRequisites != null ) {
                 PreRequisites = domain.PreRequisites.Select(p => p.Name).ToList();
+                PreRequisitesIds = domain.PreRequisites.Select(p => p.Id).ToList();
             }
             PassingPercentage = domain.PassingPercentage;
             NumClasses = domain.GetNumCourseClasses(); 
@@ -30,6 +31,8 @@ namespace SPM_Project.DTOs
 
 
         public List<string> PreRequisites { get; set; }
+
+        public List<int> PreRequisitesIds { get; set; }
 
 
         public decimal PassingPercentage { get; set; }

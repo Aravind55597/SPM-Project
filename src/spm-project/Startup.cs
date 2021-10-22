@@ -71,9 +71,7 @@ namespace SPM_Project
                     new BadRequestObjectResult(
 
                         Newtonsoft.Json.JsonConvert.SerializeObject(
-
                             new Response<object>((int)HttpStatusCode.BadRequest, actionContext.ModelState.AllErrors(),"Invalid Request")
-
                     )
 
 
