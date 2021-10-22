@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SPM_Project.EntityModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,7 +12,22 @@ namespace SPM_Project.DTOs
     public class QuizDTO
     {
 
-        public int Id { get; private set; }
+        //default constructor for model binding 
+        public QuizDTO()
+        {
+
+        }
+
+
+
+        //contructor to create QuizDTO object
+        public QuizDTO(Quiz  domain)
+        {
+
+        }
+
+
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Please provide a name for the Quiz")]
         public string Name { get; set; }

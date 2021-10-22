@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using SPM_Project.Extensions;
 
 namespace SPM_Project.EntityModels
 {
@@ -106,19 +107,16 @@ namespace SPM_Project.EntityModels
         public List<int> GetAnswer()
         {
             //throw  FormatException if parse fails
-            List<int> ans = new List<int>();
-            foreach (var num in Answer.Split
+            var ans = new List<int>();
 
-             (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                ans.Add(Int32.Parse(num));
-            }
+            ans.CommaSepStringToIntList(Answer); 
 
             if (!IsMultiSelect)
             {
                 return (List<int>)ans.GetRange(0, 1);
             }
             return ans;
+
         }
 
         //set answer

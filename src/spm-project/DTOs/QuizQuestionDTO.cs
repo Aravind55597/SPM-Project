@@ -1,21 +1,32 @@
 ﻿using SPM_Project.EntityModels;
+using SPM_Project.Extensions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SPM_Project.DTOs
 {
-
-
     //TODO UNIT TEST THIS CLASS
+    //https://www.intertech.com/unit-test-net-entity-validation/
+
+
     public class QuizQuestionDTO : IValidatableObject
     {
 
-        public int Id { get; private set; }
 
+
+        public QuizQuestionDTO()
+        {
+
+        }
+
+        //cosntructor to create QuizQuestionDTO object
+        public QuizQuestionDTO(Quiz domain)
+        {
+
+        }
+
+        public int Id { get; set; }
 
         [Url(ErrorMessage = "Invalid URL!")]
         public string ImageUrl { get; set; }
@@ -28,20 +39,24 @@ namespace SPM_Project.DTOs
 
         [Required(ErrorMessage = "Please provide answer for the question")]
         public string Answer { get; set; }
-    
-            
+
         public int? Marks { get; set; }
 
+        //tf option
 
-        //tf option 
+        [Required(ErrorMessage = "Please provide option")]
         public string TrueOption { get; set; }
-
+        [Required(ErrorMessage = "Please provide option")]
         public string FalseOption { get; set; }
 
-        //mcq option 
+        //mcq option
+        [Required(ErrorMessage = "Please provide option")]
         public string Option1 { get; set; }
+        [Required(ErrorMessage = "Please provide option")]
         public string Option2 { get; set; }
+        [Required(ErrorMessage = "Please provide option")]
         public string Option3 { get; set; }
+        [Required(ErrorMessage = "Please provide option")]
         public string Option4 { get; set; }
 
         //check if multiselect or not
@@ -50,15 +65,15 @@ namespace SPM_Project.DTOs
         public QuizDTO Quiz { get; set; }
 
 
-
+        //this method can't be tested directly as it is called by the framework to generate an inummerabe
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
 
 
-            //check if marks is provided 
+            //check if marks is provided
             if (Quiz.IsGraded)
             {
-                if (Marks==null)
+                if (Marks == null)
                 {
                     yield return new ValidationResult(
                         $"Please provide marks for graded quizzes",
@@ -66,50 +81,53 @@ namespace SPM_Project.DTOs
                 }
             }
 
-            //check if question type is properly provided 
+
+
+            //check if question type is properly provided
             if (!QuizQuestion.Discriminators.Contains(QuestionType))
             {
                 yield return new ValidationResult(
                     $"Question types are  {string.Join(",", QuizQuestion.Discriminators)}",
                     new[] { nameof(QuestionType) });
-
             }
 
-            //if (QuizQuestion.Discriminators.Contains(QuestionType))
-            //{
-            //    "TFQuestion","McqQuestion"
+            //check if answers are fomatted correctly 
+            if (QuizQuestion.Discriminators.Contains(QuestionType))
+            {
+                bool flag;
+                switch (QuestionType)
+                {
+                    case "TFQuestion":
 
-            //    switch (QuestionType)
-            //    {
-            //        case "TFQuestion":
-            //            Console.WriteLine($"Measured value is {measurement}; too low.");
-            //            break;
+                        if (!Boolean.TryParse(Answer, out flag))
+                        {
+                            yield return new ValidationResult(
+                                $"Please provide the proper format for the answer for a True/False Question",
+                                new[] { nameof(Answer) });
 
-            //        case "McqQuestion":
-            //            Console.WriteLine($"Measured value is {measurement}; too high.");
-            //            break;
+                            //yield return new ValidationResult(
+                            //    $"Ans hav"}",
+                            //    new[] { nameof(QuestionType) });
+                        }
 
-            //    }
+                        break;
+
+                    case "McqQuestion":
+
+                        if (! new List<int>().CommaSepStringToIntListValidator(Answer))
+                        {
+                            yield return new ValidationResult(
+                               $"Please provide the proper format for the answer for a MCQ Question ",
+                                   new[] { nameof(Answer) });
+                        }
 
 
-
-
-
-
-
-
-                yield return new ValidationResult(
-                    $"Question types are  {string.Join(",", QuizQuestion.Discriminators)}",
-                    new[] { nameof(QuestionType) });
-
+                        break;
+                }
             }
-
-
-
-
         }
 
 
 
     }
-
+}
