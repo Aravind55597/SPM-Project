@@ -1,6 +1,5 @@
 ﻿function view_classes(course_id) {
     var RetrieveCoursesClasses = $("#get-course-classes").val() + "?courseId=" + course_id;
-    console.log(RetrieveCoursesClasses)
     $.ajax({
         url: RetrieveCoursesClasses, success: function (result) {
             console.log(result)
@@ -54,8 +53,6 @@
 $(function () {
     (function (name) {
         var RetrieveCourses = $("#get-eligible-courses").val();
-        console.log(RetrieveCourses)
-        console.log(JSON.stringify(RetrieveCourses))
         var container = $('#pagination-' + name);
 
         var options = {
