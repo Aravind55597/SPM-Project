@@ -56,7 +56,7 @@ namespace SPM_Project.ApiControllers
 
         [HttpPost, Route("AssignTrainerToClass", Name = "AssignTrainerToClass")]
         
-        public async Task<IActionResult> AssignTrainerToClass(int trainerId ,  int classId)
+        public async Task<IActionResult> AssignTrainerToClass([FromQuery]int trainerId , [FromQuery] int classId)
         {
 
 

@@ -58,8 +58,8 @@ namespace SPM_Project.ApiControllers
 
 
             }
-
-            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(dto);
+          
+            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(new CourseDTOTable("Courses Table",dto));
             return Ok(responseJson);
 
         }

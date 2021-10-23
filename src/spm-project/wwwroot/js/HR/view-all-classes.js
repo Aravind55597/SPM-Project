@@ -1,16 +1,9 @@
 ﻿
+
 $(document).ready(function () {
 	viewCourseClassDT();
 
 });
-
-
-
-function closeModal() {
-	$(".btn-close").click(function () {
-		$(".overlay").hide();
-	});
-}
 
 function notification(notificationString) {
 
@@ -19,6 +12,16 @@ function notification(notificationString) {
 		globalPosition: 'top center'
 	});
 }
+
+
+function closeModal() {
+	$(".btn-close").click(function () {
+		$(".overlay").hide();
+
+	});
+}
+
+
 
 function openViewClassModal() {
 	//modal must always show classlist tab upon open 
@@ -29,6 +32,7 @@ function openViewClassModal() {
 	$('#ClassList').addClass("show active");
 
 	$(".overlay").show();
+
 	closeModal();
 }
 
@@ -46,14 +50,12 @@ function viewClassEvent(table) {
 		$(".classNameInput").html(classname);
 
 
-		//get of selected row classID
+		//get selected row classID
 		var classID = row_data.DT_RowId;
 		console.log(classID)
 
 		//destroy previous datatable before you can initialize a new table 
-		$("#individual_class_datatable").DataTable().clear().destroy();
-		$("#assign_trainer_datatable").DataTable().clear().destroy();
-		$("#assign_learner_datatable").DataTable().clear().destroy();
+		destroyDT(["#individual_class_datatable", "#assign_trainer_datatable", "#assign_learner_datatable"]);
 
 
 		//initialize class list DT using classID
@@ -73,6 +75,17 @@ function viewClassEvent(table) {
 
 
 
+function destroyDT(list_DT_names) {
+	for (i = 0; i < list_DT_names.length; i++) {
+		// clear and destroy DT
+		$(list_DT_names[i]).DataTable().clear().destroy();
+		//remove event listeners attached to DTs that are destroyed
+		$(list_DT_names[i]).off();
+
+    }
+}
+
+
 
 function deleteClassEvent(table) {
 
@@ -85,7 +98,6 @@ function deleteClassEvent(table) {
 
 		//ajax success: after ajax is successful 
 
-
 		//reload table
 		table.ajax.reload();
 
@@ -95,56 +107,65 @@ function deleteClassEvent(table) {
 	});
 }
 
-//group select checkbox 
-function groupSelectHandler(table) {
-	table.on('change', '.group-checkable', function () {
+function AddWithdrawEvent(table, class_ID, action) {
 
-		var set = $(this).closest('table').find('td:first-child .checkable');
-		var checked = $(this).is(':checked');
+	var buttonName = null;
+	var message = null;
 
-		var selectedList = [];
+	if (action == "addLearner") {
+		buttonName = '.addLearner';
+		message = "Learner has been Added";
 
-		$(set).each(function () {
-			if (checked) {
-				$(this).prop('checked', true);
-				table.rows($(this).closest('tr')).select();
-				//get data of group select rows
-				selectedList.push(table.rows($(this).closest('tr')).data()[0]);
+	}
 
-			}
-			else {
-				$(this).prop('checked', false);
-				table.rows($(this).closest('tr')).deselect();
-			}
+	else if (action == "addTrainer") {
+		buttonName = '.addTrainer';
+		message = "Trainer has been Added";
+	}
+
+	else if (action == "withdrawLearner") {
+		buttonName = '.withdrawLearner';
+		message = "Learner has been Withdrawn";
+	}
+
+	table.on('click', buttonName, function () {
+		var row = $(this).parents('tr')[0];
+		//for row data
+		var row_data = table.row(row).data();
+		var userID = row_data.Id;
+		var classID = class_ID;
+
+		console.log(userID);
+		console.log(classID);
+
+		table.ajax.reload();
+		notification(message);
+
+		
+		var query = "/api/CourseClasses/AssignTrainerToClass" + "?trainerId=" + userID + "&" + "classId=" + classID;
+		console.log(query)
+
+
+		$.ajax({
+			url: query,
+			method: "POST",
+			
+			success: function (data) {
+				table.ajax.reload();
+				notification(message);
+			},
+			error: function (data) {
+				alert("failed");
+			},
+			async: false
 		});
 
-		console.log(selectedList);
+		
+
 
 	});
-
 }
 
-//individual select checkbox
-function individualSelectHandler(table) {
-
-	table.on('change', '.checkable', function () {
-
-		//RETREIVE row where select was triiggered (check whether it is selceted )
-		//$(row).data("DT_RowId")  -> COURSE ID 
-		var selectedList = [];
-
-		var NumSelected = $('.selected').length;
-
-		var indexList = table.rows({ selected: true }).indexes();
-		var rows_data = table.rows(indexList).data();
-
-		for (i = 0; i < NumSelected; i++) {
-			selectedList.push(rows_data[i])
-
-		}
-		console.log(selectedList);
-	});
-}
 
 
 
@@ -258,30 +279,35 @@ function generalDT(action, class_ID) {
 	var RetrieveValue = null;
 	var htmlTableName = null;
 	var EmptyTableMsg = null;
+	var button = null;
 	
 
 	if (action == "viewClassList") {
 
-		RetrieveValue = $("#get-engineers-datatable").val() + "?classID=" + class_ID
+		RetrieveValue = $("#get-engineers-datatable").val() + "?classId=" + class_ID;
 		htmlTableName = "#individual_class_datatable";
 		EmptyTableMsg = "Class is Empty"
+		button = `<a href="javascript:;" class="btn btn-danger withdrawLearner" >Remove</a>`
 		
 	}
 
 
 	else if (action == "assignTrainer") {
-		RetrieveValue = $("#get-engineers-datatable").val() + "?classID=" + class_ID + "&isTrainer=True&isEligible=True";
-		console.log(RetrieveValue)
+		RetrieveValue = $("#get-engineers-datatable").val() + "?classId=" + class_ID + "&isTrainer=True&isEligible=True";
 		htmlTableName = "#assign_trainer_datatable";
 		EmptyTableMsg = "Could not find Eligible Trainers"
+		button = `<a href="javascript:;" class="btn btn-success addTrainer" >Add Trainer</a>`
 
 	}
 
 	else if (action == "assignLearner") {
-		RetrieveValue = $("#get-engineers-datatable").val() + + "?classID=" + class_ID + "&isLearner=True&isEligible=True";
+		RetrieveValue = $("#get-engineers-datatable").val() + "?classId=" + class_ID + "&isLearner=True&isEligible=True";
 		htmlTableName = "#assign_learner_datatable";
 		EmptyTableMsg = "Could not find Eligible Learners"
+		button = `<a href="javascript:;" class="btn btn-success addLearner" >Add Learner</a>`
 	}
+
+	console.log(RetrieveValue)
 
 
 	var table = $(htmlTableName).DataTable({
@@ -307,16 +333,6 @@ function generalDT(action, class_ID) {
 		//enable server side 
 		serverSide: true,
 
-		//enable select in the table 
-		select: {
-			//allow us to select multiple rows
-			style: 'multi',
-			//retricts which cells in the table that will trigger table selection 
-			//td first child (for each td tag , only the first item (cell) will allow selection. Within the cell , the element with .checkable class is only allowed)
-			//this is essentially a css selector used here 
-			selector: 'td:first-child .checkable',
-		},
-
 
 		//send ajax request to server to Retrieve customers
 		ajax: {
@@ -334,22 +350,11 @@ function generalDT(action, class_ID) {
 			}
 		},
 
-		//every time the table get initialised (draw or ajax.reload()) , 
-		//render this for the header 
-		//in this case , render a checkbox for the first header 
-		headerCallback: function (thead, data, start, end, display) {
-			thead.getElementsByTagName('th')[0].innerHTML = `
-                    <label class="checkbox checkbox-single checkbox-solid checkbox-primary mb-0">
-                        <input type="checkbox" value="" class="group-checkable"/>
-                        <span></span>
-                    </label>`;
-		},
-
 
 
 
 		//default order and sort. In this case ,order by ID in ascending order (Id is column number 1)
-		order: [[1, "asc"]],
+		order: [[0, "asc"]],
 
 
 
@@ -361,9 +366,10 @@ function generalDT(action, class_ID) {
 			//data: null means it is not Retrieveing data from the server
 			//column can't be ordered
 			//regarding name (https://datatables.net/reference/option/columns.name)
-			{ name: 'Checkbox', data: null, orderable: false },
+	
 			{ name: 'Id', data: 'Id' },
-			{ name: 'Name', data: 'Name' }
+			{ name: 'Name', data: 'Name' },
+			{ name: 'Actions', data: null, responsivePriority: -1, orderable: false },
 
 		],
 
@@ -371,15 +377,12 @@ function generalDT(action, class_ID) {
 		//I suggest to use this just to render stuff such as buttons/any elements OR processign the result to display in diff format eg. format date string
 		columnDefs: [
 
+
 			{
-				//target first collumn 
-				targets: 0,
+				//target last column
+				targets: -1,
 				render: function (data, type, full, meta) {
-					return `
-                        <label class="checkbox checkbox-single checkbox-primary mb-0">
-                            <input type="checkbox" value="" class="checkable"/>
-                            <span></span>
-                        </label>`;
+					return button;
 				},
 			},
 
@@ -402,13 +405,11 @@ function generalDT(action, class_ID) {
 
 	});
 
-
 	//event handlers
+	AddWithdrawEvent(table, class_ID, "withdrawLearner");
+	AddWithdrawEvent(table, class_ID, "addLearner");
+	AddWithdrawEvent(table, class_ID, "addTrainer");
 
-	//group select checkbox 
-	groupSelectHandler(table);
-	//individual select checkbox
-	individualSelectHandler(table);
 
 }
 
