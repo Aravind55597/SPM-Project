@@ -12,26 +12,33 @@
                 </div>
 
                 @*card body is to add content*@
-                <div class="card-body">
-                      
-                    @*begin: Datatable*@
-                    <table class="table table-bordered table-hover table-checkable" id="request_datatable" style="margin-top: 13px !important">
-                        <thead>
-                            <tr>
-                                <th>Request ID</th>
-                                <th>Request Date</th>
-                                <th>Requestor ID</th>
-                                <th>Requestor Name</th>
-                                <th>Class Name</th>
-                                <th>Request Status</th>
-                                @*add button*@
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                    </table>
-                    @*end: Datatable*@
+            <div class="card-body">
 
-                </div>
+                <select id="dropdownFilter" class="form-select form-select-sm" style="width: 170px;" >
+                    <option value="">No Filter</option>
+                    <option value="Enrolled">Enrolled</option>
+                    <option value="RequestedEnrollment">Requested Enrollment</option>
+                </select>
+            
+
+                @*begin: Datatable*@
+                <table class="table table-bordered table-hover table-checkable" id="request_datatable" style="margin-top: 13px !important">
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>Request Date</th>
+                            <th>Requestor ID</th>
+                            <th>Requestor Name</th>
+                            <th>Class Name</th>
+                            <th>Request Status</th>
+                            @*add button*@
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
+                @*end: Datatable*@
+
+            </div>
             </div>
         </div>
     </div>

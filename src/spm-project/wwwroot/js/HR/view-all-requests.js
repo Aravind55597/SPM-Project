@@ -1,12 +1,21 @@
-﻿
-$(document).ready(function () {
+﻿$(document).ready(function () {
 	viewRequestDT();
-
+	
 });
 
 
 
+function filterHandler(table) {
+	$('#dropdownFilter').on('change', function () {
+		table.column(5).search(this.value).draw()
+	});
+
+}
+
+
+
 function viewRequestDT() {
+
 
 	var RetrieveRequest = $("#get-class-enrollment-records-datatable").val();
 
@@ -47,7 +56,8 @@ function viewRequestDT() {
 			contentType: "application/json",
 			dataType: "json",
 			data: function (d) {
-				console.log(JSON.stringify(d))
+				//d.filter = [{ column: "CourseClassName", value: "Course 1 G2" }]
+				console.log(JSON.stringify(d));
 				return JSON.stringify(d);
 			},
 			error: function (xhr, error, code) {
@@ -125,7 +135,8 @@ function viewRequestDT() {
 
 	});
 
-
+	
+	filterHandler(table);
 
 }
 
