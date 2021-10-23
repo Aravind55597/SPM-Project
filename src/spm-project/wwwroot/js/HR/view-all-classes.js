@@ -13,6 +13,12 @@ function notification(notificationString) {
 	});
 }
 
+function errorNotification(notificationString) {
+	$.notify(notificationString, {
+		className: 'danger',
+		globalPosition: 'top center'
+	});
+}
 
 function closeModal() {
 	$(".btn-close").click(function () {
@@ -107,25 +113,50 @@ function deleteClassEvent(table) {
 	});
 }
 
+
+function queryStringHandler(action, classid, userid) {
+	var query = null;
+
+	if (action == "addTrainer") {
+		query = "/api/CourseClasses/AssignTrainerToClass" + "?trainerId=" + userid + "&" + "classId=" +  classid;
+	}
+
+	else if (action == "addLearner") {
+
+    }
+	else if (action == "withdrawLearner") {
+
+	}
+
+	return query
+
+}
+
 function AddWithdrawEvent(table, class_ID, action) {
 
 	var buttonName = null;
 	var message = null;
+	var failMsg = null;
+	var query = null;
+
 
 	if (action == "addLearner") {
 		buttonName = '.addLearner';
 		message = "Learner has been Added";
+		failMsg = "Learner could not be added";
 
 	}
 
 	else if (action == "addTrainer") {
 		buttonName = '.addTrainer';
 		message = "Trainer has been Added";
+		failMsg = "Trainer could not be added";
 	}
 
 	else if (action == "withdrawLearner") {
 		buttonName = '.withdrawLearner';
 		message = "Learner has been Withdrawn";
+		failMsg = "Learner could not be withdrawn";
 	}
 
 	table.on('click', buttonName, function () {
@@ -138,31 +169,25 @@ function AddWithdrawEvent(table, class_ID, action) {
 		console.log(userID);
 		console.log(classID);
 
-		table.ajax.reload();
-		notification(message);
+		query = queryStringHandler(action, classID, userID);
+
+		if (query != null) {
+			console.log(query)
+			$.ajax({
+				url: query,
+				method: "POST",
+				success: function (data) {
+					table.ajax.reload();
+					notification(message);
+				},
+				error: function (data) {
+					errorNotification(failMsg);
+				},
+				async: true
+			});
+		}
 
 		
-		var query = "/api/CourseClasses/AssignTrainerToClass" + "?trainerId=" + userID + "&" + "classId=" + classID;
-		console.log(query)
-
-
-		$.ajax({
-			url: query,
-			method: "POST",
-			
-			success: function (data) {
-				table.ajax.reload();
-				notification(message);
-			},
-			error: function (data) {
-				alert("failed");
-			},
-			async: false
-		});
-
-		
-
-
 	});
 }
 
