@@ -155,8 +155,8 @@ namespace SPM_Project.ApiControllers.Tests
             };
             //set id of course 
             typeof(Course).GetProperty(nameof(course.Id)).SetValue(course, 1);
-            
-            return course; 
+
+            return course;
         }
 
 
@@ -186,7 +186,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             //when when course id = 1 , return course
             _uowMocker.mockCourseRepository
-                .Setup(l => l.GetByIdAsync(1,It.IsAny<string>() )   )
+                .Setup(l => l.GetByIdAsync(1, It.IsAny<string>()))
                 .ReturnsAsync(TestCourse());
 
 
@@ -203,12 +203,12 @@ namespace SPM_Project.ApiControllers.Tests
 
 
         //GetCourseClassesDTOAPIAsync-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        
+
         //BLACKBOX
         [Fact()]
         public async Task GetCourseClassesDTOAPIAsync_CourseExists_ReturnsOK()
         {
-            
+
 
             //return classes when retreiving class that has the course of Id provided 
             _uowMocker.mockCourseClassRepository
@@ -219,11 +219,11 @@ namespace SPM_Project.ApiControllers.Tests
 
             _uowMocker.mockCourseRepository.Verify(l => l.GetByIdAsync(1, It.IsAny<string>()));
 
-   
+
             _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), null, "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>()));
 
 
-           
+
 
             //check if ok is returned 
             Assert.IsType<OkObjectResult>(result);
@@ -232,14 +232,14 @@ namespace SPM_Project.ApiControllers.Tests
 
             var val = (Response<List<CourseClassesDTO>>)result.Value;
             //check if count is 10 
-            Assert.Equal(10, val.Data.Count); 
+            Assert.Equal(10, val.Data.Count);
         }
 
         //BLACKBOX
         [Fact()]
         public async Task GetCourseClassesDTOAPIAsync_CourseDoesNotExists_ReturnsNotFoundException()
         {
-            Func<Task> action = (async () => await _controller.GetCourseClassesDTOAPIAsync(null,0));
+            Func<Task> action = (async () => await _controller.GetCourseClassesDTOAPIAsync(null, 0));
             //check if ok is returned 
             await Assert.ThrowsAsync<NotFoundException>(action);
         }
@@ -255,7 +255,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             var result = await _controller.GetCourseClassesDTOAPIAsync(1, null) as OkObjectResult;
 
-            _uowMocker.mockCourseClassRepository.Verify(l => l.GetByIdAsync(1, "Course,ClassTrainer")); 
+            _uowMocker.mockCourseClassRepository.Verify(l => l.GetByIdAsync(1, "Course,ClassTrainer"));
 
 
             //check if ok is returned 
@@ -265,7 +265,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             var val = (Response<CourseClassesDTO>)result.Value;
             //check if course id is 1 
-            Assert.Equal(1 ,val.Data.CourseId );
+            Assert.Equal(1, val.Data.CourseId);
         }
 
 
@@ -299,22 +299,22 @@ namespace SPM_Project.ApiControllers.Tests
 
         //GetCourseClassDTOAsync------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- PASS
 
-        
- 
+
+
         [Fact()]
         public async Task GetCourseClassDTOAsync_ClassExists_ReturnsOneClass()
         {
             //assert that 1 class is returned 
             var result = await _controller.GetCourseClassDTOAsync(1);
 
-            _uowMocker.mockCourseClassRepository.Verify(l => l.GetByIdAsync(1, "Course,ClassTrainer")); 
+            _uowMocker.mockCourseClassRepository.Verify(l => l.GetByIdAsync(1, "Course,ClassTrainer"));
 
             Assert.IsType<CourseClassesDTO>(result);
 
-            Assert.Equal(1, result.Id); 
+            Assert.Equal(1, result.Id);
         }
 
-     
+
         [Fact()]
         public async Task GetCourseClassDTOAsync_ClassDoesNotExists_ThrowNotFoundException()
         {
@@ -344,13 +344,13 @@ namespace SPM_Project.ApiControllers.Tests
 
 
             _uowMocker.mockCourseRepository.Verify(l => l.GetByIdAsync(1, It.IsAny<string>()));
-            _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), null, "Course,ClassTrainer",It.IsAny<int>(), It.IsAny<int>()));
+            _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), null, "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>()));
 
- 
+
             Assert.IsType<List<CourseClassesDTO>>(result);
 
             Assert.All(result,
-                item => Assert.Contains("Test Trainer",item.TrainerName)
+                item => Assert.Contains("Test Trainer", item.TrainerName)
 
             );
 
@@ -360,7 +360,7 @@ namespace SPM_Project.ApiControllers.Tests
 
 
             );
-    
+
         }
 
 
@@ -398,7 +398,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             Assert.IsType<List<CourseClassesDTO>>(result);
 
-            Assert.Empty(result); 
+            Assert.Empty(result);
 
         }
 
@@ -413,21 +413,21 @@ namespace SPM_Project.ApiControllers.Tests
                 .ReturnsAsync(TestCourseClassList().Concat(TestCourseClassList()).ToList()).Verifiable("Course Classes were not retreived");
 
 
-           var result = await _controller.GetCourseClassesDTOAsync(null);
+            var result = await _controller.GetCourseClassesDTOAsync(null);
 
-            _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), It.IsAny<Func<IQueryable<CourseClass>, IOrderedQueryable<CourseClass>>>(), "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>())); 
+            _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), It.IsAny<Func<IQueryable<CourseClass>, IOrderedQueryable<CourseClass>>>(), "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.IsType<List<CourseClassesDTO>>(result);
 
             Assert.All(result,
-                item => Assert.Contains("Test Trainer",item.TrainerName)
+                item => Assert.Contains("Test Trainer", item.TrainerName)
             );
 
             Assert.All(result,
             item => Assert.Equal(1, item.CourseId)
             );
 
-            Assert.Equal(20,result.Count); 
+            Assert.Equal(20, result.Count);
 
 
         }
@@ -523,6 +523,27 @@ namespace SPM_Project.ApiControllers.Tests
 
 
         }
+
+
+
+        //[Fact()]
+        //public void IsCourseClassModifiableTest()
+        //{
+
+        //    //start class is after current datetime
+        //    var cc = TestCourseClassCreator();
+        //    cc.StartClass = DateTime.Now.AddDays(1); 
+        //    Assert.True(_controller.IsCourseClassModifiable(cc), "This test needs an implementation");
+
+
+        //    //start class is before datetime
+        //    cc.StartClass = DateTime.Now.AddDays(-1);
+        //    Assert.False(_controller.IsCourseClassModifiable(cc), "This test needs an implementation");
+        //}
+
+
+      
+
 
     }
 }

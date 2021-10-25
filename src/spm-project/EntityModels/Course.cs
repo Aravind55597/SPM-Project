@@ -9,6 +9,7 @@ namespace SPM_Project.EntityModels
     public class Course : IEntityWithId
     {
 
+        //TODO UNIT TESTS
         public Course()
         {
             PassingPercentage = (decimal)0.85; 

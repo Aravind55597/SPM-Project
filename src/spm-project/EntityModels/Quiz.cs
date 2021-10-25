@@ -33,27 +33,24 @@ namespace SPM_Project.EntityModels
         //time limit (in minutes)
         public decimal TimeLimit { get; set; }
 
-        [NotMapped]
-        public int TotalMarks
-        {
-            get
-            {
-                if (this.IsGraded)
-                {
-                    if (this.Questions.Count > 0)
-                    {
-                        var marks = this.Questions.Sum(q => q.Marks);
+        //[NotMapped]
+        //public int TotalMarks
+        //{
+        //    get
+        //    {
+        //        if (this.IsGraded)
+        //        {
+        //            if (this.Questions.Count > 0)
+        //            {
+        //                var marks = this.Questions.Sum(q => q.Marks);
 
-                        return marks;
-                    }
-                }
+        //                return marks;
+        //            }
+        //        }
 
-                return 0;
-            }
-        }
-
-
-
+        //        return 0;
+        //    }
+        //}
 
     }
 }

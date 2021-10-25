@@ -23,11 +23,16 @@ namespace SPM_Project.DTOs
         //contructor to create QuizDTO object
         public QuizDTO(Quiz  domain)
         {
-
+            Id = domain.Id;
+            Name = domain.Name;
+            Description = domain.Description;
+            IsGraded = domain.IsGraded;
+            ChapterId = domain.Chapter.Id;
+            TimeLimit = domain.TimeLimit; 
         }
 
 
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
         [Required(ErrorMessage = "Please provide a name for the Quiz")]
         public string Name { get; set; }
@@ -40,9 +45,13 @@ namespace SPM_Project.DTOs
         public bool IsGraded { get; set; }
 
         //relate to chapters if it is not a graded quiz 
+        public int? ChapterId { get; set; }
 
-        [Required(ErrorMessage = "Please provide an ID for the chapter")]
-        public int Chapter { get; set; }
+
+        //courseClass Id 
+        [Required(ErrorMessage = "Please provide an ID for the course class")]
+        public int CourseClassId  { get; set; }
+
 
         //list of questions present 
 
@@ -53,7 +62,6 @@ namespace SPM_Project.DTOs
         //time limit (in minutes)
         [Required(ErrorMessage = "Please provide a timelimit for the quiz")]
         public decimal TimeLimit { get; set; }
-
 
 
 

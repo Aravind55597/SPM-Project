@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SPM_Project.EntityModels
 {
     public class CourseClass : IEntityWithId
     {
+
+
+        //TODO UNIT TESTS
         public int Id { get; private set; }
 
         public string Name { get; set; }
@@ -19,11 +20,11 @@ namespace SPM_Project.EntityModels
         public DateTime UpdateTimeStamp { get; set; }
 
 
-        public DateTime StartRegistration  { get; set; }
+        public DateTime StartRegistration { get; set; }
 
         public DateTime EndRegistration { get; set; }
 
-        public DateTime StartClass  { get; set; }
+        public DateTime StartClass { get; set; }
 
         public DateTime EndClass { get; set; }
 
@@ -44,6 +45,22 @@ namespace SPM_Project.EntityModels
 
 
         public List<ClassEnrollmentRecord> ClassEnrollmentRecords { get; set; }
+
+
+
+
+
+        public bool IsCourseClassModifiable()
+        {
+            if (StartClass > DateTime.Now)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
 
     }
 

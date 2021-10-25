@@ -12,12 +12,10 @@ namespace SPM_Project.EntityModels
 
         public int Id { get; private set; }
 
-        [Url(ErrorMessage = "Invalid URL!")]
         public string ImageUrl { get; set; }
 
         public string Question { get; set; }
 
-        [Required(ErrorMessage = "Please provide a discriminator")]
         //this is discriminator ; auto set by efcore
         public string QuestionType { get; set; }
 
@@ -74,6 +72,11 @@ namespace SPM_Project.EntityModels
                 return dList;
             }
         }
+
+
+
+
+
     }
 
     public class TFQuestion : QuizQuestion

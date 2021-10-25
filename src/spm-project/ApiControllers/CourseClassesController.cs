@@ -153,8 +153,6 @@ namespace SPM_Project.ApiControllers
 
 
 
-
-
         [NonAction]
         public async Task<List<CourseClassesDTO>> GetCourseClassesDTOAsync(int? courseId)
         {
@@ -206,8 +204,6 @@ namespace SPM_Project.ApiControllers
 
 
 
-
-       
 
 
 

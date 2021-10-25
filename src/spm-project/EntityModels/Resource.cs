@@ -25,6 +25,7 @@ namespace SPM_Project.EntityModels
         public Chapter Chapter { get; set; }
     }
 
+
     public enum ContentType
     {
         PDF, 
@@ -34,5 +35,6 @@ namespace SPM_Project.EntityModels
         PowerPoint,
         Hyperlink
     }
+
 
 }

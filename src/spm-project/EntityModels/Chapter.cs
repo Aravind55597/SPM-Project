@@ -27,7 +27,7 @@ namespace SPM_Project.EntityModels
 
         public List<Quiz> Quizzes { get; set; }
 
-
+        public CourseClass CourseClass { get; set; }
 
     }
 }

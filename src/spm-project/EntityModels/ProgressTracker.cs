@@ -21,5 +21,8 @@ namespace SPM_Project.EntityModels
 
         public bool HaveViewedResources { get; set; }
         public LMSUser LMSUser { get; set; }
+
+
+
     }
 }
