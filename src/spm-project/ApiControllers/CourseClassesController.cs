@@ -68,6 +68,20 @@ namespace SPM_Project.ApiControllers
 
         }
 
+        [HttpPost, Route("WithdrawLearner", Name = "WithdrawLearner")]
+
+        public async Task<IActionResult> WithdrawLearnerFromClass([FromQuery] int learnerId, [FromQuery] int classId)
+        {
+
+
+            var response = await WithdrawLearner(learnerId, classId);
+
+
+            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+            return Ok(responseJson);
+
+        }
+
 
 
 
@@ -185,7 +199,32 @@ namespace SPM_Project.ApiControllers
             await _unitOfWork.CompleteAsync();
             return new CourseClassesDTO(courseClass);
         }
-           
+        [NonAction]
+        public async Task<CourseClassesDTO> WithdrawLearner(int learnerId, int courseClassId)
+        {
+
+            //check if class exists ; otherwise return not found
+            //return courseclass
+            var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(courseClassId, "Course");
+            var learner = await _unitOfWork.LMSUserRepository.GetByIdAsync(learnerId);
+            if (courseClass == null)
+            {
+                throw new NotFoundException($"Course class of id {courseClassId} does not exist");
+            }
+            if (learner == null)
+            {
+                throw new NotFoundException($"learner not exist");
+            }
+            var currentenrollment = learner.Enrollments.Find(x => x.CourseClass.Id == courseClass.Id);
+
+            if (currentenrollment == null) {
+                throw new NotFoundException($"Enrollment not exist");
+            }
+            learner.Enrollments.Remove(currentenrollment);
+            await _unitOfWork.CompleteAsync();
+            return new CourseClassesDTO(courseClass);
+        }
+
 
         [NonAction]
         public async Task<List<CourseClassesDTO>> GetCourseClassesDTOAsync(int? courseId)
