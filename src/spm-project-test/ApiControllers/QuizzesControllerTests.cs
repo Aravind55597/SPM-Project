@@ -52,11 +52,11 @@ namespace SPM_Project.ApiControllers.Tests
 
 
 
-        [Fact()]
-        public void PostQuizDTOAPIAsyncTest()
-        {
-            Assert.True(false, "This test needs an implementation");
-        }
+        //[Fact()]
+        //public void PostQuizDTOAPIAsyncTest()
+        //{
+        //    Assert.True(false, "This test needs an implementation");
+        //}
 
 
 

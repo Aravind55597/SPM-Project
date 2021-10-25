@@ -15,10 +15,9 @@ namespace SPM_Project.EntityModels
 
         public string Description { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime CreationTimeStamp { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+
         public DateTime UpdateTimeStamp { get; set; }
 
         //check if it is graded
@@ -32,6 +31,8 @@ namespace SPM_Project.EntityModels
 
         //time limit (in minutes)
         public decimal TimeLimit { get; set; }
+
+        public CourseClass CourseClass { get; set; }
 
         //[NotMapped]
         //public int TotalMarks

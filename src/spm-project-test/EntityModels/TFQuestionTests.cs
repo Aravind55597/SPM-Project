@@ -27,7 +27,6 @@ namespace SPM_Project.EntityModels.Tests
                 QuestionType = "McqQuestion",
                 Answer = "",
                 Marks = marks,
-                IsGraded = isGraded,
                 TrueOption = "Lorem Option True",
                 FalseOption = "Lorem Option False",
 
@@ -93,18 +92,6 @@ namespace SPM_Project.EntityModels.Tests
 
         }
 
-
-        [Fact]
-        public void McqQuestionTest_AddingMarks()
-        {
-            //add marks when question is not graded  ; marks will be 0 
-            _testQuestionSingle.Marks = 5;
-            Assert.Equal(0, _testQuestionSingle.Marks);
-
-            //add marks when question i sgraded ; marks will be whatever added 
-            _testQuestionSingleGraded.Marks = 5;
-            Assert.Equal(5, _testQuestionSingleGraded.Marks);
-        }
 
 
 

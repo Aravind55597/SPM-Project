@@ -26,6 +26,10 @@ namespace SPM_Project.Data
 
         public DbSet<QuizQuestion> QuizQuestion { get; set; }
 
+        public DbSet<McqQuestion> McqQuestion { get; set; }
+
+        public DbSet<TFQuestion> TFQuestion { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -56,8 +60,103 @@ namespace SPM_Project.Data
              .UsePropertyAccessMode(PropertyAccessMode.Property);
 
 
+            //set up updeated & created 
+            modelBuilder.Entity<Chapter>()
+                .Property(s => s.CreationTimeStamp)
+                .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<Chapter>()
+                    .Property(s => s.UpdateTimeStamp)
+                    .HasDefaultValueSql("GETDATE()");
 
 
+            //set up updeated & created 
+            modelBuilder.Entity<Quiz>()
+                .Property(s => s.CreationTimeStamp)
+                .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<Quiz>()
+                    .Property(s => s.UpdateTimeStamp)
+                    .HasDefaultValueSql("GETDATE()");
+
+
+            //set up updeated & created 
+            modelBuilder.Entity<Resource>()
+                .Property(s => s.CreationTimestamp)
+                .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<Resource>()
+                    .Property(s => s.UpdateTimestamp)
+                    .HasDefaultValueSql("GETDATE()");
+
+
+
+
+            //set up updeated & created 
+            modelBuilder.Entity<ProgressTracker>()
+                .Property(s => s.CreationTimestamp)
+                .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<ProgressTracker>()
+                    .Property(s => s.UpdateTimestamp)
+                    .HasDefaultValueSql("GETDATE()");
+
+
+
+            //set up updeated & created 
+            modelBuilder.Entity<UserAnswer>()
+                .Property(s => s.CreationTimestamp)
+                .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<UserAnswer>()
+                    .Property(s => s.UpdateTimestamp)
+                    .HasDefaultValueSql("GETDATE()");
+
+            //set up updeated & created 
+            modelBuilder.Entity<Course>()
+                .Property(s => s.CreationTimestamp)
+                .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<Course>()
+                    .Property(s => s.UpdateTimestamp)
+                    .HasDefaultValueSql("GETDATE()");
+
+
+
+            //set up updeated & created 
+            modelBuilder.Entity<CourseClass>()
+                .Property(s => s.CreationTimeStamp)
+                .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<CourseClass>()
+                    .Property(s => s.UpdateTimeStamp)
+                    .HasDefaultValueSql("GETDATE()");
+
+
+            //set up updeated & created 
+            modelBuilder.Entity<ClassEnrollmentRecord>()
+                .Property(s => s.CreationTimestamp)
+                .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<ClassEnrollmentRecord>()
+                    .Property(s => s.UpdateTimestamp)
+                    .HasDefaultValueSql("GETDATE()");
+
+
+            modelBuilder.Entity<QuizQuestion>()
+               .HasOne(b => b.Quiz)
+               .WithMany(a => a.Questions)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CourseClass>()
+                  .HasOne(a => a.GradedQuiz)
+                  .WithOne(b => b.CourseClass)
+                  .HasForeignKey <CourseClass> (b => b.GradedQuizId);
+
+            //modelBuilder.Entity<CourseClass>()
+            //   .HasOne(b => b.GradedQuiz)
+            //   .WithOne(a => a.CourseClass)
+            //   .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

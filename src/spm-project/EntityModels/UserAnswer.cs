@@ -11,11 +11,11 @@ namespace SPM_Project.EntityModels
 
         public int Id { get; private set;  }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
         public DateTime CreationTimestamp { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime UpdatedTimestamp { get; set; }
+
+        public DateTime UpdateTimestamp { get; set; }
 
         public QuizQuestion QuizQuestion { get; set; }
 

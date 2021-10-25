@@ -15,10 +15,9 @@ namespace SPM_Project.EntityModels
 
         public ContentType Content { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
         public DateTime CreationTimestamp { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdateTimestamp { get; set; }
 
 

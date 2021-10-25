@@ -44,17 +44,13 @@ namespace SPM_Project.EntityModels
             set
             {
                 _Marks = value;
-                if (!IsGraded)
-                {
-                    _Marks = 0;
-                }
+                
             }
         }
 
         public List<UserAnswer> UserAnswers { get; set; }
 
-        public bool IsGraded { get; set; }
-
+   
 
         public Quiz Quiz { get; set; }
 
@@ -73,10 +69,6 @@ namespace SPM_Project.EntityModels
             }
         }
 
-
-
-
-
     }
 
     public class TFQuestion : QuizQuestion
@@ -94,6 +86,11 @@ namespace SPM_Project.EntityModels
         {
             Answer = ans.ToString();
         }
+
+
+
+
+
     }
 
     public class McqQuestion : QuizQuestion

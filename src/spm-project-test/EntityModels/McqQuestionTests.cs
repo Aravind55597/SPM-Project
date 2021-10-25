@@ -33,7 +33,6 @@ namespace SPM_Project.EntityModels.Tests
                 QuestionType = "McqQuestion",
                 Answer= answer,
                 Marks = 5,
-                IsGraded = isGraded,
                 Option1="Lorem Option 1",
                 Option2 = "Lorem Option 2",
                 Option3 = "Lorem Option 3",
@@ -135,29 +134,6 @@ namespace SPM_Project.EntityModels.Tests
 
         }
 
-
-
-
-
-        [Fact]
-        public void McqQuestionTest_AddingMarks()
-        {
-            //add marks when question is not graded  ; marks will be 0 
-            _testQuestionSingle.Marks = 5;
-            Assert.Equal(0, _testQuestionSingle.Marks);
-
-            //add marks when question i sgraded ; marks will be whatever added 
-            _testQuestionSingleGraded.Marks = 5;
-            Assert.Equal(5, _testQuestionSingleGraded.Marks);
-
-            //same as the previous 2 bu tnow for multi-ans questions
-
-            _testQuestionMulti.Marks = 5;
-            Assert.Equal(0, _testQuestionSingle.Marks);
-
-            _testQuestionMultiGraded.Marks = 5;
-            Assert.Equal(5, _testQuestionSingleGraded.Marks);
-        }
 
 
 

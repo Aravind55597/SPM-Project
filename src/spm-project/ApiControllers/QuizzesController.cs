@@ -45,12 +45,14 @@ namespace SPM_Project.ApiControllers
 
             //check if courseclass exists 
 
-            var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(quizDTO.CourseClassId, "Chapters, GradedQuiz" ); 
+            var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(quizDTO.CourseClassId, "Chapters,GradedQuiz" ); 
             
             if (courseClass==null)
             {
                 throw new NotFoundException($"Course Class of {quizDTO.CourseClassId} is not found");
             }
+
+
 
             //check the datetine of the class start if class has not started, throw badrequest
             if (!courseClass.IsCourseClassModifiable())
@@ -59,32 +61,34 @@ namespace SPM_Project.ApiControllers
             }
 
  
-            //check if  classes exists
-            if (quizDTO.IsGraded)
-            {
-                if (courseClass.GradedQuiz!=null)
-                {
-                    throw new BadRequestException("Quiz already exists. Please update the graded quiz instead");
-                }
+            ////check if  classes exists
+            //if (quizDTO.IsGraded)
+            //{
+            //    if (courseClass.GradedQuiz!=null)
+            //    {
+            //        throw new BadRequestException("Quiz already exists. Please update the graded quiz instead");
+            //    }
 
 
-                courseClass.GradedQuiz = new Quiz();
-                courseClass.GradedQuiz = await ConvertQuizDTOToQuiz(quizDTO);
+            //    courseClass.GradedQuiz = new Quiz();
+            //    courseClass.GradedQuiz = await ConvertQuizDTOToQuiz(quizDTO);
        
  
-            }
+            //}
 
             //check if chapter exists 
             else
             {
+               
                 var chap = await _unitOfWork.ChapterRepository.GetByIdAsync((int)quizDTO.ChapterId, "Quizzes");
                 if (chap == null)
                 {
                     throw new NotFoundException("Chapter does not exist");
                 }
+
                 if (chap.Quizzes==null)
                 {
-                    throw new BadRequestException("Quiz already exists. Please update the graded quiz instead");
+                    throw new BadRequestException("Quiz already exists. Please update the ungraded quiz instead quiz instead");
                 }
 
                 chap.Quizzes = new List<Quiz>();
@@ -96,6 +100,23 @@ namespace SPM_Project.ApiControllers
             return Ok(); 
         }
 
+
+        [HttpDelete, Route("{id:int}", Name = "DeleteQuiz")]
+        public async Task<IActionResult> DeleteQuizAPIAsync(int id)
+        {
+            //check if quiz exists 
+            var quiz = await _unitOfWork.QuizRepository.GetByIdAsync(id); 
+
+            if (quiz == null)
+            {
+                throw new NotFoundException($"Quiz of Id {id} does not exist"); 
+            }
+
+            await _unitOfWork.QuizRepository.RemoveByEntityAsync(quiz);
+            await _unitOfWork.CompleteAsync();
+
+            return Ok(); 
+        }
 
 
         [NonAction]
@@ -113,7 +134,6 @@ namespace SPM_Project.ApiControllers
 
             return inputErrors;
         }
-
 
 
         [NonAction]
@@ -143,7 +163,7 @@ namespace SPM_Project.ApiControllers
 
             foreach (var item in quizDTO.Questions)
             {
-                quiz.Questions.Add(ConvertQuizQuestionDTOToQuiz(item)); 
+                quiz.Questions.Add(ConvertQuizQuestionDTOToQuizQuestion(item)); 
             }
 
             return quiz; 
@@ -151,7 +171,7 @@ namespace SPM_Project.ApiControllers
         }
 
         [NonAction]
-        public QuizQuestion ConvertQuizQuestionDTOToQuiz(QuizQuestionDTO quizQuestionDTO)
+        public QuizQuestion ConvertQuizQuestionDTOToQuizQuestion(QuizQuestionDTO quizQuestionDTO)
         {
             if (quizQuestionDTO.QuestionType== "McqQuestion")
             {
@@ -203,6 +223,11 @@ namespace SPM_Project.ApiControllers
         }
 
 
+        //[NonAction]
+        //public Quiz CheckIfQuizExists(int id)
+        //{
+        //    var quiz = _unitOfWork.QuizRepository.GetByIdAsync(id,""); 
+        //}
 
         //PRIVATE METHODS------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
