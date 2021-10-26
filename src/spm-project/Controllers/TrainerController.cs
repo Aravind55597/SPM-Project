@@ -3,7 +3,7 @@ namespace SPM_Project.Controllers
 {
     public class TrainerController : Controller
     {
-        public IActionResult Courses_teaching()
+        public IActionResult CoursesTaught()
         {
             return View();
         }
