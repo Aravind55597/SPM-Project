@@ -109,6 +109,32 @@ namespace SPM_Project.ApiControllers
             return Ok();
         }
 
+        [HttpPost, Route("GetApprovalStatus", Name = "GetApprovalStatus")]
+        public async Task<IActionResult> GetApprovalStatus([FromQuery] int classId, [FromQuery] int userid)
+        {
+
+            var userId = 0;
+            if (userid == 0)
+            {
+                userId = await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
+            }
+            else
+            {
+
+                userId = userid;
+            }
+
+
+           var response =  await GetApproval(userId, classId);
+
+            //var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(classId); 
+
+
+
+            return Ok(response);
+        }
+
+
 
         //DATATABLE-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -211,14 +237,10 @@ namespace SPM_Project.ApiControllers
             }
             else
             {
-                var errorDict = new Dictionary<string, string>()
-                    {
-                        {"Class", $"Class of  Id {courseclass.Id} does not exist" }
-                    };
+              
+             
 
-                var notFoundExp = new NotFoundException("Class does not exist", errorDict);
-
-                throw notFoundExp;
+                throw new NotFoundException("Class does not exist"); ;
             }
             //Secondly use classenrollmentrecordservice to check eligibility 
             //if (!await new CoursesController(_unitOfWork).GetCourseEligiblity(courseclass.Course, ))
@@ -255,7 +277,9 @@ namespace SPM_Project.ApiControllers
                 LMSUser = user
                 
             };
-
+            if (user.Enrollments == null) {
+                user.Enrollments = new List<ClassEnrollmentRecord>();
+            }
             user.Enrollments.Add(record);
             await _unitOfWork.CompleteAsync();
 
@@ -276,6 +300,28 @@ namespace SPM_Project.ApiControllers
             }
 
             return new CourseClassesDTO(courseClass);
+        }
+
+        [NonAction]
+        public async Task<JsonResult> GetApproval(int userId,int classId)
+        {
+
+            //check if class exists ; otherwise return not found
+            //return courseclass
+            var user = await _unitOfWork.LMSUserRepository.GetByIdAsync(userId, "ClassEnrollmentRecord");
+
+            if (user == null)
+            {
+                throw new NotFoundException($"user of id {userId} does not exist");
+            }
+            if (user.Enrollments == null) {
+                throw new NotFoundException($"Enrollment of id {userId} does not exist");
+            }
+            var enrollemnt = user.Enrollments.Find(x => x.CourseClass.Id == classId);
+            if (enrollemnt == null) {
+                throw new NotFoundException($"Enrollment of id {userId} does not exist");
+            }
+            return new JsonResult(enrollemnt);
         }
 
         [NonAction]
