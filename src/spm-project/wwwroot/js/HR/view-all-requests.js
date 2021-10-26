@@ -1,21 +1,35 @@
 ﻿$(document).ready(function () {
-	viewRequestDT();
-	
+	viewRequestDT("No Filter");
+	filterHandler();
 });
 
 
 
-function filterHandler(table) {
+function filterHandler() {
 	$('#dropdownFilter').on('change', function () {
-		table.column(5).search(this.value).draw()
+		console.log(this.value)
+		var filterInput = this.value;
+		//destroy DT
+		$('#request_datatable').DataTable().clear().destroy();
+		//initialize DT with filter
+		viewRequestDT(filterInput);
 	});
-
 }
 
 
 
-function viewRequestDT() {
+function viewRequestDT(filterInput) {
+	var filterValue = null;
 
+	if (filterInput =="No Filter") {
+		filterValue = [];
+	}
+	else if (filterInput == "Enrolled"){
+		filterValue = [{ column: "RecordStatus", value: "Enrolled" }]
+	}
+	else if (filterInput == "RequestedEnrollment") {
+		filterValue = [{ column: "RecordStatus", value: "RequestedEnrollment" }]
+	}
 
 	var RetrieveRequest = $("#get-class-enrollment-records-datatable").val();
 
@@ -36,12 +50,6 @@ function viewRequestDT() {
 		language: {
 			processing: "DataTables is currently busy"
 
-			//spinner if DT is loading
-			/*
-			processing: `<div class="spinner-border" role="status">
-							<span class="sr-only">Loading...</span>
-						</div>`
-			*/
 		},
 
 		//enable server side 
@@ -56,7 +64,7 @@ function viewRequestDT() {
 			contentType: "application/json",
 			dataType: "json",
 			data: function (d) {
-				//d.filter = [{ column: "CourseClassName", value: "Course 1 G2" }]
+				d.filter = filterValue;
 				console.log(JSON.stringify(d));
 				return JSON.stringify(d);
 			},
@@ -135,8 +143,7 @@ function viewRequestDT() {
 
 	});
 
-	
-	filterHandler(table);
+
 
 }
 

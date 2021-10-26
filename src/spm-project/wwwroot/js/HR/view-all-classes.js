@@ -5,20 +5,22 @@ $(document).ready(function () {
 
 });
 
-function notification(notificationString) {
+function notification(notificationString, value) {
+	var CLASSNAME = null;
+	if (value == "success") {
+		CLASSNAME = "Success"
+	}
+	else if (value == "failed") {
+		CLASSNAME = "Danger"
+	}
 
 	$.notify(notificationString, {
-		className: 'success',
+		className: CLASSNAME,
 		globalPosition: 'top center'
 	});
 }
 
-function errorNotification(notificationString) {
-	$.notify(notificationString, {
-		className: 'danger',
-		globalPosition: 'top center'
-	});
-}
+
 
 function closeModal() {
 	$(".btn-close").click(function () {
@@ -27,6 +29,21 @@ function closeModal() {
 	});
 }
 
+function tabsReloadDT() {
+	$(".nav-tabs").click(function () {
+		var ID = $('a[class="active"]').prevObject[0].activeElement.id;
+		console.log(ID)
+		if (ID == "ViewClassListTAB") {
+			$('#individual_class_datatable').DataTable().ajax.reload();
+		}
+		else if (ID == "AssignTrainerTAB") {
+			$('#individual_class_datatable').DataTable().ajax.reload();
+		}
+		else if (ID == "AssignLearnerTAB") {
+			$('#assign_learner_datatable').DataTable().ajax.reload();
+		}
+	});
+}
 
 
 function openViewClassModal() {
@@ -40,6 +57,7 @@ function openViewClassModal() {
 	$(".overlay").show();
 
 	closeModal();
+	tabsReloadDT();
 }
 
 
@@ -92,7 +110,7 @@ function destroyDT(list_DT_names) {
 }
 
 
-
+/*
 function deleteClassEvent(table) {
 
 	table.on('click', '.deleteClassbtn', function () {
@@ -112,13 +130,13 @@ function deleteClassEvent(table) {
 
 	});
 }
-
+*/
 
 function queryStringHandler(action, classid, userid) {
 	var query = null;
 
 	if (action == "addTrainer") {
-		query = "/api/CourseClasses/AssignTrainerToClass" + "?trainerId=" + userid + "&" + "classId=" +  classid;
+		query = "/api/CourseClasses/AssignTrainerToClass" + "?trainerId=" + userid + "&" + "classId=" +  classid ;
 	}
 
 	else if (action == "addLearner") {
@@ -172,16 +190,17 @@ function AddWithdrawEvent(table, class_ID, action) {
 		query = queryStringHandler(action, classID, userID);
 
 		if (query != null) {
-			console.log(query)
 			$.ajax({
 				url: query,
 				method: "POST",
 				success: function (data) {
-					table.ajax.reload();
-					notification(message);
+					$('#individual_class_datatable').DataTable().ajax.reload();
+					$('#assign_trainer_datatable').DataTable().ajax.reload();
+					$('#assign_learner_datatable').DataTable().ajax.reload();
+					notification(message,"success");
 				},
 				error: function (data) {
-					errorNotification(failMsg);
+					notification(failMsg,"failed");
 				},
 				async: true
 			});
@@ -267,7 +286,8 @@ function viewCourseClassDT() {
 				targets: -1,
 				render: function (data, type, full, meta) {
 					return `<a href="javascript:;" class="btn btn-primary viewClassbtn" >View Class List</a>
-							<a class="btn btn-danger deleteClassbtn" >Delete Class</a>`
+							`
+							//<a class="btn btn-danger deleteClassbtn" >Delete Class</a>
 						;
 				},
 			},
@@ -292,7 +312,7 @@ function viewCourseClassDT() {
 	});
 
 	viewClassEvent(table);
-	deleteClassEvent(table);
+	//deleteClassEvent(table);
 
 }
 
