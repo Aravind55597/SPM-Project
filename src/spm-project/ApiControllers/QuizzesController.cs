@@ -128,8 +128,8 @@ namespace SPM_Project.ApiControllers
 
             for (int i = 0; i < quizDTO.Questions.Count; i++)
             {
-                IsQuestionTypeProvided(inputErrors, quizDTO.Questions[i], quizDTO, i);
-                IsAnswerFormated(inputErrors, quizDTO.Questions[i], quizDTO, i);
+                IsQuestionTypeProvided(inputErrors, quizDTO.Questions[i],  i);
+                IsAnswerFormated(inputErrors, quizDTO.Questions[i],  i);
             }
 
             return inputErrors;
@@ -137,7 +137,7 @@ namespace SPM_Project.ApiControllers
 
 
         [NonAction]
-        public async Task<Quiz> ConvertQuizDTOToQuiz(QuizDTO quizDTO)
+        public async Task<Quiz> ConvertQuizDTOToQuiz(QuizDTO quizDTO)    
         {
             var quiz = new Quiz()
             {
@@ -232,7 +232,7 @@ namespace SPM_Project.ApiControllers
         //PRIVATE METHODS------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         [NonAction]
-        private void IsQuestionTypeProvided(Dictionary<string, string> inputErrors, QuizQuestionDTO questionDTO, QuizDTO quizDTO, int index)
+        private void IsQuestionTypeProvided(Dictionary<string, string> inputErrors, QuizQuestionDTO questionDTO, int index)
         {
             if (!QuizQuestion.Discriminators.Contains(questionDTO.QuestionType))
             {
@@ -240,7 +240,7 @@ namespace SPM_Project.ApiControllers
             }
         }
         [NonAction]
-        private void IsAnswerFormated(Dictionary<string, string> inputErrors, QuizQuestionDTO questionDTO, QuizDTO quizDTO, int index)
+        private void IsAnswerFormated(Dictionary<string, string> inputErrors, QuizQuestionDTO questionDTO, int index)
         {
             if (QuizQuestion.Discriminators.Contains(questionDTO.QuestionType))
             {
