@@ -1,6 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject ApplicationDbContext  dbcontext
+
+
 <div class="d-flex align-items-stretch ms-1 ms-lg-3">
     @if (SignInManager.IsSignedIn(User))
     {
@@ -15,8 +18,8 @@
             </li>*@
 
         @*<div class="menu-item px-5">
-            <a class="menu-link px-5" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">Sign Out</a>
-        </div>*@
+                <a class="menu-link px-5" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">Sign Out</a>
+            </div>*@
 
         <form class="form-inline" asp-controller="Home" asp-action="Logout">
             <button type="submit" class="nav-link btn btn-link text-info">Logout</button>
@@ -27,7 +30,7 @@
         <div class="menu-item px-5">
             @{
                 var person = await UserManager.GetUserAsync(User);
-                @*<span>Hello @person.LMSUser.Name</span>*@
+                <span>Hello @dbcontext.LMSUser.Find(person.LMSUserId).Name</span>
             }
         </div>
 
@@ -47,5 +50,5 @@
             <a class="menu-link px-5" asp-area="Identity" asp-page="/Account/Login">Log in</a>
         </div>
     }
-    
+
 </div>

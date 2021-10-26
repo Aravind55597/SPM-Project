@@ -26,7 +26,7 @@
                                     <p class="card-text">Slots Available: ${slots}</p>
 
 
-                                    <p class="card-text"><small class="text-muted">Last updated 5 mins ago</small></p>
+                                    <p class="card-text"><small class="text-muted"></small></p>
                                     <div class="row">
                                         <div class="col"></div>
                                         <div class="col-6">
@@ -74,7 +74,7 @@ $(function () {
                                 <div class="card-body">
                                     <h5 class="card-title">${item.Name}</h5>
                                     <p class="card-text">${item.Description}</p>
-                                    <p class="card-text"><small class="text-muted">Last updated 5 mins ago</small></p>
+                                    <p class="card-text"><small class="text-muted"></small></p>
                                     <button type="button" value="course_id" onclick="view_classes(${item.Id})"; class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                       View Classes Available
                                     </button>

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SPM_Project.Data;
 
 namespace SPM_Project.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211025153956_addmcq-tf")]
+    partial class addmcqtf
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -402,9 +404,7 @@ namespace SPM_Project.Data.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.HasIndex("GradedQuizId")
-                        .IsUnique()
-                        .HasFilter("[GradedQuizId] IS NOT NULL");
+                    b.HasIndex("GradedQuizId");
 
                     b.ToTable("CourseClass");
                 });
@@ -640,19 +640,6 @@ namespace SPM_Project.Data.Migrations
                     b.HasDiscriminator().HasValue("McqQuestion");
                 });
 
-            modelBuilder.Entity("SPM_Project.EntityModels.TFQuestion", b =>
-                {
-                    b.HasBaseType("SPM_Project.EntityModels.QuizQuestion");
-
-                    b.Property<string>("FalseOption")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TrueOption")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("TFQuestion");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -761,8 +748,8 @@ namespace SPM_Project.Data.Migrations
                         .HasForeignKey("CourseId");
 
                     b.HasOne("SPM_Project.EntityModels.Quiz", "GradedQuiz")
-                        .WithOne("CourseClass")
-                        .HasForeignKey("SPM_Project.EntityModels.CourseClass", "GradedQuizId");
+                        .WithMany()
+                        .HasForeignKey("GradedQuizId");
 
                     b.Navigation("ClassTrainer");
 
@@ -805,8 +792,7 @@ namespace SPM_Project.Data.Migrations
                 {
                     b.HasOne("SPM_Project.EntityModels.Quiz", "Quiz")
                         .WithMany("Questions")
-                        .HasForeignKey("QuizId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("QuizId");
 
                     b.Navigation("Quiz");
                 });
@@ -873,8 +859,6 @@ namespace SPM_Project.Data.Migrations
 
             modelBuilder.Entity("SPM_Project.EntityModels.Quiz", b =>
                 {
-                    b.Navigation("CourseClass");
-
                     b.Navigation("Questions");
                 });
 

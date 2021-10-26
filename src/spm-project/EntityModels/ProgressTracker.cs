@@ -10,9 +10,9 @@ namespace SPM_Project.EntityModels
     {
         public int Id { get; private set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreateTimestamp { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+
+        public DateTime CreationTimestamp { get; set; }
+
         public DateTime UpdateTimestamp { get; set; }
 
         public Course Course { get; set; }
@@ -21,5 +21,8 @@ namespace SPM_Project.EntityModels
 
         public bool HaveViewedResources { get; set; }
         public LMSUser LMSUser { get; set; }
+
+
+
     }
 }

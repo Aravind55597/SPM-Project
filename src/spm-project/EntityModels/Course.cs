@@ -9,6 +9,7 @@ namespace SPM_Project.EntityModels
     public class Course : IEntityWithId
     {
 
+        //TODO UNIT TESTS
         public Course()
         {
             PassingPercentage = (decimal)0.85; 
@@ -19,10 +20,9 @@ namespace SPM_Project.EntityModels
 
         public string Name { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
         public DateTime CreationTimestamp { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdateTimestamp { get; set; }
 
 
