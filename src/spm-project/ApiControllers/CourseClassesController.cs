@@ -41,11 +41,6 @@ namespace SPM_Project.ApiControllers
 
 
 
-
-
-
-
-
             if (id != null && courseId != null)
             {
                 throw new BadRequestException("You can either query a Class of a praticular Id OR all classes OR retreive classes for a course");
