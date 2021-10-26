@@ -39,6 +39,13 @@ namespace SPM_Project.ApiControllers
         {
 
 
+
+
+
+
+
+
+
             if (id != null && courseId != null)
             {
                 throw new BadRequestException("You can either query a Class of a praticular Id OR all classes OR retreive classes for a course");
@@ -310,18 +317,25 @@ namespace SPM_Project.ApiControllers
             //return courseclass
             var user = await _unitOfWork.LMSUserRepository.GetByIdAsync(userId, "ClassEnrollmentRecord");
 
+
+
             if (user == null)
             {
                 throw new NotFoundException($"user of id {userId} does not exist");
             }
+
+
             if (user.Enrollments == null) {
                 throw new NotFoundException($"Enrollment of id {userId} does not exist");
             }
-            var enrollemnt = user.Enrollments.Find(x => x.CourseClass.Id == classId);
-            if (enrollemnt == null) {
+
+
+            var enrollment = _unitOfWork.ClassEnrollmentRecordRepository.GetAllAsync(filter:f=>f.LMSUser.Id==userId&&f.CourseClass.Id==classId); 
+            
+            if (enrollment == null) {
                 throw new NotFoundException($"Enrollment of id {userId} does not exist");
             }
-            return new JsonResult(enrollemnt);
+            return new JsonResult(enrollment);
         }
 
         [NonAction]
@@ -344,6 +358,8 @@ namespace SPM_Project.ApiControllers
             await _unitOfWork.CompleteAsync();
             return new CourseClassesDTO(courseClass);
         }
+
+
         [NonAction]
         public async Task<CourseClassesDTO> WithdrawLearner(int learnerId, int courseClassId)
         {
