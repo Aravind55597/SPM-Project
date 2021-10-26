@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.DataTableModels.DataTableData
 {
-    public class TableData
+    public abstract class TableData
     {
 
 

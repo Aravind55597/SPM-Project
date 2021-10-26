@@ -11,21 +11,130 @@ using SPM_ProjectTests.Extensions;
 
 namespace SPM_Project.Controllers.Tests
 {
-    public class AdministratorControllerTests
+
+    public class AdministratorControllerTests : IDisposable
     {
-        //[Fact()]
-        //public void HRTest()
-        //{
-        //    var controller = new AdministratorController().WithIdentity("Administrator");
 
-        //    var result = controller.HR() as ViewResult;
+        public AdministratorController _controller;
 
-        //    var checkAttribute = controller.GetType().GetMethod("HR").GetCustomAttributes(typeof(AuthorizeAttribute), true);
+        //setup--------------------------------------------------
+        public AdministratorControllerTests()
+        {
+            _controller = new AdministratorController();
+        }
 
-        //    Assert.Equal(typeof(AuthorizeAttribute),checkAttribute[0].GetType()); 
-        //    Assert.NotNull(result); 
-        //    Assert.Equal("HR",result.ViewName);
-          
-        //}
+        //setup--------------------------------------------------
+
+
+        //tear down-----------------------------------------------------------------------------
+        public void Dispose()
+        {
+            _controller = null;
+        }
+
+
+        //ViewEngineers-------------------------------------------------------------------
+
+        //SHUM CHIN NING 
+        [Fact()]
+        public void ViewEngineersTest_Check_If_Correct_Page_Is_Returned()
+        {
+            var controller = new AdministratorController().WithIdentity("Administrator");
+
+            var result = controller.ViewAllEngineers() as ViewResult;
+
+            var checkAttribute = controller.GetType().GetMethod("ViewAllEngineers").GetCustomAttributes(typeof(AuthorizeAttribute), true);
+
+            Assert.NotNull(result);
+            Assert.Equal(typeof(AuthorizeAttribute), checkAttribute[0].GetType());
+            Assert.Equal("ViewAllEngineers", result.ViewName);
+
+        }
+
+        [Fact()]
+        public void ViewEngineersTest_Check_If_Non_Admin_Users_Can_Access()
+        {
+            var attribute = _controller.GetAuthoriseAttribute("ViewAllEngineers");
+            Assert.NotNull(attribute);
+
+            var checkTrainer = attribute.CheckRoleAccess("Trainer");
+            Assert.False(checkTrainer);
+
+            var checkLearner = attribute.CheckRoleAccess("Learner");
+            Assert.False(checkLearner);
+
+        }
+
+        //ViewAllCourses-------------------------------------------------------------------
+
+
+        //SHUM CHIN NING
+        [Fact()]
+        public void ViewAllCoursesTest_Check_If_Correct_Page_Is_Returned()
+        {
+            var result = _controller.ViewAllCourses() as ViewResult;
+
+            Assert.NotNull(result);
+            Assert.Equal("ViewAllCourses", result.ViewName);
+        }
+
+
+
+        [Fact()]
+        public void ViewAllCoursesTest_Check_If_Non_Admin_Users_Can_Access()
+        {
+            var attribute = _controller.GetAuthoriseAttribute("ViewAllCourses");
+            Assert.NotNull(attribute);
+
+            var checkTrainer = attribute.CheckRoleAccess("Trainer");
+            Assert.False(checkTrainer);
+
+            var checkLearner = attribute.CheckRoleAccess("Learner");
+            Assert.False(checkLearner);
+        }
+
+        [Fact()]
+        public void ViewAllClassesTest_Check_If_Correct_Page_Is_Returned()
+        {
+            var result = _controller.ViewAllClasses() as ViewResult;
+
+            Assert.NotNull(result);
+            Assert.Equal("ViewAllClasses", result.ViewName);
+        }
+
+        [Fact()]
+        public void ViewAllClassesTest_Check_If_Non_Admin_Users_Can_Access()
+        {
+            var attribute = _controller.GetAuthoriseAttribute("ViewAllClasses");
+            Assert.NotNull(attribute);
+
+            var checkTrainer = attribute.CheckRoleAccess("Trainer");
+            Assert.False(checkTrainer);
+
+            var checkLearner = attribute.CheckRoleAccess("Learner");
+            Assert.False(checkLearner);
+        }
+
+        [Fact()]
+        public void ViewAllRequests_Check_If_Correct_Page_Is_Returned()
+        {
+            var result = _controller.ViewAllRequests() as ViewResult;
+
+            Assert.NotNull(result);
+            Assert.Equal("ViewAllRequests", result.ViewName);
+        }
+
+        [Fact()]
+        public void ViewAllRequests_Check_If_Non_Admin_Users_Can_Access()
+        {
+            var attribute = _controller.GetAuthoriseAttribute("ViewAllRequests");
+            Assert.NotNull(attribute);
+
+            var checkTrainer = attribute.CheckRoleAccess("Trainer");
+            Assert.False(checkTrainer);
+
+            var checkLearner = attribute.CheckRoleAccess("Learner");
+            Assert.False(checkLearner);
+        }
     }
 }

@@ -1,133 +1,253 @@
-﻿using SPM_Project.Data;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using SPM_Project.Data;
 using SPM_Project.DataTableModels;
 using SPM_Project.DataTableModels.DataTableData;
+using SPM_Project.DataTableModels.DataTableRequest;
 using SPM_Project.DataTableModels.DataTableResponse;
 using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
-using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace SPM_Project.Repositories
 {
     public class LMSUserRepository : GenericRepository<LMSUser>, ILMSUserRepository
     {
-        public LMSUserRepository(ApplicationDbContext context) : base(context)
-        {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHttpContextAccessor _hcontext;
+        private RoleManager<IdentityRole> _roleManager;
 
+
+        public LMSUserRepository(ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager,
+            IHttpContextAccessor hcontext,
+            RoleManager<IdentityRole> roleManager) : base(context)
+        {
+            _userManager = userManager;
+            _hcontext = hcontext;
+            _context = context;
+            _roleManager = roleManager;
         }
 
 
-        //for now it will just return null
-        public async Task<int?> RetrieveCurrentUserId() {
+        //retreive all roles as a dictionary
 
-            return null;
 
+
+        public async Task<Dictionary<string, string>> RetreiveAllRolesAsync()
+        {
+            return await _roleManager.
+                Roles.
+                ToDictionaryAsync(
+                r => r.Name,
+                r => r.Id
+
+                );
         }
 
-        //for now , it will just return null
-        public async Task<string> RetreiveCurrentUserRole()
+
+
+        public  List<ProgressTracker> GetCompletedProgressTracker(LMSUser user)
         {
+            var trackers = _context.ProgressTracker.Where(u => u.LMSUser.Id == user.Id).ToList();
+            return trackers;
+        }
 
-            return null;
+     
 
+        //--------------------------------------------CURRENT-USER------------------------------------------------------------------------------------------------------
 
+        //retrieve lMSUser id of current user
+        public async Task<int> RetrieveCurrentUserIdAsync()
+        {
+            //retreive app user id
+            var appUserId = _hcontext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var lmsUserId = await _context.Users.Where(u => u.Id == appUserId).Select(u => u.LMSUser.Id).FirstOrDefaultAsync();
+
+            return lmsUserId;
+        }
+
+        //retreive role of current user
+        public async Task<List<string>> RetreiveUserRolesAsync(int LMSUserId)
+        {
+            var appUserId = await _context.Users
+                .Where(u => u.LMSUser.Id == LMSUserId)
+                .Select(u => u.Id).FirstOrDefaultAsync();
+
+            var user = await _userManager.FindByIdAsync(appUserId);
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            return (List<string>)roles;
         }
 
 
+        //--------------------------------------------TABLE FUNCTIONS------------------------------------------------------------------------------------------------------
 
-        //get all engineers present -> Accessed by Trainer 
-        public async Task<DTResponse<EngineersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel)
+        //generate IQueryable for manipulation by datatable
+
+        private IQueryable<LMSUsersTableData> GetLMSUsersTableQueryable(bool isTrainer, bool isLearner, bool isEligible , int? classId)
         {
-
-
-            var draw = dTParameterModel.Draw;
-            var start = dTParameterModel.Start;
-            var length = dTParameterModel.Start;
-            var sortColumn = dTParameterModel.Columns[dTParameterModel.Order[0].Column].Name;
-            var sortColumnDirection = dTParameterModel.Order[0].Dir;
-            var searchValue = dTParameterModel.Search.Value;
-            int pageSize = dTParameterModel.Length;
-            
-            
-            //number of records to be skipped
-            int skip = dTParameterModel.Start;
-            int recordsTotal = 0;
-
-
-            //Retrieve learners and trainers role id 
-            var learnerRole = _context.Roles.
-                Where(r => r.Name == "Learner").
-                Select(r => new { 
-                Name=r.Name,
-                Id=r.Id
-                }).
-                FirstOrDefault();
-
-            //trainer role id 
-            var trainerRole = _context.Roles.
-                Where(r => r.Name == "Trainer").
-                Select(r => new {
-                    Name = r.Name,
-                    Id = r.Id
-                }).
-                FirstOrDefault();
-
-            //Retrieve all userid + roleid pair that has either learnerRole or trainer role
-            var queryable = _context.UserRoles.Where(ur => ur.RoleId == learnerRole.Id || ur.RoleId == trainerRole.Id)
+            //var roles = await RetreiveAllRolesAsync();
+            var queryable = _context.UserRoles
                 .Join(_context.Users,
                 ur => ur.UserId,
                 l => l.Id,
                 (ur, l) =>
-                new EngineersTableData
+                new LMSUsersTableData
                 {
-                    Id=l.LMSUser.Id,
-                    Name = l.Name,
-                    Role = _context.Roles.Where(r => r.Id == ur.RoleId).Select(r => r.Name).FirstOrDefault()
+                    Id = l.LMSUser.Id,
+                    Name = l.LMSUser.Name,
+                    Role = _context.Roles.Where(r => r.Id == ur.RoleId).Select(r => r.Name).FirstOrDefault(),
+                    Department = l.LMSUser.Department.ToString(),
+                    DOB = l.LMSUser.DOB
                 }
                 );
 
-      
-            //if sortcolumn and sort colum direction are not empty 
-            if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+
+
+
+            if (classId == null)
             {
-                queryable = queryable.OrderBy(sortColumn + " " + sortColumnDirection);
+                //returns trainer and learner
+                return queryable;
+            }
+            else
+            {
+
+                //class id not null, so return class only trainer and learner?
+
+                if (!isEligible)
+                {
+                    //return all class trainer and learner
+                    var userIdsInClass = _context.LMSUser.
+                    Where(l => l.Enrollments.Any(e => e.CompletionStatus == true && e.CourseClass.Id == classId) || l.Id == _context.CourseClass.Where(cc => cc.Id == classId).
+                    Select(cc => cc.ClassTrainer.Id).FirstOrDefault()).Select(l => new { Id = l.Id });
+
+                    queryable =
+                    queryable.Join(userIdsInClass,
+                    l => l.Id,
+                    u => u.Id,
+                    (l, u) =>
+                    new LMSUsersTableData
+                    {
+                        Id = l.Id,
+                        Name = l.Name,
+                        Role = l.Role,
+                        Department = l.Department,
+                        DOB = l.DOB
+                    }
+                    );
+
+
+                    return queryable;
+
+                }
+
+
+                if (isLearner)
+                {
+                    queryable = queryable.Where(q => q.Role == "Learner");
+
+                    //check the prerequisite of the class 
+                    var preReq = _context.CourseClass.Where(cc => cc.Id == classId).Select(cc => cc.Course).SelectMany(c => c.PreRequisites).Select(p => p.Id);
+                    //return Queryable
+
+                    //check if all  the prereq course ids are present in 
+                    queryable.
+                        Where(q => preReq.All(_context.LMSUser.Where(l => l.Id == q.Id).SelectMany(l => l.Enrollments).Where(e => e.CompletionStatus).Select(e => e.CourseClass.Course.Id).Contains)
+                    );
+                }
+
+                if (isTrainer)
+                {
+                    queryable.Where(q => q.Role == "Trainer");
+                }
+
+
             }
 
-            //if search value is not empty 
-            if (!string.IsNullOrEmpty(searchValue))
+
+            //if user chooses Trainer or learner
+            if (isTrainer)
             {
-                queryable = queryable.Where(m => m.Name.Contains(searchValue)
-                                            || m.Role.Contains(searchValue));
+                queryable = queryable.Where(q => q.Role == "Trainer");
+            }
+            else if (isLearner)
+            {
+                queryable = queryable.Where(q => q.Role == "Learner");
             }
 
+            //if user chooses a specific class
 
 
+            return queryable;
+        }
 
-            recordsTotal = queryable.Count();
-
-            //skip 'start' records & Retrieve 'pagesize' records
-            var data = await queryable.Skip(skip).Take(pageSize).ToListAsync();
-
-            var dtResponse = new DTResponse<EngineersTableData>()
+        private IQueryable<LMSUsersTableData> GlobalTableSearcher(IQueryable<LMSUsersTableData> queryable , DTRequestHandler<LMSUsersTableData> dtH)
+        {
+            //if search value is not empty
+            if (!string.IsNullOrEmpty(dtH.SearchValue))
             {
-                Draw = draw,
-                RecordsFiltered = recordsTotal,
-                RecordsTotal = recordsTotal,
-                Data = data,
-            };
+                queryable = queryable.Where(m => m.Name.Contains(dtH.SearchValue)
+                                            || m.Role.Contains(dtH.SearchValue));
+            }
 
-            return dtResponse; 
-
-
+            return queryable; 
         }
 
 
+        public async Task<DTResponse<LMSUsersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel, bool isTrainer, bool isLearner, bool isEligible , int? classId)
+        {
+            try
+            {
+                var dtH = new DTRequestHandler<LMSUsersTableData>(dTParameterModel);
+
+
+                //Retrieve all userid + roleid pair that has either learnerRole or trainer role
+                var queryable = GetLMSUsersTableQueryable(isTrainer, isLearner, isEligible, classId).Where(q => q.Role == "Learner" || q.Role == "Trainer");
+
+                dtH.RecordsCounter(queryable);
+
+                queryable = dtH.TableSorter(queryable);
+
+
+                queryable = GlobalTableSearcher(queryable, dtH);
+
+
+                queryable = dtH.TableFilterer(queryable);
+
+                dtH.FilteredRecordsCounter(queryable);
+
+
+                //skip 'start' records & Retrieve 'pagesize' records
+                var data = await dtH.TablePager(queryable).ToListAsync();
+
+
+                var dtResponse = new DTResponse<LMSUsersTableData>()
+                {
+                    Draw = dtH.Draw,
+                    RecordsFiltered = dtH.RecordsTotal,
+                    RecordsTotal = dtH.RecordsFiltered,
+                    Data = data,
+                };
+                return dtResponse;
+            }
+            catch (Exception ex)
+            {
+                return new DTResponse<LMSUsersTableData>(); 
+            }
+
+            
+        }
 
         
-     
-
     }
 }

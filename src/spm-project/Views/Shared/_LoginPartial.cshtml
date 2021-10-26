@@ -27,7 +27,7 @@
         <div class="menu-item px-5">
             @{
                 var person = await UserManager.GetUserAsync(User);
-                <span>Hello @person.Name</span>
+                @*<span>Hello @person.LMSUser.Name</span>*@
             }
         </div>
 

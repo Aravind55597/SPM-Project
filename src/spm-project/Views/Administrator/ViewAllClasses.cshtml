@@ -1,0 +1,170 @@
+﻿@section styles{
+    <link href="~/css/HR/view-all-classes.css" rel="stylesheet" type="text/css" />
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="d-flex flex-column-fluid">
+        <div class="container">
+            <div class="card card-custom">
+
+                @*header of the table : put tabs here *@
+                <div class="card-header">
+
+                </div>
+
+
+                @*card body is to add content*@
+                <div class="card-body">
+
+                    @*begin: Datatable*@
+                    <table class="table table-bordered table-hover table-checkable" id="course_class_datatable" style="margin-top: 13px !important">
+                        <thead>
+                            <tr>
+                                <th>Course Name</th>
+                                <th>Class Name</th>
+                                <th>Present Count of Learners</th>
+                                <th>Total Slots in Class</th>
+                                @*add button*@
+                                <th>Action</th>
+                            </tr>
+
+                        </thead>
+                    </table>
+                    @*end: Datatable*@
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/js/HR/view-all-classes.js"></script>
+}
+
+@*begin: overlay*@
+<div class="content d-flex flex-column flex-column-fluid">
+    <div class="d-flex flex-column-fluid">
+
+        <div class="overlay" style="display:none">
+
+            <div class="container">
+
+                @*view class list Modal*@
+                <div id="viewClassPopUp" class="card card-custom" style="margin: 0 auto; ">
+
+                    <div class="card-header">
+                        <button type="button" class="btn-close" aria-label="Close"></button>
+
+                        @*NAV TABS*@
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a href="#ClassList" class="nav-link active" data-bs-toggle="tab">Class List</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#AssignTrainer" class="nav-link" data-bs-toggle="tab">Assign Trainer</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#AssignLearner" class="nav-link" data-bs-toggle="tab">Assign Learner</a>
+                            </li>
+                        </ul>
+
+                    </div>
+
+
+                    @*begin: card-body*@
+                    <div class="card-body">
+
+                        @*begin: tab-content*@
+                        <div class="tab-content">
+
+                            @*begin: view class list tab*@
+                            <div class="tab-pane fade show active" id="ClassList">
+
+                                
+                                <h3 style="display:inline-block">You are Viewing ClassList of</h3>
+                                <h3 class="classNameInput" style=" display: inline-block"></h3>
+                                
+
+                                @*begin: Datatable*@
+                                <table class="table table-bordered table-hover table-checkable" id="individual_class_datatable" style="margin-top: 13px !important">
+                                    <thead>
+                                        <tr>
+                                            <th>User ID</th>
+                                            <th>Name</th>
+                                            <th></th>
+                                        </tr>
+
+                                    </thead>
+                                </table>
+                                @*end: Datatable*@
+
+                            </div>
+                            @*end: view class list tab*@
+
+                            @*begin: assign trainer tab*@
+                            <div class="tab-pane fade" id="AssignTrainer">
+
+  
+                                <h3 style="display:inline-block">You are Assigning Trainer for</h3>
+                                <h3 class="classNameInput" style=" display: inline-block"></h3>
+                
+
+                                @*begin: Datatable*@
+                                <table class="table table-bordered table-hover table-checkable" id="assign_trainer_datatable" style="margin-top: 13px !important">
+
+                                    <thead>
+                                        <tr>
+                                            <th>User ID</th>
+                                            <th>Name</th>
+                                            <th></th>
+                                        </tr>
+
+                                    </thead>
+
+                                </table>
+                                @*end: Datatable*@
+
+                            </div>
+                            @*end: assign trainer tab*@
+
+                            @*begin: assign learner tab*@
+                            <div class="tab-pane fade" id="AssignLearner">
+
+                                <h3 style="display:inline-block">You are Assigning Learner for</h3>
+                                <h3 class="classNameInput" style=" display: inline-block"></h3>
+   
+
+                                @*begin: Datatable*@
+                                <table class="table table-bordered table-hover table-checkable" id="assign_learner_datatable" style="margin-top: 13px !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>User ID</th>
+                                            <th>Name</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                @*end: Datatable*@
+
+                            </div>
+                            @*end: assign learner tab*@
+
+                        </div>
+                        @*end: tab-content*@
+
+
+                    </div>
+                    @*end: card-body*@
+
+                </div>
+                @*end: view class list Modal*@
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+@*end: overlay*@

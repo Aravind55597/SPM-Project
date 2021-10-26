@@ -25,10 +25,10 @@ namespace SPM_Project.DTOs.RRModels
         }
 
         //failure response
-        public Response(int errorCode , Dictionary<string,string> errors)
+        public Response(int errorCode , Dictionary<string,string> errors,string messege)
         {
-            Succeeded = true;
-            Message = string.Empty;
+            Succeeded = false;
+            Message = messege;
             Errors = errors;
             Data = default(T);
             HttpCode = errorCode;

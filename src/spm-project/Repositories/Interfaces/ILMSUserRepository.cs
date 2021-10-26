@@ -13,14 +13,14 @@ namespace SPM_Project.Repositories.Interfaces
     {
 
         //retrieve data to display all engineers present
-        public Task<DTResponse<EngineersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel);
+        public Task<DTResponse<LMSUsersTableData>> GetEngineersDataTable(DTParameterModel dTParameterModel, bool isTrainer, bool isLearner, bool isEligible, int? classId);
 
-        //for now it will just return null
-        public Task<int?> RetrieveCurrentUserId();
+     
+        public Task<int> RetrieveCurrentUserIdAsync();
 
-        //for now , it will just return null
-        public Task<string> RetreiveCurrentUserRole();
+    
 
-       
+        public Task<List<string>> RetreiveUserRolesAsync(int LMSUserId);
+        public List<ProgressTracker> GetCompletedProgressTracker(LMSUser user);
     }
 }

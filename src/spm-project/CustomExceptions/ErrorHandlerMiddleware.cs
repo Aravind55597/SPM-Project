@@ -59,6 +59,9 @@ namespace CustomExceptions
                         response.StatusCode = (int)HttpStatusCode.NotFound;
                         result.Errors = e.ErrorDict;
                         break;
+                    case NotImplementedException e:
+                        response.StatusCode = (int)HttpStatusCode.NotImplemented;
+                        break; 
                     default:
                         // unhandled error
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;

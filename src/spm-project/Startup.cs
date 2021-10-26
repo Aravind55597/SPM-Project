@@ -4,21 +4,24 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SPM_Project.Data;
+using SPM_Project.DTOs.RRModels;
 using SPM_Project.EntityModels;
+using SPM_Project.Extensions;
 using SPM_Project.Repositories;
 using SPM_Project.Repositories.Interfaces;
-using SPM_Project.Services;
-using SPM_Project.Services.Interfaces;
-using SPM_Project.Utility;
+using SPM_Project;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using SPM_Project.Utility;
 
 namespace SPM_Project
 {
@@ -49,13 +52,32 @@ namespace SPM_Project
             services.AddDatabaseDeveloperPageExceptionFilter();
 
 
-            //add indentity 
+            //add indentity with roles
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+
+
             //add controllers that allows for views & suppress auto 400 reponses when model biding is invalid 
-            services.AddControllersWithViews().ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; });
+            //services.AddControllersWithViews().ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; });
+
+            services.AddControllersWithViews();
+
+
+            //AUTO 400 BAD REQUEST FOR MODEL STATE ERRORS
+            services.Configure<ApiBehaviorOptions>(o =>
+            {
+                o.InvalidModelStateResponseFactory = actionContext =>
+                    new BadRequestObjectResult(
+
+                        Newtonsoft.Json.JsonConvert.SerializeObject(
+                            new Response<object>((int)HttpStatusCode.BadRequest, actionContext.ModelState.AllErrors(),"Invalid Request")
+                    )
+
+
+                    );
+            });
 
             //seed users
             //services.AddScoped<SeedUsers>();
@@ -66,10 +88,10 @@ namespace SPM_Project
 
 
             //servicemanager
-            services.AddScoped<IServiceManager, ServiceManager>();
+            //services.AddScoped<IServiceManager, ServiceManager>();
 
-
-
+            //allow access to httpcontext 
+            services.AddHttpContextAccessor();
 
 
 
@@ -113,16 +135,14 @@ namespace SPM_Project
 
 
             //handles exceptions thrown and returns an error reponse based on the type of exception thrown 
-            app.UseMiddleware<ErrorHandlerMiddleware>();
-
-
+            //    app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
 
             //Add database seeding code here 
-            //SeedDatabase.Initialize(dbContext);
+            SeedDatabase.Initialize(dbContext);
             //handles exceptions thrown and returns an error reponse based on the type of exception thrown 
             app.UseMiddleware<ErrorHandlerMiddleware>();
 

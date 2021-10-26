@@ -1,4 +1,7 @@
-﻿using SPM_Project.EntityModels;
+﻿using SPM_Project.DataTableModels;
+using SPM_Project.DataTableModels.DataTableData;
+using SPM_Project.DataTableModels.DataTableResponse;
+using SPM_Project.EntityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +12,9 @@ namespace SPM_Project.Repositories.Interfaces
     public interface ICourseRepository: IGenericRepository<Course>
     {
 
-        //Retrieve courses that users are eligbible (need picture description etc.)
-
-
-
+        public Task<DTResponse<CourseTableData>> GetCoursesDataTable(DTParameterModel dTParameterModel);
+        //object GetCoursePreReq(Course course);
+ 
     }
 
 }

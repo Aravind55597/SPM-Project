@@ -1,15 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SPM_Project.Data;
+using SPM_Project.DataTableModels.DataTableRequest;
+using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
 
 namespace SPM_Project.Repositories
 {
-    public class GenericRepository<T>: IGenericRepository<T> where T : class
+    public class GenericRepository<T>: IGenericRepository<T> where T : class, IEntityWithId
     {
         public ApplicationDbContext _context;
 
@@ -36,10 +39,10 @@ namespace SPM_Project.Repositories
 
         //READ------------------------------------------------------------------------------------------------
 
+        //refernce : https://docs.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application
+        public async virtual Task<List<T>> GetAllAsync(
 
-        //retrieve all values (stupid to use on large data sets )
-        //NEED To implement pagination later 
-        public async virtual Task<IEnumerable<T>> GetAllAsync(
+            //student => student.LastName == "Smith" 
             //lambda to filter
             Expression<Func<T, bool>> filter = null,
             //lambda to order
@@ -60,11 +63,7 @@ namespace SPM_Project.Repositories
                 query = query.Where(filter);
             }
 
-            foreach (var includeProperty in includeProperties.Split
-                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                query = query.Include(includeProperty);
-            }
+            query = IncludeFunc(query,  includeProperties); 
 
             if (orderBy != null)
             {
@@ -85,30 +84,49 @@ namespace SPM_Project.Repositories
 
 
         //Retrieve data by Id 
-        public virtual async Task<T> GetByIdAsync(int id)
+        public virtual async Task<T> GetByIdAsync(int id, string includeProperties = "")
         {
-            var data = await _context.Set<T>().FindAsync(id);
-            return data;
+            IQueryable<T> query = _context.Set<T>();
+
+            if (includeProperties!="")
+            {
+                query = IncludeFunc(query, includeProperties);
+            }
+
+            return await query.FirstOrDefaultAsync(q=>q.Id==id);
+        }
+        //GetByIdAsync(1,"PreRequisites")
+
+        private IQueryable<T> IncludeFunc(IQueryable<T> query , string includeProperties )
+        {
+            foreach (var includeProperty in includeProperties.Split
+            (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+
+                if (typeof(T).GetProperty(includeProperty)!=null)
+                {
+                    query = query.Include(includeProperty);
+                }
+               
+            }
+
+            return query; 
         }
 
+
         //UPDATE------------------------------------------------------------------------------------------------
-
-
-
-
-
 
 
         //DELETE------------------------------------------------------------------------------------------------
 
         //remove an enitity  
-        public virtual async Task RemoveAsync(T entity)
+        public virtual async Task RemoveByEntityAsync(T entity)
         {
             _context.Set<T>().Remove(entity);
         }
 
         //remove range of entities from the parent entity 
-        public virtual async Task RemoveRange(IEnumerable<T> entities)
+        public virtual async Task RemoveRangeByEntityAsync(IEnumerable<T> entities)
         {
             _context.Set<T>().RemoveRange(entities);
         }
@@ -124,7 +142,7 @@ namespace SPM_Project.Repositories
         }
 
         //remove range of entities by Id
-        public virtual async Task RemoveRangeAsync(List<int> ids)
+        public virtual async Task RemoveRangeByIdAsync(List<int> ids)
         {
             for (int i = 0; i < ids.Count; i++)
             {
@@ -133,6 +151,10 @@ namespace SPM_Project.Repositories
             }
             
         }
+
+
+
+
 
     }
 
