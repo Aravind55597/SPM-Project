@@ -315,7 +315,7 @@ namespace SPM_Project.ApiControllers
 
             //check if class exists ; otherwise return not found
             //return courseclass
-            var user = await _unitOfWork.LMSUserRepository.GetByIdAsync(userId, "ClassEnrollmentRecord");
+            var user = await _unitOfWork.LMSUserRepository.GetByIdAsync(userId, "Enrollments");
 
 
 
@@ -330,13 +330,23 @@ namespace SPM_Project.ApiControllers
             }
 
 
-            var enrollment = _unitOfWork.ClassEnrollmentRecordRepository.GetAllAsync(filter:f=>f.LMSUser.Id==userId&&f.CourseClass.Id==classId); 
+            var enrollment = await _unitOfWork.ClassEnrollmentRecordRepository.GetAllAsync(filter:f=>f.LMSUser.Id==userId&&f.CourseClass.Id==classId); 
             
+
+
+
             if (enrollment == null) {
                 throw new NotFoundException($"Enrollment of id {userId} does not exist");
             }
-            return new JsonResult(enrollment);
+
+
+            return new JsonResult(new ClassEnrollmentRecordDTO(enrollment[0]));
         }
+        
+
+
+
+
 
         [NonAction]
         public async Task<CourseClassesDTO> AssignTrainer(int trainerId,int courseClassId)
