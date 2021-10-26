@@ -274,9 +274,20 @@ namespace SPM_Project.ApiControllers
 
             return results;
         }
-       
 
 
-        
+        [NonAction]
+        public async Task<CourseClass> GetCourseClass(int id, string properties = "")
+        {
+            var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(id, properties);
+
+            if (courseClass == null)
+            {
+                throw new NotFoundException($"Course Class of id {id} is not found");
+            }
+            return courseClass;
+        }
+
+
     }
 }

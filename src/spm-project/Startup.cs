@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using SPM_Project.Utility;
+
 
 namespace SPM_Project
 {
@@ -142,7 +142,7 @@ namespace SPM_Project
 
 
             //Add database seeding code here 
-            SeedDatabase.Initialize(dbContext);
+   
             //handles exceptions thrown and returns an error reponse based on the type of exception thrown 
             app.UseMiddleware<ErrorHandlerMiddleware>();
 
