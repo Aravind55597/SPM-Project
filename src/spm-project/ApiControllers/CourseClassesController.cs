@@ -37,26 +37,26 @@ namespace SPM_Project.ApiControllers
         [HttpGet, Route("{id:int?}", Name = "GetCourseClasses")]
         public async Task<IActionResult> GetCourseClassesDTOAPIAsync(int? id, [FromQuery] int? courseId)
         {
-          
 
-            if (id!=null && courseId!= null)
+
+            if (id != null && courseId != null)
             {
-                throw new BadRequestException("You can either query a Class of a praticular Id OR all classes OR retreive classes for a course"); 
+                throw new BadRequestException("You can either query a Class of a praticular Id OR all classes OR retreive classes for a course");
             }
 
-            if (id!=null)
+            if (id != null)
             {
-                return Ok(new Response<CourseClassesDTO>(await GetCourseClassDTOAsync(id.GetValueOrDefault()))); 
+                return Ok(new Response<CourseClassesDTO>(await GetCourseClassDTOAsync(id.GetValueOrDefault())));
             }
 
-            return Ok(new Response<List<CourseClassesDTO>>(await GetCourseClassesDTOAsync(courseId))); 
-  
-           
+            return Ok(new Response<List<CourseClassesDTO>>(await GetCourseClassesDTOAsync(courseId)));
+
+
         }
 
         [HttpPost, Route("AssignTrainerToClass", Name = "AssignTrainerToClass")]
-        
-        public async Task<IActionResult> AssignTrainerToClass([FromQuery]int trainerId , [FromQuery] int classId)
+
+        public async Task<IActionResult> AssignTrainerToClass([FromQuery] int trainerId, [FromQuery] int classId)
         {
 
 
@@ -84,7 +84,30 @@ namespace SPM_Project.ApiControllers
 
 
 
+        [HttpPost, Route("SubmitEnrollmentRequest", Name = "SubmitEnrollmentRequest")]
+        public async Task<IActionResult> SubmitEnrollmentRequest([FromQuery] int classId, [FromQuery] int userid)
+        {
 
+            var userId = 0;
+            if (userid == 0)
+            {
+                userId = await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
+            }
+            else
+            {
+
+                userId = userid;
+            }
+
+
+            var user = await _unitOfWork.LMSUserRepository.GetByIdAsync(userId);
+
+            //var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(classId); 
+
+            await SubmitEnrollmentRequest(user, classId);
+
+            return Ok();
+        }
 
 
         //DATATABLE-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -96,13 +119,13 @@ namespace SPM_Project.ApiControllers
         //query : lmsUserId(int) -> for a particular user
         public async Task<IActionResult> GetCourseClassesDataTable(
 
-            [FromBody] DTParameterModel dTParameterModel , 
-            [FromQuery] int? courseId ,
+            [FromBody] DTParameterModel dTParameterModel,
+            [FromQuery] int? courseId,
             [FromQuery] int? lmsUserId,
-            [FromQuery] bool isTrainer=false , 
-            [FromQuery] bool isLearner=false
+            [FromQuery] bool isTrainer = false,
+            [FromQuery] bool isLearner = false
 
-            
+
             )
         {
             var response = new DTResponse<CourseClassTableData>();
@@ -157,12 +180,88 @@ namespace SPM_Project.ApiControllers
 
 
 
+      
 
 
 
 
 
         //NON-API FUNCTIONS-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+
+
+        [NonAction]
+        public async Task SubmitEnrollmentRequest(LMSUser user, int classId)
+        {
+
+            //firstly retrieve class from classservice (check if class exists)
+            var courseclass = await _unitOfWork.CourseClassRepository.GetByIdAsync(classId);
+            if (courseclass != null)
+            {
+                if (courseclass.EndRegistration < DateTime.Today || courseclass.StartRegistration > DateTime.Today)
+                {
+                    var errorDict = new Dictionary<string, string>()
+                    {
+                        {"Class", $"Class of  {courseclass.Id} registration is over" }
+                    };
+
+                    var notFoundExp = new NotFoundException("Class registration period is over", errorDict);
+
+                    throw notFoundExp;
+                }
+            }
+            else
+            {
+                var errorDict = new Dictionary<string, string>()
+                    {
+                        {"Class", $"Class of  Id {courseclass.Id} does not exist" }
+                    };
+
+                var notFoundExp = new NotFoundException("Class does not exist", errorDict);
+
+                throw notFoundExp;
+            }
+            //Secondly use classenrollmentrecordservice to check eligibility 
+            //if (!await new CoursesController(_unitOfWork).GetCourseEligiblity(courseclass.Course, ))
+            //{
+            //    var errorDict = new Dictionary<string, string>()
+            //        {
+            //            {"Class", $"Class of  Id {courseclass.Id} does not exist" }
+            //        };
+
+            //    var notFoundExp = new NotFoundException("Class does not exist", errorDict);
+
+            //    throw notFoundExp;
+            //}
+
+
+            //check if enrolled 
+
+            if (await _unitOfWork.ClassEnrollmentRecordRepository.hasEnrollmentRecord(user, courseclass))
+            {
+                var errorDict = new Dictionary<string, string>()
+                    {
+                        {"Class", $"User has class of Id {courseclass.Id}  exist" }
+                    };
+
+                var notFoundExp = new NotFoundException("User has existing enrollment record with this class", errorDict);
+
+                throw notFoundExp;
+            }
+            //Create classenrollment record for the user
+
+            var record = new ClassEnrollmentRecord
+            {
+                CourseClass = courseclass,
+                LMSUser = user
+                
+            };
+
+            user.Enrollments.Add(record);
+            await _unitOfWork.CompleteAsync();
+
+        }
+
+
         [NonAction]
         public async Task<CourseClassesDTO> GetCourseClassDTOAsync(int courseClassId)
         {
