@@ -140,10 +140,10 @@ function queryStringHandler(action, classid, userid) {
 	}
 
 	else if (action == "addLearner") {
-
+		query = "/api/CourseClasses/addlearner" + "?learnerId=" + userid + "&" + "classId=" + classid;
     }
 	else if (action == "withdrawLearner") {
-
+		query = "/api/CourseClasses/WithdrawLearner" + "?learnerId=" + userid + "&" + "classId=" + classid;
 	}
 
 	return query
@@ -188,6 +188,7 @@ function AddWithdrawEvent(table, class_ID, action) {
 		console.log(classID);
 
 		query = queryStringHandler(action, classID, userID);
+		console.log(query);
 
 		if (query != null) {
 			$.ajax({
