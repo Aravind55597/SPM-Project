@@ -85,7 +85,9 @@ namespace SPM_Project.DataTableModels.DataTableRequest
                 {
                     if (filter.Column != null && filter.Value != null)
                     {
-                        queryable.Where("@0 = @1", filter.Column, filter.Value);
+                        //queryable= queryable.Where("@0 = @1", filter.Column, filter.Value);
+                        //queryable = queryable.Where(q=>q.);
+                        queryable = queryable.Where($"{filter.Column}=\"{filter.Value}\"");
                     }
 
                 }
