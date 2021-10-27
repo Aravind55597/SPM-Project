@@ -1,10 +1,11 @@
-﻿function view_classes(course_id) {
-    var RetrieveCoursesClasses = $("#get-course-classes").val() + "?courseId=" + course_id;
+﻿function view_classes(courseId) {
+    var RetrieveCoursesClasses = $("#get-course-classes").val() + "?courseId=" + courseId;
     $.ajax({
         url: RetrieveCoursesClasses, success: function (result) {
             console.log(result)
             var dataHtml = ``;
             $.each(result.data, function (index, item) {
+                var classId = item.id
                 var className = item.name
                 var trainerName = item.trainerName
                 var startClass = ($.format.date(item.startClass, "dd-MMM-yyyy"))
@@ -30,7 +31,7 @@
                                     <div class="row">
                                         <div class="col"></div>
                                         <div class="col-6">
-                                            <button type="button" value="course_id" onclick=""; class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            <button type="button" value="course_id" onclick="submitEnrollmentRequest(${classId}, this)"; class="btn-sign-up btn btn-primary ">
                                               Sign up for this class
                                             </button>
                                         </div>
@@ -47,6 +48,49 @@
         }
     });
 
+
+}
+
+function submitEnrollmentRequest(classId, el) {
+    var submitEnrollmentRequest = $("#submit-enrollment-request").val() + "?classid=" + classId;
+
+    $.ajax({
+        type: "POST",
+        url: submitEnrollmentRequest,
+        success: function (msg) {
+            console.log(msg)
+            var option = {
+                animation: true,
+                delay: 5000
+            }
+            $('#liveToast').addClass('bg-success')
+            $('#toastHeader').addClass('bg-success')
+            var myAlert = document.getElementById('liveToast')
+            var dataHtml = `You have signed up for this class successfully. Please wait for HR approval.`;
+            $('#toastBody').html(dataHtml)
+            var bsAlert = new bootstrap.Toast(myAlert, option);
+            bsAlert.show();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            console.log(XMLHttpRequest.responseJSON)
+            var data = XMLHttpRequest.responseJSON
+            $(el).removeClass('active');
+            $(el).addClass('disabled');
+
+            var option = {
+                animation: true,
+                delay: 5000
+            }
+            $('#liveToast').addClass('bg-danger')
+            $('#toastHeader').addClass('bg-danger')
+
+            var myAlert = document.getElementById('liveToast')
+            var dataHtml = `${data.Message}`;
+            $('#toastBody').html(dataHtml)
+            var bsAlert = new bootstrap.Toast(myAlert, option);
+            bsAlert.show();
+        }
+    });
 
 }
 
