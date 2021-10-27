@@ -80,7 +80,7 @@ function submitEnrollmentRequest(classId, el) {
             $(el).addClass('btn-secondary');
 
             if (data.Message == "User has existing enrollment record with this class") {
-                $(el).text('Signed up');
+                $(el).text('Enrolled');
             } else if (data.Message == "Class registration period is over") {
                 $(el).text('Registration Period is over');
             }
