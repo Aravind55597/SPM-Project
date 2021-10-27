@@ -3,19 +3,83 @@
 	filterHandler();
 });
 
+function notification(notificationString, value) {
+	var CLASSNAME = null;
+	if (value == "success") {
+		CLASSNAME = "Success"
+	}
+	else if (value == "failed") {
+		CLASSNAME = "error"
+	}
+
+	$.notify(notificationString, {
+		className: CLASSNAME,
+		globalPosition: 'top center'
+	});
+}
+
 
 
 function filterHandler() {
 	$('#dropdownFilter').on('change', function () {
-		console.log(this.value)
 		var filterInput = this.value;
 		//destroy DT
 		$('#request_datatable').DataTable().clear().destroy();
+		//remove previous event listeners
+		$('#request_datatable').off();
 		//initialize DT with filter
 		viewRequestDT(filterInput);
 	});
 }
 
+
+
+function ApproveRejectHandler(table, action) {
+	var buttonName = null;
+	var message = null;
+	var failMsg = null;
+	var query = null;
+
+
+	if (action == "approve") {
+		buttonName = ".ApproveRequestBtn";
+		message = "Successfully Approved Request";
+		failMsg = "Failed to Approve Request";
+
+	}
+	else if (action == "reject") {
+		buttonName = ".RejectRequestBtn"
+		message = "Successfully Rejected Request";
+		failMsg = "Failed to Reject Request";
+	}
+
+
+	table.on('click', buttonName, function () {
+
+		var row = $(this).parents('tr')[0];
+		//for row data
+		var row_data = table.row(row).data();
+
+		console.log(row_data)
+		query="asdadasasdas"
+		
+		$.ajax({
+			url: query,
+			method: "POST",
+			success: function (data) {
+
+				//table.ajax().reload();
+				notification(message, "success");
+			},
+			error: function (data) {
+				notification(failMsg, "failed");
+			},
+			async: false
+		});
+		
+	});
+
+}
 
 
 function viewRequestDT(filterInput) {
@@ -55,8 +119,6 @@ function viewRequestDT(filterInput) {
 		//enable server side 
 		serverSide: true,
 
-
-
 		//send ajax request to server to Retrieve customers
 		ajax: {
 			url: RetrieveRequest,
@@ -75,10 +137,8 @@ function viewRequestDT(filterInput) {
 		},
 
 
-
-
 		//default order and sort. In this case ,order by ID in ascending order (Id is column number 1)
-		order: [[1, "asc"]],
+		order: [[0, "asc"]],
 
 
 
@@ -119,14 +179,20 @@ function viewRequestDT(filterInput) {
 				//target last column
 				targets: -1,
 				render: function (data, type, full, meta) {
-					return `<a href="javascript:;" class="btn btn-primary" title="AssignToClass" id="AssignClassbtn">Assign to Class</a>`
-						;
+					//only render approve button to requests with status RequestedEnrollment
+					if (data.RecordStatus == "RequestedEnrollment") {
+						return `<a href="javascript:;" class="btn btn-success ApproveRequestBtn">Approve</a>
+								<a href="javascript:;" class="btn btn-danger RejectRequestBtn">Reject</a>
+								`;
+					}
+					else {
+						return null;
+                    }
 				},
 			},
 
 			
 		],
-
 
 		//https://datatables.net/reference/option/createdRow
 		// add events, class name information or otherwise format the row when it is created
@@ -140,12 +206,16 @@ function viewRequestDT(filterInput) {
 		},
 
 
-
 	});
 
-
+	ApproveRejectHandler(table, "approve");
+	ApproveRejectHandler(table, "reject");
 
 }
+
+
+
+
 
 
 
