@@ -31,7 +31,7 @@
                                     <div class="row">
                                         <div class="col"></div>
                                         <div class="col-6">
-                                            <button type="button" value="course_id" onclick="submitEnrollmentRequest(${classId}, this)"; class="btn-sign-up btn btn-primary ">
+                                            <button type="button" onclick="submitEnrollmentRequest(${classId}, this)"; class="btn-sign-up btn btn-primary w-100">
                                               Sign up for this class
                                             </button>
                                         </div>
@@ -76,6 +76,14 @@ function submitEnrollmentRequest(classId, el) {
             var data = XMLHttpRequest.responseJSON
             $(el).removeClass('active');
             $(el).addClass('disabled');
+            $(el).removeClass('btn-primary');
+            $(el).addClass('btn-secondary');
+
+            if (data.Message == "User has existing enrollment record with this class") {
+                $(el).text('Signed up');
+            } else if (data.Message == "Class registration period is over") {
+                $(el).text('Registration Period is over');
+            }
 
             var option = {
                 animation: true,
