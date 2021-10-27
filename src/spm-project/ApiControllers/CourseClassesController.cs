@@ -18,10 +18,13 @@ namespace SPM_Project.ApiControllers
     public class CourseClassesController : ControllerBase
     {
         public IUnitOfWork _unitOfWork;
-
+        public CoursesController _coursesCon;
+        public UsersController _usersCon; 
         public CourseClassesController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+            _coursesCon = new CoursesController(unitOfWork);
+            _usersCon = new UsersController(unitOfWork); 
         }
 
 
@@ -39,102 +42,105 @@ namespace SPM_Project.ApiControllers
         {
 
 
-
-
-            if (id != null && courseId != null)
-            {
-                throw new BadRequestException("You can either query a Class of a praticular Id OR all classes OR retreive classes for a course");
-            }
-
             if (id != null)
             {
-                return Ok(new Response<CourseClassesDTO>(await GetCourseClassDTOAsync(id.GetValueOrDefault())));
+                return Ok(new Response<CourseClassDTO>(await GetCourseClassDTOAsync((int)id)));
+            }
+            if (courseId!=null)
+            {
+                return Ok(new Response<List<CourseClassDTO>>(await GetCourseClassesDTOsAsync(courseId)));
             }
 
-            return Ok(new Response<List<CourseClassesDTO>>(await GetCourseClassesDTOAsync(courseId)));
+            return Ok(new Response<List<CourseClassDTO>>(await GetCourseClassesDTOsAsync(id.GetValueOrDefault())));
 
 
         }
 
-        [HttpPost, Route("AssignTrainerToClass", Name = "AssignTrainerToClass")]
 
+
+        [HttpPost, Route("{classid:int}/Trainer/{trainerId:int}", Name = "AssignTrainerToClass")]
         public async Task<IActionResult> AssignTrainerToClass([FromQuery] int trainerId, [FromQuery] int classId)
         {
 
 
             var response = await AssignTrainer(trainerId, classId);
 
-
-            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
-            return Ok(responseJson);
-
-        }
-
-        [HttpPost, Route("WithdrawLearner", Name = "WithdrawLearner")]
-
-        public async Task<IActionResult> WithdrawLearnerFromClass([FromQuery] int learnerId, [FromQuery] int classId)
-        {
-
-
-            var response = await WithdrawLearner(learnerId, classId);
-
-
-            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
-            return Ok(responseJson);
+            return Ok(new Response<CourseClassDTO>(response));
 
         }
 
 
 
-        [HttpPost, Route("SubmitEnrollmentRequest", Name = "SubmitEnrollmentRequest")]
-        public async Task<IActionResult> SubmitEnrollmentRequest([FromQuery] int classId, [FromQuery] int userid)
-        {
-
-            var userId = 0;
-            if (userid == 0)
-            {
-                userId = await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
-            }
-            else
-            {
-
-                userId = userid;
-            }
-
-
-            var user = await _unitOfWork.LMSUserRepository.GetByIdAsync(userId);
-
-            //var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(classId); 
-
-            await SubmitEnrollmentRequest(user, classId);
-
-            return Ok();
-        }
-
-        [HttpPost, Route("GetApprovalStatus", Name = "GetApprovalStatus")]
-        public async Task<IActionResult> GetApprovalStatus([FromQuery] int classId, [FromQuery] int userid)
-        {
-
-            var userId = 0;
-            if (userid == 0)
-            {
-                userId = await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
-            }
-            else
-            {
-
-                userId = userid;
-            }
-
-
-           var response =  await GetApproval(userId, classId);
-
-            //var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(classId); 
 
 
 
-            return Ok(response);
-        }
+
+
+        //[HttpPost, Route("WithdrawLearner", Name = "WithdrawLearner")]
+
+        //public async Task<IActionResult> WithdrawLearnerFromClass([FromQuery] int learnerId, [FromQuery] int classId)
+        //{
+
+
+        //    var response = await WithdrawLearner(learnerId, classId);
+
+
+        //    var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+        //    return Ok(responseJson);
+
+        //}
+
+
+
+        //[HttpPost, Route("SubmitEnrollmentRequest", Name = "SubmitEnrollmentRequest")]
+        //public async Task<IActionResult> SubmitEnrollmentRequest([FromQuery] int classId, [FromQuery] int userid)
+        //{
+
+        //    var userId = 0;
+        //    if (userid == 0)
+        //    {
+        //        userId = await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
+        //    }
+        //    else
+        //    {
+
+        //        userId = userid;
+        //    }
+
+
+        //    var user = await _unitOfWork.LMSUserRepository.GetByIdAsync(userId);
+
+        //    //var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(classId); 
+
+        //    await SubmitEnrollmentRequest(user, classId);
+
+        //    return Ok();
+        //}
+
+        //[HttpPost, Route("GetApprovalStatus", Name = "GetApprovalStatus")]
+        //public async Task<IActionResult> GetApprovalStatus([FromQuery] int classId, [FromQuery] int userid)
+        //{
+
+        //    var userId = 0;
+        //    if (userid == 0)
+        //    {
+        //        userId = await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
+        //    }
+        //    else
+        //    {
+
+        //        userId = userid;
+        //    }
+
+
+        //   var response =  await GetApproval(userId, classId);
+
+        //    //var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(classId); 
+
+
+
+        //    return Ok(response);
+        //}
 
 
 
@@ -208,88 +214,82 @@ namespace SPM_Project.ApiControllers
 
 
 
-      
-
-
-
-
-
         //NON-API FUNCTIONS-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 
 
-        [NonAction]
-        public async Task SubmitEnrollmentRequest(LMSUser user, int classId)
-        {
+        //[NonAction]
+        //public async Task SubmitEnrollmentRequest(LMSUser user, int classId)
+        //{
 
-            //firstly retrieve class from classservice (check if class exists)
-            var courseclass = await _unitOfWork.CourseClassRepository.GetByIdAsync(classId);
-            if (courseclass != null)
-            {
-                if (courseclass.EndRegistration < DateTime.Today || courseclass.StartRegistration > DateTime.Today)
-                {
-                    var errorDict = new Dictionary<string, string>()
-                    {
-                        {"Class", $"Class of  {courseclass.Id} registration is over" }
-                    };
+        //    //firstly retrieve class from classservice (check if class exists)
+        //    var courseclass = await _unitOfWork.CourseClassRepository.GetByIdAsync(classId);
+        //    if (courseclass != null)
+        //    {
+        //        if (courseclass.EndRegistration < DateTime.Today || courseclass.StartRegistration > DateTime.Today)
+        //        {
+        //            var errorDict = new Dictionary<string, string>()
+        //            {
+        //                {"Class", $"Class of  {courseclass.Id} registration is over" }
+        //            };
 
-                    var notFoundExp = new NotFoundException("Class registration period is over", errorDict);
+        //            var notFoundExp = new NotFoundException("Class registration period is over", errorDict);
 
-                    throw notFoundExp;
-                }
-            }
-            else
-            {
+        //            throw notFoundExp;
+        //        }
+        //    }
+        //    else
+        //    {
               
              
 
-                throw new NotFoundException("Class does not exist"); ;
-            }
-            //Secondly use classenrollmentrecordservice to check eligibility 
-            //if (!await new CoursesController(_unitOfWork).GetCourseEligiblity(courseclass.Course, ))
-            //{
-            //    var errorDict = new Dictionary<string, string>()
-            //        {
-            //            {"Class", $"Class of  Id {courseclass.Id} does not exist" }
-            //        };
+        //        throw new NotFoundException("Class does not exist"); ;
+        //    }
+        //    //Secondly use classenrollmentrecordservice to check eligibility 
+        //    //if (!await new CoursesController(_unitOfWork).GetCourseEligiblity(courseclass.Course, ))
+        //    //{
+        //    //    var errorDict = new Dictionary<string, string>()
+        //    //        {
+        //    //            {"Class", $"Class of  Id {courseclass.Id} does not exist" }
+        //    //        };
 
-            //    var notFoundExp = new NotFoundException("Class does not exist", errorDict);
+        //    //    var notFoundExp = new NotFoundException("Class does not exist", errorDict);
 
-            //    throw notFoundExp;
-            //}
+        //    //    throw notFoundExp;
+        //    //}
 
 
-            //check if enrolled 
+        //    //check if enrolled 
 
-            if (await _unitOfWork.ClassEnrollmentRecordRepository.hasEnrollmentRecord(user, courseclass))
-            {
-                var errorDict = new Dictionary<string, string>()
-                    {
-                        {"Class", $"User has class of Id {courseclass.Id}  exist" }
-                    };
+        //    if (await _unitOfWork.ClassEnrollmentRecordRepository.hasEnrollmentRecord(user, courseclass))
+        //    {
+        //        var errorDict = new Dictionary<string, string>()
+        //            {
+        //                {"Class", $"User has class of Id {courseclass.Id}  exist" }
+        //            };
 
-                var notFoundExp = new NotFoundException("User has existing enrollment record with this class", errorDict);
+        //        var notFoundExp = new NotFoundException("User has existing enrollment record with this class", errorDict);
 
-                throw notFoundExp;
-            }
-            //Create classenrollment record for the user
+        //        throw notFoundExp;
+        //    }
+        //    //Create classenrollment record for the user
 
-            var record = new ClassEnrollmentRecord
-            {
-                CourseClass = courseclass,
-                LMSUser = user
+        //    var record = new ClassEnrollmentRecord
+        //    {
+        //        CourseClass = courseclass,
+        //        LMSUser = user
                 
-            };
-            if (user.Enrollments == null) {
-                user.Enrollments = new List<ClassEnrollmentRecord>();
-            }
-            user.Enrollments.Add(record);
-            await _unitOfWork.CompleteAsync();
+        //    };
+        //    if (user.Enrollments == null) {
+        //        user.Enrollments = new List<ClassEnrollmentRecord>();
+        //    }
+        //    user.Enrollments.Add(record);
+        //    await _unitOfWork.CompleteAsync();
 
-        }
+        //}
 
 
         [NonAction]
-        public async Task<CourseClassesDTO> GetCourseClassDTOAsync(int courseClassId)
+        public async Task<CourseClassDTO> GetCourseClassDTOAsync(int courseClassId)
         {
 
             //check if class exists ; otherwise return not found
@@ -301,8 +301,9 @@ namespace SPM_Project.ApiControllers
                 throw new NotFoundException($"Course class of id {courseClassId} does not exist");
             }
 
-            return new CourseClassesDTO(courseClass);
+            return new CourseClassDTO(courseClass);
         }
+
 
         [NonAction]
         public async Task<JsonResult> GetApproval(int userId,int classId)
@@ -311,7 +312,6 @@ namespace SPM_Project.ApiControllers
             //check if class exists ; otherwise return not found
             //return courseclass
             var user = await _unitOfWork.LMSUserRepository.GetByIdAsync(userId, "Enrollments");
-
 
 
             if (user == null)
@@ -337,36 +337,39 @@ namespace SPM_Project.ApiControllers
 
             return new JsonResult(new ClassEnrollmentRecordDTO(enrollment[0]));
         }
-        
+
 
 
 
 
 
         [NonAction]
-        public async Task<CourseClassesDTO> AssignTrainer(int trainerId,int courseClassId)
+        public async Task<CourseClassDTO> AssignTrainer(int trainerId, int courseClassId)
         {
 
             //check if class exists ; otherwise return not found
             //return courseclass
-            var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(courseClassId, "Course,ClassTrainer");
-            var trainer = await _unitOfWork.LMSUserRepository.GetByIdAsync(trainerId);
-            if (courseClass == null)
+
+            var courseClass = await GetCourseClassAsync(courseClassId,"Course,ClassTrainer");
+
+            //var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(courseClassId, "Course,ClassTrainer");
+
+            var trainer = await _usersCon.GetLMSUserAsync(trainerId, "ClassesTrained");
+
+            if (! await _usersCon.CheckLMSUserRoleAsync(trainer,"Trainer"))
             {
-                throw new NotFoundException($"Course class of id {courseClassId} does not exist");
+                throw new BadRequestException($"User of id {trainerId} is NOT a trainer"); 
             }
-            if (trainer == null)
-            {
-                throw new NotFoundException($"trainer not exist");
-            }
+
             courseClass.ClassTrainer = trainer;
             await _unitOfWork.CompleteAsync();
-            return new CourseClassesDTO(courseClass);
+            return new CourseClassDTO(courseClass);
         }
 
 
+
         [NonAction]
-        public async Task<CourseClassesDTO> WithdrawLearner(int learnerId, int courseClassId)
+        public async Task<CourseClassDTO> WithdrawLearner(int learnerId, int courseClassId)
         {
 
             //check if class exists ; otherwise return not found
@@ -388,14 +391,18 @@ namespace SPM_Project.ApiControllers
             }
             learner.Enrollments.Remove(currentenrollment);
             await _unitOfWork.CompleteAsync();
-            return new CourseClassesDTO(courseClass);
+            return new CourseClassDTO(courseClass);
         }
 
 
+
+
+
+
         [NonAction]
-        public async Task<List<CourseClassesDTO>> GetCourseClassesDTOAsync(int? courseId)
+        public async Task<List<CourseClassDTO>> GetCourseClassesDTOAsync(int? courseId)
         {
-            List<CourseClassesDTO> results = new List<CourseClassesDTO>();
+            List<CourseClassDTO> results = new List<CourseClassDTO>();
             List<CourseClass> courseClasses; 
             
             if (courseId!=null)
@@ -425,25 +432,76 @@ namespace SPM_Project.ApiControllers
 
 
         [NonAction]
-        private List<CourseClassesDTO> CourseClassesDTOList(List<CourseClass> courseClasses)
+        private List<CourseClassDTO> CourseClassesDTOList(List<CourseClass> courseClasses)
         {
-            List<CourseClassesDTO> results = new List<CourseClassesDTO>();
+            List<CourseClassDTO> results = new List<CourseClassDTO>();
 
             if (courseClasses!= null)
             {
                 foreach (CourseClass cc in courseClasses)
 
                 {
-                    results.Add(new CourseClassesDTO(cc));
+                    results.Add(new CourseClassDTO(cc));
                 }
             }
 
             return results;
         }
 
+        [NonAction]
+        public async Task<List<CourseClass>> GetCourseClassesAsync(int? courseId, string properties = "")
+        {
+            var ccList = new List<CourseClass>();
+          
+            if (courseId != null)
+            {
+                var cc = await _coursesCon.GetCourseAsync((int)courseId);
+                ccList = await _unitOfWork.CourseClassRepository.GetAllAsync(filter: f => f.Course.Id == cc.Id, includeProperties: properties);
+            }
+            else
+            {
+                ccList = await _unitOfWork.CourseClassRepository.GetAllAsync(includeProperties: properties);
+            }
+
+            if (ccList == null)
+            {
+                throw new NotFoundException($"Classes are not found");
+            }
+            return ccList;
+        }
+
 
         [NonAction]
-        public async Task<CourseClass> GetCourseClass(int id, string properties = "")
+        public async Task<List<CourseClassDTO>> GetCourseClassesDTOsAsync(int? courseId, string properties = "")
+        {
+            var chaps = await GetCourseClassesAsync(courseId, properties);
+
+            var result = new List<CourseClassDTO>();
+
+            foreach (var item in chaps)
+            {
+                result.Add(new  CourseClassDTO(item));
+            }
+
+            return result;
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //single course class
+        [NonAction]
+        public async Task<CourseClass> GetCourseClassAsync(int id, string properties = "")
         {
             var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(id, properties);
 
@@ -453,6 +511,18 @@ namespace SPM_Project.ApiControllers
             }
             return courseClass;
         }
+
+        //single course class dto
+        [NonAction]
+        public async Task<CourseClassDTO> GetCourseClassDTOAsync(int id, string properties = "")
+        {
+            var chap = await GetCourseClassAsync(id, properties);
+
+            return new CourseClassDTO(chap);
+        }
+
+
+
 
 
     }

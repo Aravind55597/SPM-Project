@@ -228,9 +228,9 @@ namespace SPM_Project.ApiControllers.Tests
             //check if ok is returned 
             Assert.IsType<OkObjectResult>(result);
             //cCheck if the value is a response object 
-            Assert.IsType<Response<List<CourseClassesDTO>>>(result.Value);
+            Assert.IsType<Response<List<CourseClassDTO>>>(result.Value);
 
-            var val = (Response<List<CourseClassesDTO>>)result.Value;
+            var val = (Response<List<CourseClassDTO>>)result.Value;
             //check if count is 10 
             Assert.Equal(10, val.Data.Count);
         }
@@ -261,9 +261,9 @@ namespace SPM_Project.ApiControllers.Tests
             //check if ok is returned 
             Assert.IsType<OkObjectResult>(result);
             //cCheck if the value is a response object 
-            Assert.IsType<Response<CourseClassesDTO>>(result.Value);
+            Assert.IsType<Response<CourseClassDTO>>(result.Value);
 
-            var val = (Response<CourseClassesDTO>)result.Value;
+            var val = (Response<CourseClassDTO>)result.Value;
             //check if course id is 1 
             Assert.Equal(1, val.Data.CourseId);
         }
@@ -288,9 +288,9 @@ namespace SPM_Project.ApiControllers.Tests
             //check if ok is returned 
             Assert.IsType<OkObjectResult>(result);
             //cCheck if the value is a response object 
-            Assert.IsType<Response<List<CourseClassesDTO>>>(result.Value);
+            Assert.IsType<Response<List<CourseClassDTO>>>(result.Value);
 
-            var val = (Response<List<CourseClassesDTO>>)result.Value;
+            var val = (Response<List<CourseClassDTO>>)result.Value;
             //check if count is 10 
             Assert.Equal(20, val.Data.Count);
 
@@ -309,7 +309,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             _uowMocker.mockCourseClassRepository.Verify(l => l.GetByIdAsync(1, "Course,ClassTrainer"));
 
-            Assert.IsType<CourseClassesDTO>(result);
+            Assert.IsType<CourseClassDTO>(result);
 
             Assert.Equal(1, result.Id);
         }
@@ -347,7 +347,7 @@ namespace SPM_Project.ApiControllers.Tests
             _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), null, "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>()));
 
 
-            Assert.IsType<List<CourseClassesDTO>>(result);
+            Assert.IsType<List<CourseClassDTO>>(result);
 
             Assert.All(result,
                 item => Assert.Contains("Test Trainer", item.TrainerName)
@@ -396,7 +396,7 @@ namespace SPM_Project.ApiControllers.Tests
             _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), null, "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>()));
 
 
-            Assert.IsType<List<CourseClassesDTO>>(result);
+            Assert.IsType<List<CourseClassDTO>>(result);
 
             Assert.Empty(result);
 
@@ -417,7 +417,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), It.IsAny<Func<IQueryable<CourseClass>, IOrderedQueryable<CourseClass>>>(), "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>()));
 
-            Assert.IsType<List<CourseClassesDTO>>(result);
+            Assert.IsType<List<CourseClassDTO>>(result);
 
             Assert.All(result,
                 item => Assert.Contains("Test Trainer", item.TrainerName)

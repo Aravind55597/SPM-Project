@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using SPM_Project.DTOs;
+using SPM_Project.CustomExceptions;
+
 namespace SPM_Project.ApiControllers
 {
     [Route("api/[controller]")]
@@ -135,6 +137,21 @@ namespace SPM_Project.ApiControllers
             return false;
         }
 
+
+
+
+        //single course class
+        [NonAction]
+        public async Task<Course> GetCourseAsync(int id, string properties = "")
+        {
+            var course = await _unitOfWork.CourseRepository.GetByIdAsync(id, properties);
+
+            if (course == null)
+            {
+                throw new NotFoundException($"Course Class of id {id} is not found");
+            }
+            return course;
+        }
 
     }
 }
