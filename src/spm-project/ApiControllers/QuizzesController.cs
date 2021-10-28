@@ -45,6 +45,8 @@ namespace SPM_Project.ApiControllers
 
             //check if courseclass exists 
 
+            //TODO REUSE FUNCTION FROM COURSECALSS CONTROLLER
+
             var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(quizDTO.CourseClassId, "Chapters,GradedQuiz" ); 
             
             if (courseClass==null)
@@ -79,7 +81,8 @@ namespace SPM_Project.ApiControllers
             //check if chapter exists 
             else
             {
-               
+
+                //TODO REUSE FUNCTION FROM CHAPTERS CONTROLLER CONTROLLER
                 var chap = await _unitOfWork.ChapterRepository.GetByIdAsync((int)quizDTO.ChapterId, "Quizzes");
                 if (chap == null)
                 {
@@ -105,6 +108,8 @@ namespace SPM_Project.ApiControllers
         public async Task<IActionResult> DeleteQuizAPIAsync(int id)
         {
             //check if quiz exists 
+
+            //TODO CREATE REUSABLE FUNCTION TO RETREIVE QUIZ
             var quiz = await _unitOfWork.QuizRepository.GetByIdAsync(id); 
 
             if (quiz == null)
@@ -231,6 +236,9 @@ namespace SPM_Project.ApiControllers
 
         //PRIVATE METHODS------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        
+        //TODO MIGHT NEED TO SHIFT TO ENTITY CLASS INSTEAD 
+        
         [NonAction]
         private void IsQuestionTypeProvided(Dictionary<string, string> inputErrors, QuizQuestionDTO questionDTO, int index)
         {
@@ -267,6 +275,7 @@ namespace SPM_Project.ApiControllers
             }
         }
 
+        //TODO SHIFT TO ENTIY CLASS 
         [NonAction]
         private void IsChapterIdProvided(Dictionary<string, string> inputErrors, QuizDTO quizDTO)
         {

@@ -44,7 +44,6 @@ namespace SPM_Project.ApiControllers
             {
 
     
-
             return Ok(new Response<List<ChapterDTO>>(await GetChapterDTOsAsync(courseClassId, "Resources,Quizzes,CourseClass")));
              
 
@@ -53,6 +52,8 @@ namespace SPM_Project.ApiControllers
         }
 
         //get chap---------------------------------------------------------------------------------------------------------------
+       
+        
         [NonAction]
         public async Task<Chapter> GetChapterAsync(int id, string properties = "")
         {
@@ -72,6 +73,11 @@ namespace SPM_Project.ApiControllers
 
             return new ChapterDTO(chap);
         }
+
+
+
+
+
 
 
         //get chaps------------------------------------------------------------------------------------------------------------

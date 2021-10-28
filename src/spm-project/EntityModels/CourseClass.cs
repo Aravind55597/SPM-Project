@@ -42,7 +42,7 @@ namespace SPM_Project.EntityModels
         //graded quiz 
         public Quiz GradedQuiz { get; set; }
 
-
+        //graded quiz 1d
         public int? GradedQuizId { get; set; }
 
 
@@ -64,6 +64,19 @@ namespace SPM_Project.EntityModels
 
             return false;
         }
+
+
+        public bool IsCourseClassregistrable()
+        {
+            if (DateTime.Now>= StartRegistration && DateTime.Now <=EndRegistration)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
 
 
 

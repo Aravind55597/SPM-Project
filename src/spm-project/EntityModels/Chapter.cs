@@ -8,6 +8,14 @@ namespace SPM_Project.EntityModels
 {
     public class Chapter: IEntityWithId
     {
+
+        //TODO UNIT TESTS
+
+        public Chapter()
+        {
+
+        }
+
         public int Id { get; private set; }
 
         public string Name { get; set; }
@@ -28,6 +36,29 @@ namespace SPM_Project.EntityModels
         public List<Quiz> Quizzes { get; set; }
 
         public CourseClass CourseClass { get; set; }
+
+
+        public int NumberOfQuizzes()
+        {
+            if (Quizzes==null)
+            {
+                return 0; 
+            }
+
+            return Quizzes.Count; 
+        }
+
+        public int NumberOfResources()
+        {
+            if (Resources == null)
+            {
+                return 0;
+            }
+
+            return Resources.Count;
+        }
+
+
 
     }
 }

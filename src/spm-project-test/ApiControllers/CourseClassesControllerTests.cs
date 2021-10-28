@@ -183,14 +183,10 @@ namespace SPM_Project.ApiControllers.Tests
                 ReturnsAsync(TestCourseClass()).Verifiable("Course Class was NOT retreived");
 
 
-
             //when when course id = 1 , return course
             _uowMocker.mockCourseRepository
                 .Setup(l => l.GetByIdAsync(1, It.IsAny<string>()))
                 .ReturnsAsync(TestCourse());
-
-
-
 
         }
 
