@@ -277,7 +277,7 @@ namespace SPM_Project.ApiControllers
 
 
         [NonAction]
-        public async Task<CourseClass> GetCourseClass(int id, string properties = "")
+        public async Task<CourseClass> GetCourseClassAsync(int id, string properties = "")
         {
             var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(id, properties);
 
