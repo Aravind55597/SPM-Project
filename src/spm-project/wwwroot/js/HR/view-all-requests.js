@@ -61,14 +61,13 @@ function ApproveRejectHandler(table, action) {
 		var row_data = table.row(row).data();
 
 		console.log(row_data)
-		query="asdadasasdas"
+
 		
 		$.ajax({
 			url: query,
 			method: "POST",
 			success: function (data) {
-
-				//table.ajax().reload();
+				table.ajax.reload();
 				notification(message, "success");
 			},
 			error: function (data) {
@@ -76,6 +75,7 @@ function ApproveRejectHandler(table, action) {
 			},
 			async: false
 		});
+	
 		
 	});
 
