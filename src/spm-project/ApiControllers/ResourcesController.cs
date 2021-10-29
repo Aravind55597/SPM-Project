@@ -87,11 +87,6 @@ namespace SPM_Project.ApiControllers
             {
                 resources = await _unitOfWork.ResourceRepository.GetAllAsync(includeProperties: properties);
             }
-
-            if (resources == null)
-            {
-                throw new NotFoundException($"Resources are not found");
-            }
             return resources;
         }
 

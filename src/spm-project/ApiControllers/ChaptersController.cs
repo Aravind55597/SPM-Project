@@ -87,7 +87,8 @@ namespace SPM_Project.ApiControllers
             var chaps = new List<Chapter>(); 
             if (courseClassId!=null)
             {
-                var cc = await _courseClassesCon.GetCourseClassAsync((int)courseClassId);
+                var cc = await _courseClassesCon.GetCourseClassAsync((int)courseClassId,"Chapters");
+
                 chaps = await _unitOfWork.ChapterRepository.GetAllAsync(filter: f => f.CourseClass.Id == cc.Id, includeProperties: properties);
             }
             else
@@ -95,10 +96,6 @@ namespace SPM_Project.ApiControllers
                 chaps = await _unitOfWork.ChapterRepository.GetAllAsync(includeProperties: properties);
             }
 
-            if (chaps == null)
-            {
-                throw new NotFoundException($"Chapters are not found");
-            }
             return chaps;
         }
 
@@ -119,11 +116,6 @@ namespace SPM_Project.ApiControllers
             return result; 
 
         }
-
-
-
-
-
 
 
     }
