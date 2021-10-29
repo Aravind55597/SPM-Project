@@ -15,6 +15,9 @@ using Newtonsoft.Json;
 
 namespace SPM_Project.ApiControllers.Tests
 {
+
+    //TODO ASSERT THE EXCEPTION MESSAGE 
+    //https://www.meziantou.net/quick-introduction-to-xunitdotnet.htm
     public class ClassEnrollmentRecordControllerTests : IDisposable
     {
 

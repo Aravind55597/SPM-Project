@@ -12,7 +12,10 @@ using Xunit;
 
 namespace SPM_Project.ApiControllers.Tests
 {
-    public class ResourcesControllerTests
+
+    //TODO ASSERT THE EXCEPTION MESSAGE 
+    //https://www.meziantou.net/quick-introduction-to-xunitdotnet.htm
+    public class ResourcesControllerTests : IDisposable
     {
         private ResourcesController _controller;
         private UOWMocker _uowMocker;
@@ -134,6 +137,7 @@ namespace SPM_Project.ApiControllers.Tests
         {
             _uowMocker = null;
             _controller = null;
+
         }
 
         [Fact()]

@@ -20,7 +20,10 @@ using SPM_Project.DTOs.RRModels;
 
 namespace SPM_Project.ApiControllers.Tests
 {
-    public class CourseClassesControllerTests
+
+    //TODO ASSERT THE EXCEPTION MESSAGE 
+    //https://www.meziantou.net/quick-introduction-to-xunitdotnet.htm
+    public class CourseClassesControllerTests:IDisposable
     {
 
         private CourseClassesController _controller;

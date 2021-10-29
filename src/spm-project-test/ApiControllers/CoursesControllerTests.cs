@@ -14,7 +14,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SPM_Project.ApiControllers.Tests
 {
-    public class CoursesControllerTests
+
+    //TODO ASSERT THE EXCEPTION MESSAGE 
+    //https://www.meziantou.net/quick-introduction-to-xunitdotnet.htm
+    public class CoursesControllerTests:IDisposable
     {
         private UOWMocker _uowMocker;
 

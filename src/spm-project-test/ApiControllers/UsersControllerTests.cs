@@ -18,6 +18,9 @@ using Newtonsoft.Json;
 
 namespace SPM_Project.ApiControllers.Tests
 {
+
+    //TODO ASSERT THE EXCEPTION MESSAGE 
+    //https://www.meziantou.net/quick-introduction-to-xunitdotnet.htm
     public class UsersControllerTests : IDisposable
     {
 
@@ -138,11 +141,6 @@ namespace SPM_Project.ApiControllers.Tests
             await Assert.ThrowsAsync<BadRequestException>(action);
 
         }
-
-
-
-
-
 
         [Theory]
         [InlineData(null, false, true, false)]

@@ -9,7 +9,7 @@ namespace SPM_Project.EntityModels
     public class Chapter: IEntityWithId
     {
 
-        //TODO UNIT TESTS
+
 
         public Chapter()
         {
