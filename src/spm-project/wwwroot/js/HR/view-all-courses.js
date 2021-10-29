@@ -221,26 +221,22 @@ function viewCoursesDT() {
 
 			//responsive priority is an option to state the priority of the column to be view when the screen is smaller
 			//data: null means it is not Retrieveing data from the server
-			{ name: 'Actions', data: null, responsivePriority: -1, orderable: false },
+			//{ name: 'Actions', data: null, responsivePriority: -1, orderable: false },
 		],
 
 		//define the properties of each column (very similar function as columns option above.Don't need to define all the column )
 		//I suggest to use this just to render stuff such as buttons/any elements OR processign the result to display in diff format eg. format date string
 		columnDefs: [
 
-
 			{
 				targets: [2,3] ,
 				render: function (data, type, full, meta) {
-			
-					return moment(data).format('Do MMMM YYYY, h:mm a')
-						;
-				
+					return moment(data).format('Do MMMM YYYY, h:mm a');
 				},
 			},
 
 
-
+			/*
 			{
 				//target last column
 				targets: -1,
@@ -251,6 +247,8 @@ function viewCoursesDT() {
 					;
 				},
 			},
+
+			*/
 
 			
 		],
@@ -272,9 +270,9 @@ function viewCoursesDT() {
 
 
 	//event handlers
-	addClassEvent(table);
-	addCourseEvent(table);
-	deleteCourseEvent(table);
+	//addClassEvent(table);
+	//addCourseEvent(table);
+	//deleteCourseEvent(table);
 
 
 }
