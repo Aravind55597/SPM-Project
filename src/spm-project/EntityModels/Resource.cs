@@ -12,18 +12,19 @@ namespace SPM_Project.EntityModels
 
         public string ContentUrl { get; set; }
 
+        public string DownloadableContentUrl { get; set; }
 
         public ContentType Content { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
         public DateTime CreationTimestamp { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdateTimestamp { get; set; }
 
 
         public Chapter Chapter { get; set; }
     }
+
 
     public enum ContentType
     {
@@ -31,8 +32,10 @@ namespace SPM_Project.EntityModels
         Word,
         Excel,
         Video,
-        PowerPoint,
-        Hyperlink
+        PowerPoint
     }
+
+
+
 
 }

@@ -7,6 +7,7 @@ using SPM_Project.DataTableModels.DataTableResponse;
 using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 
 namespace SPM_Project.Repositories
@@ -94,6 +95,11 @@ namespace SPM_Project.Repositories
             queryable = dtH.TableFilterer(queryable);
 
             dtH.FilteredRecordsCounter(queryable);
+
+       
+           
+
+
 
             //skip 'start' records & Retrieve 'pagesize' records
             var data = await dtH.TablePager(queryable).ToListAsync();

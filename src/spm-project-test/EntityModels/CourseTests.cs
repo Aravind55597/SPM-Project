@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.EntityModels.Tests
 {
-    public class CourseTests
+    public class CourseTests : IDisposable
     {
         private Course _testCoursePrequisities;
         private Course _testUserCourse;

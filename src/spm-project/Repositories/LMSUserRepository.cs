@@ -128,7 +128,7 @@ namespace SPM_Project.Repositories
                 {
                     //return all class trainer and learner
                     var userIdsInClass = _context.LMSUser.
-                    Where(l => l.Enrollments.Any(e => e.CompletionStatus == true && e.CourseClass.Id == classId) || l.Id == _context.CourseClass.Where(cc => cc.Id == classId).
+                    Where(l => l.Enrollments.Any(e => e.IsEnrollled == true && e.CourseClass.Id == classId) || l.Id == _context.CourseClass.Where(cc => cc.Id == classId).
                     Select(cc => cc.ClassTrainer.Id).FirstOrDefault()).Select(l => new { Id = l.Id });
 
                     queryable =

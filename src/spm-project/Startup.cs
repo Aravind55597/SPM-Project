@@ -22,6 +22,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
+
 namespace SPM_Project
 {
     public class Startup
@@ -71,9 +72,7 @@ namespace SPM_Project
                     new BadRequestObjectResult(
 
                         Newtonsoft.Json.JsonConvert.SerializeObject(
-
                             new Response<object>((int)HttpStatusCode.BadRequest, actionContext.ModelState.AllErrors(),"Invalid Request")
-
                     )
 
 
@@ -143,6 +142,9 @@ namespace SPM_Project
 
 
             //Add database seeding code here 
+            //SeedDatabase.Initialize(dbContext); 
+
+
 
             //handles exceptions thrown and returns an error reponse based on the type of exception thrown 
             app.UseMiddleware<ErrorHandlerMiddleware>();

@@ -2,4 +2,4 @@ bin/
 obj/
 .vs
 
-/src/spm-project/wwwroot/js/Trainer/courses-taught.js
+/src/spm-project/SeedDatabase.cs
