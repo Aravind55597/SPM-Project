@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace SPM_Project.Controllers.Tests
 {
 
-    public class LearnerControllerTests: IDisposable
+    public class LearnerControllerTests : IDisposable
     {
         public LearnerController _controller;
 
@@ -58,6 +58,33 @@ namespace SPM_Project.Controllers.Tests
             var checkAdministrator = attribute.CheckRoleAccess("Administrator");
             Assert.False(checkAdministrator);
 
+        }
+
+        [Fact()]
+        public void ViewRequestsTest_Check_If_Correct_Page_Is_Returned()
+        {
+            var controller = new LearnerController().WithIdentity("Learner");
+
+            var result = controller.ViewRequests() as ViewResult;
+
+            var checkAttribute = controller.GetType().GetMethod("ViewRequests").GetCustomAttributes(typeof(AuthorizeAttribute), true);
+
+            Assert.NotNull(result);
+            Assert.Equal(typeof(AuthorizeAttribute), checkAttribute[0].GetType());
+            Assert.Equal("ViewRequests", result.ViewName);
+        }
+
+        [Fact()]
+        public void ViewRequestsTest_Check_If_Non_Learner_Users_Can_Access()
+        {
+            var attribute = _controller.GetAuthoriseAttribute("ViewRequests");
+            Assert.NotNull(attribute);
+
+            var checkTrainer = attribute.CheckRoleAccess("Trainer");
+            Assert.False(checkTrainer);
+
+            var checkAdmin = attribute.CheckRoleAccess("Administrator");
+            Assert.False(checkAdmin);
         }
     }
 }
