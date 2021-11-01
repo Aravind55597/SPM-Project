@@ -22,11 +22,9 @@ namespace SPM_Project.Controllers
         }
 
         [Authorize(Roles = "Learner")]
-        [HttpGet]
-        public IActionResult ViewCourseMaterial([FromQuery]int chapterId)
+        public IActionResult ViewRequests()
         {
-            ViewBag.ChapterId = chapterId; 
-            return View("ViewCourseMaterial");
+            return View("ViewRequests");
         }
     }
 }
