@@ -3,6 +3,8 @@
 
     $.ajax({
         url: retrieveChapters, success: function (result) {
+            // sort chapters in ascending order
+            result.data.sort((a, b) => (a.name > b.name ? 1 : -1))
             console.log(result)
 
             var dataHtml = ``;
