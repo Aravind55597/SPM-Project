@@ -20,5 +20,11 @@ namespace SPM_Project.Controllers
         {
             return View("ViewChapters");
         }
+
+        [Authorize(Roles = "Learner")]
+        public IActionResult ViewRequests()
+        {
+            return View("ViewRequests");
+        }
     }
 }
