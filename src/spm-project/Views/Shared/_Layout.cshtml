@@ -94,8 +94,15 @@
     <input type="hidden" id="get-course-classes" value="@Url.RouteUrl("GetCourseClasses")">
     <input type="hidden" id="submit-enrollment-request" value="@Url.RouteUrl("SubmitEnrollmentRequest")">
     <input type="hidden" id="get-chapters" value="@Url.RouteUrl("GetChapters")">
+    @*Get userid of the user logged in*@
+    @{
+        var person = await UserManager.GetUserAsync(User);
+        if (person != null)
+        {
+            <input id="userid" type="hidden" value="@person.LMSUserId">
+        }
 
-
+    }
 
     <!--end::Page Custom Javascript-->
     @RenderSection("scripts", required: false)
