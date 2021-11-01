@@ -13,6 +13,9 @@
                 var index = name.indexOf("Chapter");
                 var chapterName = name.slice(index, name.length)
                 var chapterDescription = item.description
+                var resources = item.resourceIds
+                var chapterId = item.id
+                console.log(resources)
                 dataHtml += '<div class="row align-items-center"><div class="col">' + `<div class="card mb-3" style="max-width: 540px; background-color: fefaf4;">
                             <div class="row g-0">
                                 <div class="col">
@@ -26,9 +29,13 @@
                                         <div class="row">
                                             <div class="col"></div>
                                             <div class="col-6">
-                                                <button type="button" onclick=""; class="btn-sign-up btn btn-primary w-100">
+
+                                            <form action="/Learner/ViewCourseMaterial" method="get">
+                                            <button type="submit" name="chapterId" value="${chapterId}" class="btn-sign-up btn btn-primary w-100">
                                                   View Course Material
                                                 </button>
+                                            </form>
+
                                             </div>
                                             <div class="col"></div>
                                         </div>

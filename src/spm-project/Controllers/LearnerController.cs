@@ -20,5 +20,13 @@ namespace SPM_Project.Controllers
         {
             return View("ViewChapters");
         }
+
+        [Authorize(Roles = "Learner")]
+        [HttpGet]
+        public IActionResult ViewCourseMaterial([FromQuery]int chapterId)
+        {
+            ViewBag.ChapterId = chapterId; 
+            return View("ViewCourseMaterial");
+        }
     }
 }
