@@ -16,9 +16,9 @@ namespace SPM_Project.Controllers
         }
 
         [Authorize(Roles = "Learner")]
-        public IActionResult ViewChapters()
+        public IActionResult ViewEnrolledCourses()
         {
-            return View("ViewChapters");
+            return View("ViewEnrolledCourses");
         }
 
         [Authorize(Roles = "Learner")]
