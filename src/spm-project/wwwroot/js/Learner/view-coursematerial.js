@@ -1,6 +1,4 @@
 ﻿function view(chapterId) {
-    console.log(chapterId)
-
     var retrieveResources = $("#get-resources").val() + "?chapterId=" + chapterId;
     $.ajax({
         url: retrieveResources, success: function (result) {
@@ -9,7 +7,7 @@
             var accordionHtml = `<div class="accordion" id="accordionExample">`;
             var contentHtml = ``;
             $.each(result.data, function (index, item) {
-                console.log(index)
+                index = index + 1
                 var indexStr = index.toString()
                 var contentType = item.content
                 var contentUrl = item.contentUrl
@@ -17,7 +15,7 @@
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading${indexStr}">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${indexStr}" aria-expanded="true" aria-controls="collapse${indexStr}">
-                            ${contentType} Item #${indexStr}
+                            ${indexStr}) ${contentType}
                         </button>
                     </h2>
                     <div id="collapse${indexStr}" class="accordion-collapse collapse" aria-labelledby="heading${indexStr}" data-bs-parent="#accordionExample">

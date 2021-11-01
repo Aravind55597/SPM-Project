@@ -15,7 +15,6 @@ function closeEventHandler() {
 function viewCourseClassDT(userID) {
 
 	var RetrieveCourseClass = $("#get-course-classes-datatable").val() + "?isLearner=true&lmsUserId=" + userID;
-	console.log(RetrieveCourseClass)
 
 	var table = $('#course_class_datatable').DataTable({
 
@@ -46,7 +45,7 @@ function viewCourseClassDT(userID) {
 			contentType: "application/json",
 			dataType: "json",
 			data: function (d) {
-				console.log(JSON.stringify(d))
+				/*console.log(JSON.stringify(d))*/
 				return JSON.stringify(d);
 			},
 			error: function (xhr, error, code) {
@@ -148,7 +147,6 @@ function get_chapter(courseClassId) {
                 var chapterDescription = item.description
                 var resources = item.resourceIds
                 var chapterId = item.id
-                console.log(resources)
                 dataHtml += '<div class="row align-items-center"><div class="col">' + `<div class="card mb-3" style="max-width: 540px; background-color: fefaf4;">
                             <div class="row g-0">
                                 <div class="col">
