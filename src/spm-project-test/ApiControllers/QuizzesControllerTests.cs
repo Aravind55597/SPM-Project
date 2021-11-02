@@ -365,12 +365,12 @@ namespace SPM_Project.ApiControllers.Tests
             .Setup(l => l.GetByIdAsync(1, It.IsAny<string>()))
             .ReturnsAsync(TestCourseClassCreator()).Verifiable("When course class exists : GetIdByAsync is not called");
 
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestQuizCreator(false)), Newtonsoft.Json.JsonConvert.SerializeObject(await _controller.ConvertQuizDTOToQuiz(QuizDTOCreator(false))));
+            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestQuizCreator(false)), Newtonsoft.Json.JsonConvert.SerializeObject(await _controller.ConvertQuizDTOToQuizAsync(QuizDTOCreator(false))));
 
             //GRADED QUIZ -> ALL FIELDS OF QUIZ DTO IS FILLED; NO CHAPTER ID PROVIDED -> CHAPTER IN QUIZ MUST BE NULL 
          
             //run ConvertQuizDTOToQuiz
-            var result = await _controller.ConvertQuizDTOToQuiz(QuizDTOCreator(true));
+            var result = await _controller.ConvertQuizDTOToQuizAsync(QuizDTOCreator(true));
             Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestQuizCreator(true)), Newtonsoft.Json.JsonConvert.SerializeObject(result));
 
             //check that Chapter property of Quiz object returned is null

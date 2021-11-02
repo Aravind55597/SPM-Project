@@ -12,6 +12,8 @@ namespace SPM_Project.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+    //TODO ADD TESTS TO RETREIVE QUIZZES 
     public class QuizzesController : ControllerBase
     {
         public IUnitOfWork _unitOfWork;
@@ -60,7 +62,7 @@ namespace SPM_Project.ApiControllers
 
             if (quizDTO.IsGraded)
             {
-                courseClass.GradedQuiz = await ConvertQuizDTOToQuiz(quizDTO); 
+                courseClass.GradedQuiz = await ConvertQuizDTOToQuizAsync(quizDTO); 
 
             }
 
@@ -70,7 +72,7 @@ namespace SPM_Project.ApiControllers
 
                 chap.Quizzes = new List<Quiz>();
 
-                chap.Quizzes.Add(await ConvertQuizDTOToQuiz(quizDTO)); 
+                chap.Quizzes.Add(await ConvertQuizDTOToQuizAsync(quizDTO)); 
 
             }
 
@@ -99,6 +101,22 @@ namespace SPM_Project.ApiControllers
         }
 
 
+        [HttpGet, Route("{id:int}", Name = "GetQuiz")]
+        public async Task<IActionResult> GetQuizAPIAsync(int id)
+        {
+            //check if quiz exists 
+
+            //TODO CREATE REUSABLE FUNCTION TO RETREIVE QUIZ
+            var quiz = await GetQuizDTOAsync(id, "CourseClass,Chapter,Questions"); 
+
+            if (quiz == null)
+            {
+                throw new NotFoundException($"Quiz of Id {id} does not exist");
+            }
+
+
+            return Ok(quiz);
+        }
 
 
 
@@ -138,7 +156,7 @@ namespace SPM_Project.ApiControllers
 
 
         [NonAction]
-        public async Task<Quiz> ConvertQuizDTOToQuiz(QuizDTO quizDTO)    
+        public async Task<Quiz> ConvertQuizDTOToQuizAsync(QuizDTO quizDTO)    
         {
             var quiz = new Quiz()
             {
@@ -230,30 +248,57 @@ namespace SPM_Project.ApiControllers
         }
 
 
+        [NonAction]
+        public QuizDTO ConvertQuizToQuizDTO(Quiz quiz)
+        {
+            var quizDTO = new QuizDTO(quiz);
+
+            //loop through questions to add to QuizDTO 
+
+            if (quiz.Questions != null)
+            {
+                foreach (var item in quiz.Questions)
+                {
+                    if (item.QuestionType=="McqQuestion")
+                    {
+                        var ques = (McqQuestion)item;
+                        quizDTO.Questions.Add(new QuizQuestionDTO(ques)); 
+
+                    }
+                    else
+                    {
+                        var ques = (TFQuestion)item;
+                        quizDTO.Questions.Add(new QuizQuestionDTO(ques));
+                    }
+                }
+            }
+
+            return quizDTO; 
+
+        }
 
 
-        //get quiz---------------------------------------------------------------------------------------------------------------
-        //based on clourse classs or chapter id 
+        
+        [NonAction]
+        public async Task<Quiz> GetQuizAsync(int id, string properties = "")
+        {
+            var quiz = await _unitOfWork.QuizRepository.GetByIdAsync(id, properties);
 
-        //[NonAction]
-        //public async Task<Quiz> GetQuizAsync(int id, string properties = "")
-        //{
-        //    var quiz = await _unitOfWork.QuizRepository.GetByIdAsync(id, properties);
+            if (quiz == null)
+            {
+                throw new NotFoundException($"Quiz of id {id} is not found");
+            }
+            return quiz;
+        }
 
-        //    if (quiz == null)
-        //    {
-        //        throw new NotFoundException($"Quiz of id {id} is not found");
-        //    }
-        //    return quiz;
-        //}
+        [NonAction]
+        public async Task<QuizDTO> GetQuizDTOAsync(int id, string properties = "")
+        {
+            var quiz = await GetQuizAsync(id, properties);
 
-        //[NonAction]
-        //public async Task<QuizDTO> GetQuizDTOAsync(int id, string properties = "")
-        //{
-        //    var chap = await GetQuizAsync(id, properties);
 
-        //    return new ChapterDTO(chap);
-        //}
+            return ConvertQuizToQuizDTO(quiz); 
+        }
 
 
 
