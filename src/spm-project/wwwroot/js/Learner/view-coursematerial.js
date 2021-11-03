@@ -165,48 +165,92 @@ function view(courseClassId, chapterId) {
         }
     });
 
-    
-
-    // retrieve quiz resources based on chapterId
-    //var retrieveResources = $("#get-resources").val() + "?chapterId=" + chapterId;
-    //$.ajax({
-    //    url: retrieveResources, success: function (result) {
-    //        console.log(result)
-    //        var contentHtml = ``;
-    //        var accordionHtml = ``;
-            
-    //        $.each(result.data, function (index, item) {
-                
-    //        });
-
-            
-            
-
-
-    //    }
-    //});
 }
 
 function displayQuiz(quizId) {
     console.log(quizId)
-    //var retrieveResources = $("#get-resources").val() + "?chapterId=" + chapterId;
-    //$.ajax({
-    //    url: retrieveResources, success: function (result) {
-    //        console.log(result)
-    //        var contentHtml = ``;
+    var retrieveQuiz = "/api/Quizzes/" + quizId;
+    console.log(retrieveQuiz)
+    $.ajax({
+        url: retrieveQuiz, success: function (result) {
+            console.log(result)
+            var contentHtml = ``;
+            var tfAnswerHtml = ``;
+            var mcqAnswerHtml = ``;
 
-    //        $.each(result.data, function (index, item) {
+            $.each(result.questions, function (index, item) {
+                var questionNum = index + 1
+                var questionName = item.question
+                var questionType = item.questionType
+                if (questionType == "TFQuestion") {
+                    var trueOption = item.trueOption
+                    var falseOption = item.falseOption
+                    var tfAnswerHtml = `<form class="card-footer">
+                                          <input type="radio" id="trueOption" name="fav_language" value="HTML">
+                                          <label for="trueOption">True</label><br>
+                                          <input type="radio" id="falseOption" name="fav_language" value="CSS">
+                                          <label for="falseOption">False</label><br>
+                                        </form>`;
 
-    //        });
+                } else {
+                    var option1 = item.option1
+                    var option2 = item.option2
+                    var option3 = item.option3
+                    var option4 = item.option4
+
+                    mcqAnswerHtml = `<form class="card-footer">
+                                        <input type="radio" id="option1" name="fav_language" value="HTML">
+                                        <label for="option1">${option1}</label><br>
+                                        <input type="radio" id="option2" name="fav_language" value="CSS">
+                                        <label for="option2">${option2}</label><br>
+                                        <input type="radio" id="option3" name="fav_language" value="CSS">
+                                        <label for="option3">${option3}</label><br>
+                                        <input type="radio" id="option4" name="fav_language" value="CSS">
+                                        <label for="option4">${option4}</label><br>
+
+                                    </form>`;
+                }
+
+                contentHtml += `
+                    <div class="row m-4">
+                        <div class="col">
+                            <div class="card" style="width: 620px; min-height: 200px;">
+                              <div class="card-body">
+                                
+                                <h5 class="card-title">Question ${questionNum}</h5>
+                                <p class="card-text">${questionName}</p>
+                                
+                              </div>`;
+                if (questionType == "TFQuestion") {
+                    contentHtml += tfAnswerHtml
+                } else {
+                    contentHtml += mcqAnswerHtml
+                }
+
+
+                contentHtml += `
+                              
+                            </div>
+                        </div>
+                    </div>`;
+            });
 
 
 
-    //        contentHtml += ``;
+            contentHtml += `
+                            <div class="row">
+                                <div class="col-8"></div>
+                                <div class="col">
+                                    <button type="button" class="btn btn-primary">Submit</button>
+                                </div>
+                                <div class="col-3"></div>
 
-    //        $("#view_course_material").html(contentHtml);
+                            </div>`;
 
-    //    }
-    //});
+            $("#view_course_material").html(contentHtml);
+
+        }
+    });
 }
 
 
