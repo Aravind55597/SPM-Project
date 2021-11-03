@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using SPM_Project.ApiControllers;
+using Moq;
 using SPM_Project.DTOs;
 using SPM_Project.EntityModels;
 using SPM_ProjectTests.Mocks;
@@ -11,14 +12,14 @@ namespace SPM_Project.ApiControllers.Tests
 {
     //TODO ASSERT THE EXCEPTION MESSAGE
     //https://www.meziantou.net/quick-introduction-to-xunitdotnet.htm
-    public class QuizzesControllerTests:IDisposable
+    public class QuizzesControllerTests : IDisposable
     {
         private QuizzesController _controller;
 
         //private ChaptersController _chaptersController; 
         private UOWMocker _uowMocker;
 
-  
+
 
         private QuizDTO _testQuiz;
 
@@ -33,17 +34,17 @@ namespace SPM_Project.ApiControllers.Tests
         private QuizDTO QuizDTOCreator(bool isGraded)
         {
 
-            int? chapId = null; 
+            int? chapId = null;
             if (!isGraded)
             {
-                chapId = 1; 
+                chapId = 1;
             }
             return new QuizDTO()
             {
                 Name = "Graded Quiz",
                 Description = "Graded Quiz Description",
                 IsGraded = isGraded,
-                ChapterId= chapId,
+                ChapterId = chapId,
                 CourseClassId = 1,
                 TimeLimit = 20,
                 Questions = new List<QuizQuestionDTO>()
@@ -98,9 +99,9 @@ namespace SPM_Project.ApiControllers.Tests
         //TEST ENTITY CLASSES-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         private Chapter TestChapterCreator()
         {
-            var chap =  new Chapter();
+            var chap = new Chapter();
             typeof(Chapter).GetProperty(nameof(chap.Id)).SetValue(chap, 1);
-            return chap; 
+            return chap;
         }
 
         private CourseClass TestCourseClassCreator()
@@ -113,20 +114,20 @@ namespace SPM_Project.ApiControllers.Tests
 
         private Quiz TestQuizCreator(bool isGraded)
         {
-            Chapter chap = null; 
+            Chapter chap = null;
             if (!isGraded)
             {
                 chap = TestChapterCreator();
             }
-            var quiz= new Quiz()
+            var quiz = new Quiz()
             {
                 Name = "Graded Quiz",
                 Description = "Graded Quiz Description",
                 IsGraded = isGraded,
                 Chapter = chap,
-                TimeLimit=20,
-                CourseClass=TestCourseClassCreator(),
-                Questions=new List<QuizQuestion>()
+                TimeLimit = 20,
+                CourseClass = TestCourseClassCreator(),
+                Questions = new List<QuizQuestion>()
                 {
                     new McqQuestion()
                     {
@@ -170,10 +171,10 @@ namespace SPM_Project.ApiControllers.Tests
                 }
             };
 
-            return quiz; 
+            return quiz;
         }
 
-        
+
 
 
         //SET-UP------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -183,7 +184,7 @@ namespace SPM_Project.ApiControllers.Tests
             _uowMocker = new UOWMocker();
             _controller = new QuizzesController(_uowMocker.mockUnitOfWork.Object);
             _testQuiz = QuizDTOCreator(false);
-            _errorDict = new Dictionary<string, string>(); 
+            _errorDict = new Dictionary<string, string>();
 
         }
 
@@ -202,9 +203,14 @@ namespace SPM_Project.ApiControllers.Tests
             //GRADED & UNGRADED QUIZ ARE NOT EQUAL
 
             var ungraded = _testQuiz.IsGraded = false;
-            var graded = _testQuiz.IsGraded = true; 
+            var graded = _testQuiz.IsGraded = true;
             Assert.NotEqual(Newtonsoft.Json.JsonConvert.SerializeObject(ungraded), Newtonsoft.Json.JsonConvert.SerializeObject(graded));
         }
+
+
+
+
+        //TODO TESTS FOR API ENDPOINT
 
         //[Fact()]
         //public void PostQuizDTOAPIAsyncTest()
@@ -218,11 +224,17 @@ namespace SPM_Project.ApiControllers.Tests
         //    Assert.True(false, "This test needs an implementation");
         //}
 
+        //[Fact()]
+        //public void GetQuizAPIAsyncTest()
+        //{
+        //    Assert.True(false, "This test needs an implementation");
+        //}
+
         [Fact()]
-        
+
         public void ValidateQuizDTOInputTest_QuizAllCorrectInput_ReturnEmptyDictionary()
         {
-     
+
             //WHEN ALL INPUTS ARE CORRECT -> EMPTY DICTIOANRY 
             Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(new Dictionary<string, string>()), Newtonsoft.Json.JsonConvert.SerializeObject(_controller.ValidateQuizDTOInput(_testQuiz)));
 
@@ -234,7 +246,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             //CHAPTER ID NOT PROVIDED -> ERROR DICTIONARY 
             _errorDict.Add("QuizDTO", "Please provide ChapterId for ungraded quizzes");
-            _testQuiz.ChapterId = null; 
+            _testQuiz.ChapterId = null;
             Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(_errorDict), Newtonsoft.Json.JsonConvert.SerializeObject(_controller.ValidateQuizDTOInput(_testQuiz)));
 
         }
@@ -247,7 +259,7 @@ namespace SPM_Project.ApiControllers.Tests
             _errorDict.Add("Questions[0].QuestionType", "Question types are TFQuestion,McqQuestion");
             _errorDict.Add("Questions[0].Answer", "Please provide the proper format for the answer");
 
-            _testQuiz.Questions[0].QuestionType = "sdfsdf"; 
+            _testQuiz.Questions[0].QuestionType = "sdfsdf";
             Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(_errorDict), Newtonsoft.Json.JsonConvert.SerializeObject(_controller.ValidateQuizDTOInput(_testQuiz)));
             Assert.Equal(2, _errorDict.Count);
 
@@ -296,7 +308,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             _testQuiz.Questions[0].Answer = ";LIKUSDF;OASHDF";
             Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(_errorDict), Newtonsoft.Json.JsonConvert.SerializeObject(_controller.ValidateQuizDTOInput(_testQuiz)));
-            Assert.Equal(1,_errorDict.Count);
+            Assert.Equal(1, _errorDict.Count);
 
             //1ST QUESTION ANSWER IS NOT PROVIDED -> RETURN ERROR DICT -> LENGTH IS 1
             _testQuiz.Questions[0].Answer = "";
@@ -351,7 +363,7 @@ namespace SPM_Project.ApiControllers.Tests
         [Fact()]
         public async Task ConvertQuizDTOToQuizTest()
         {
-            
+
 
             //UNGRADED QUIZ -> ALL FIELDS OF QUIZ DTO IS FILLED
 
@@ -365,16 +377,16 @@ namespace SPM_Project.ApiControllers.Tests
             .Setup(l => l.GetByIdAsync(1, It.IsAny<string>()))
             .ReturnsAsync(TestCourseClassCreator()).Verifiable("When course class exists : GetIdByAsync is not called");
 
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestQuizCreator(false)), Newtonsoft.Json.JsonConvert.SerializeObject(await _controller.ConvertQuizDTOToQuiz(QuizDTOCreator(false))));
+            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestQuizCreator(false)), Newtonsoft.Json.JsonConvert.SerializeObject(await _controller.ConvertQuizDTOToQuizAsync(QuizDTOCreator(false))));
 
             //GRADED QUIZ -> ALL FIELDS OF QUIZ DTO IS FILLED; NO CHAPTER ID PROVIDED -> CHAPTER IN QUIZ MUST BE NULL 
-         
+
             //run ConvertQuizDTOToQuiz
-            var result = await _controller.ConvertQuizDTOToQuiz(QuizDTOCreator(true));
+            var result = await _controller.ConvertQuizDTOToQuizAsync(QuizDTOCreator(true));
             Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestQuizCreator(true)), Newtonsoft.Json.JsonConvert.SerializeObject(result));
 
             //check that Chapter property of Quiz object returned is null
-            Assert.Null(result.Chapter); 
+            Assert.Null(result.Chapter);
 
 
         }
@@ -401,5 +413,24 @@ namespace SPM_Project.ApiControllers.Tests
         }
 
 
+        //TODO TESTS FOR NON-API FUNCTIONS
+
+        //[Fact()]
+        //public void ConvertQuizToQuizDTOTest()
+        //{
+        //    Assert.True(false, "This test needs an implementation");
+        //}
+
+        //[Fact()]
+        //public void GetQuizAsyncTest()
+        //{
+        //    Assert.True(false, "This test needs an implementation");
+        //}
+
+        //[Fact()]
+        //public void GetQuizDTOAsyncTest()
+        //{
+        //    Assert.True(false, "This test needs an implementation");
+        //}
     }
 }

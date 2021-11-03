@@ -27,8 +27,20 @@ namespace SPM_Project.DTOs
             Name = domain.Name;
             Description = domain.Description;
             IsGraded = domain.IsGraded;
-            ChapterId = domain.Chapter.Id;
-            TimeLimit = domain.TimeLimit; 
+
+            if (domain.CourseClass != null)
+            {
+                CourseClassId = domain.CourseClass.Id;
+            }
+     
+
+            if (domain.Chapter!=null)
+            {
+                ChapterId = domain.Chapter.Id;
+            }
+            
+            TimeLimit = domain.TimeLimit;
+            Questions = new List<QuizQuestionDTO>();
         }
 
 
