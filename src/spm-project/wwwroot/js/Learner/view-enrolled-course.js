@@ -125,12 +125,15 @@ function viewChaptersEventHandler(table) {
 		var row_data = table.row(row).data();
 		console.log(row_data)
 		var courseClassId = row_data.DT_RowId;
+		var courseClassId = row_data.DT_RowId;
+		var gradedQuizId = row_data.DT_RowData.GradedQuizId;
+		console.log(gradedQuizId)
 		//pass course id to the get_chapter function 
-		get_chapter(courseClassId);
+		get_chapter(courseClassId, gradedQuizId);
 	});
 }
 
-function get_chapter(courseClassId) {
+function get_chapter(courseClassId, gradedQuizId) {
     var retrieveChapters = $("#get-chapters").val() + "?courseClassId=" + courseClassId;
 
     $.ajax({
@@ -139,45 +142,89 @@ function get_chapter(courseClassId) {
             result.data.sort((a, b) => (a.name > b.name ? 1 : -1))
             console.log(result)
 
-            var dataHtml = ``;
+			var dataHtml = ``;
+			var chapterId = 0;
             $.each(result.data, function (index, item) {
                 var name = item.name
                 var index = name.indexOf("Chapter");
                 var chapterName = name.slice(index, name.length)
                 var chapterDescription = item.description
                 var resources = item.resourceIds
-                var chapterId = item.id
-                dataHtml += '<div class="row align-items-center"><div class="col">' + `<div class="card mb-3" style="max-width: 540px; background-color: fefaf4;">
-                            <div class="row g-0">
-                                <div class="col">
-                                    <div class="card-body">
-                                        <h5 class="card-title">${chapterName}</h5>
+                chapterId = item.id
+				dataHtml += `<div class="row align-items-center">
+								<div class="col">
+									<div class="card mb-3" style="max-width: 540px; background-color: fefaf4;">
+										<div class="row g-0">
+											<div class="col">
+												<div class="card-body">
+													<h5 class="card-title">${chapterName}</h5>
 
-                                        <p class="card-text">${chapterDescription}</p>
+													<p class="card-text">${chapterDescription}</p>
 
 
-                                        <p class="card-text"><small class="text-muted"></small></p>
-                                        <div class="row">
-                                            <div class="col"></div>
-                                            <div class="col-6">
+													<p class="card-text"><small class="text-muted"></small></p>
+													<div class="row">
+														<div class="col"></div>
+														<div class="col-6">
 
-                                            <form action="/Learner/ViewCourseMaterial" method="get">
-												<button type="submit" name="chapterId" value="${chapterId}" class="btn-sign-up btn btn-primary w-100">
-                                                  View Course Material
-                                                </button>
-												<input type="hidden" name="courseClassId" value="${courseClassId}">
+														<form action="/Learner/ViewCourseMaterial" method="get">
+															<button type="submit" name="chapterId" value="${chapterId}" class="btn-sign-up btn btn-primary w-100">
+															  View Course Material
+															</button>
+															<input type="hidden" name="courseClassId" value="${courseClassId}">
 
-                                            </form>
+														</form>
 
-                                            </div>
-                                            <div class="col"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>` + '</div></div>';;
-            });
-            dataHtml += ``;
+														</div>
+														<div class="col"></div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>`;
+			});
+
+			// if there is gradedquiz, show gradedquiz in modal
+			if (gradedQuizId != null) {
+				dataHtml += `
+							<div class="row align-items-center">
+								<div class="col">
+									<div class="card mb-3" style="max-width: 540px; background-color: fefaf4;">
+										<div class="row g-0">
+											<div class="col">
+												<div class="card-body">
+													<h5 class="card-title">Graded Quiz</h5>
+
+													<p class="card-text"></p>
+
+
+													<p class="card-text"><small class="text-muted"></small></p>
+													<div class="row">
+														<div class="col"></div>
+														<div class="col-6">
+
+														<form action="/Learner/ViewCourseMaterial" method="get">
+															<button type="submit" name="chapterId" value="${chapterId}" class="btn-sign-up btn btn-primary w-100">
+															  Take Graded Quiz
+															</button>
+															<input type="hidden" name="courseClassId" value="${courseClassId}">
+															<input type="hidden" name="gradedQuizId" value="${gradedQuizId}">
+														</form>
+
+														</div>
+														<div class="col"></div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>`;
+            }
+			
+
 			$("#view_classes").html(dataHtml);
 
 			//show overlay
