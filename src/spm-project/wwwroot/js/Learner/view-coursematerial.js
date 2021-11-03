@@ -176,19 +176,22 @@ function displayQuiz(quizId) {
             console.log(result)
             var contentHtml = ``;
             var tfAnswerHtml = ``;
+            var multiSelectHtml = ``;
+            var inputType = ``;
             var mcqAnswerHtml = ``;
+
 
             $.each(result.questions, function (index, item) {
                 var questionNum = index + 1
                 var questionName = item.question
                 var questionType = item.questionType
+                var isMultiSelect = item.isMultiSelect
+                
                 if (questionType == "TFQuestion") {
-                    var trueOption = item.trueOption
-                    var falseOption = item.falseOption
                     var tfAnswerHtml = `<form class="card-footer">
-                                          <input type="radio" id="trueOption" name="fav_language" value="HTML">
+                                          <input type="radio" id="trueOption" name="tfAnswer" value="true">
                                           <label for="trueOption">True</label><br>
-                                          <input type="radio" id="falseOption" name="fav_language" value="CSS">
+                                          <input type="radio" id="falseOption" name="tfAnswer" value="false">
                                           <label for="falseOption">False</label><br>
                                         </form>`;
 
@@ -197,17 +200,21 @@ function displayQuiz(quizId) {
                     var option2 = item.option2
                     var option3 = item.option3
                     var option4 = item.option4
+                    if (isMultiSelect) {
+                        inputType = "checkbox";
+                    } else {
+                        inputType = "radio";
+                    }
 
                     mcqAnswerHtml = `<form class="card-footer">
-                                        <input type="radio" id="option1" name="fav_language" value="HTML">
+                                        <input type="${inputType}" id="option1" name="mcqAnswer" value="${option1}">
                                         <label for="option1">${option1}</label><br>
-                                        <input type="radio" id="option2" name="fav_language" value="CSS">
+                                        <input type="${inputType}" id="option2" name="mcqAnswer" value="${option2}">
                                         <label for="option2">${option2}</label><br>
-                                        <input type="radio" id="option3" name="fav_language" value="CSS">
+                                        <input type="${inputType}" id="option3" name="mcqAnswer" value="${option3}">
                                         <label for="option3">${option3}</label><br>
-                                        <input type="radio" id="option4" name="fav_language" value="CSS">
+                                        <input type="${inputType}" id="option4" name="mcqAnswer" value="${option4}">
                                         <label for="option4">${option4}</label><br>
-
                                     </form>`;
                 }
 
@@ -221,6 +228,14 @@ function displayQuiz(quizId) {
                                 <p class="card-text">${questionName}</p>
                                 
                               </div>`;
+                if (isMultiSelect) {
+                    multiSelectHtml += `
+                        <strong>This is a multi select question</strong>`;
+                } else {
+                    multiSelectHtml += ``;
+
+                }
+                contentHtml += multiSelectHtml
                 if (questionType == "TFQuestion") {
                     contentHtml += tfAnswerHtml
                 } else {
@@ -233,6 +248,7 @@ function displayQuiz(quizId) {
                             </div>
                         </div>
                     </div>`;
+                multiSelectHtml = ``;
             });
 
 
