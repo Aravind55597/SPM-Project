@@ -14,9 +14,12 @@
 </div>
 
 @*buttons row*@
-<div class="row justify-content-between bg-light-info mtb-5 p-4">
+<div class="row align-items-center justify-content-between bg-light-info mtb-5 mx-0 p-4">
     <div id="prev_chap_btn" class="col-4 text-center">
 
+    </div>
+    <div id="current_chap_name" class="col-4 text-center">
+        
     </div>
     <div id="next_chap_btn" class="col-4 text-center">
 
@@ -42,5 +45,5 @@
 
 
 @section scripts {
-    <script onload="view('@ViewBag.ChapterId', '@ViewBag.CourseClassId')" src="~/js/Learner/view-coursematerial.js"></script>
+    <script onload="view('@ViewBag.CourseClassId', '@ViewBag.ChapterId')" src="~/js/Learner/view-coursematerial.js"></script>
 }
