@@ -96,16 +96,15 @@ namespace SPM_Project.DTOs
         {
             if (QuizQuestion.Discriminators.Contains(QuestionType))
             {
-                bool flag;
                 switch (QuestionType)
                 {
                     case "TFQuestion":
 
-                        if (!Boolean.TryParse(Answer, out flag))
+                        if (!Boolean.TryParse(Answer, out bool flag))
                         {
-                            return false; 
+                            return false;
                         }
-                        break; 
+                        break;
 
                     case "McqQuestion":
 
@@ -117,14 +116,14 @@ namespace SPM_Project.DTOs
                         {
                             var ans = new List<int>().CommaSepStringToIntList(Answer);
 
-                            if (ans.Any(a=>a<1 || a >4))
+                            if (ans.Any(a => a < 1 || a > 4))
                             {
-                                return false; 
+                                return false;
                             }
 
                             if (IsMultiSelect)
                             {
-                                if ((ans.Count <= 1 || ans.Count>4))
+                                if ((ans.Count <= 1 || ans.Count > 4))
                                 {
                                     return false;
                                 }
@@ -133,7 +132,7 @@ namespace SPM_Project.DTOs
 
                             else
                             {
-                                if (ans.Count > 1 || ans.Count <1)
+                                if (ans.Count > 1 || ans.Count < 1)
                                 {
                                     return false;
                                 }
