@@ -1,6 +1,9 @@
 ﻿@section styles{
-    <link href="~/css/Learner/view-chapters.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/Learner/view-course-material.css" rel="stylesheet" type="text/css" />
+
 }
+
+@*go back row*@
 <div class="row m-3">
     <div class="col-1"></div>
     <div class="col">
@@ -8,13 +11,22 @@
             <span class="menu-title">Go back to view enrolled courses</span>
         </a>
     </div>
-    <div class="col">
+</div>
+
+@*buttons row*@
+<div class="row justify-content-between bg-light-info mtb-5 p-4">
+    <div id="prev_chap_btn" class="col-4 text-center">
+
+    </div>
+    <div id="next_chap_btn" class="col-4 text-center">
 
     </div>
 </div>
+
+@*course material content*@
 <div id="" class="container">
-    
-    <div class="row">
+
+    <div class="row mt-5">
         <div id="view_course_material" class="col">
 
         </div>
@@ -23,12 +35,12 @@
         </div>
     </div>
 
-    
+
 </div>
 
 
 
 
 @section scripts {
-    <script onload="view('@ViewBag.ChapterId')" src="~/js/Learner/view-coursematerial.js"></script>
+    <script onload="view('@ViewBag.ChapterId', '@ViewBag.CourseClassId')" src="~/js/Learner/view-coursematerial.js"></script>
 }

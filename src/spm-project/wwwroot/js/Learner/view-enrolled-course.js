@@ -162,9 +162,11 @@ function get_chapter(courseClassId) {
                                             <div class="col-6">
 
                                             <form action="/Learner/ViewCourseMaterial" method="get">
-                                            <button type="submit" name="chapterId" value="${chapterId}" class="btn-sign-up btn btn-primary w-100">
+												<button type="submit" name="chapterId" value="${chapterId}" class="btn-sign-up btn btn-primary w-100">
                                                   View Course Material
                                                 </button>
+												<input type="hidden" name="courseClassId" value="${courseClassId}">
+
                                             </form>
 
                                             </div>
