@@ -294,7 +294,7 @@ namespace SPM_Project.ApiControllers
 
             //check if class exists ; otherwise return not found
             //return courseclass
-            var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(courseClassId, "Course,ClassTrainer");
+            var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(courseClassId, "Course,ClassTrainer,GradedQuiz");
 
             if (courseClass == null)
             {
@@ -409,13 +409,13 @@ namespace SPM_Project.ApiControllers
                 }
 
 
-                courseClasses = await _unitOfWork.CourseClassRepository.GetAllAsync(cc=>cc.Course.Id==(int)courseId,null, "Course,ClassTrainer");
+                courseClasses = await _unitOfWork.CourseClassRepository.GetAllAsync(cc=>cc.Course.Id==(int)courseId,null, "Course,ClassTrainer,GradedQuiz");
             }
 
 
             else
             {
-                courseClasses = await _unitOfWork.CourseClassRepository.GetAllAsync(null,null,"Course,ClassTrainer");
+                courseClasses = await _unitOfWork.CourseClassRepository.GetAllAsync(null,null, "Course,ClassTrainer,GradedQuiz");
             }
  
 

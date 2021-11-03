@@ -63,7 +63,14 @@ namespace SPM_Project.DTOs
         [Required(ErrorMessage = "Please provide a timelimit for the quiz")]
         public decimal TimeLimit { get; set; }
 
-
+        public bool IsChapterIdProvided()
+        {
+            if (!IsGraded && ChapterId==null)
+            {
+                return false; 
+            }
+            return true; 
+        }
 
 
     }
