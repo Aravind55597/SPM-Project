@@ -11,16 +11,16 @@ using SPM_ProjectTests.Extensions;
 
 namespace SPM_Project.Controllers.Tests
 {
-  
-    public class AdministratorControllerTests:IDisposable
+
+    public class AdministratorControllerTests : IDisposable
     {
 
-        public AdministratorController _controller; 
+        public AdministratorController _controller;
 
         //setup--------------------------------------------------
         public AdministratorControllerTests()
         {
-            _controller =  new AdministratorController();
+            _controller = new AdministratorController();
         }
 
         //setup--------------------------------------------------
@@ -29,7 +29,7 @@ namespace SPM_Project.Controllers.Tests
         //tear down-----------------------------------------------------------------------------
         public void Dispose()
         {
-            _controller = null; 
+            _controller = null;
         }
 
 
@@ -93,6 +93,48 @@ namespace SPM_Project.Controllers.Tests
             Assert.False(checkLearner);
         }
 
+        [Fact()]
+        public void ViewAllClassesTest_Check_If_Correct_Page_Is_Returned()
+        {
+            var result = _controller.ViewAllClasses() as ViewResult;
 
+            Assert.NotNull(result);
+            Assert.Equal("ViewAllClasses", result.ViewName);
+        }
+
+        [Fact()]
+        public void ViewAllClassesTest_Check_If_Non_Admin_Users_Can_Access()
+        {
+            var attribute = _controller.GetAuthoriseAttribute("ViewAllClasses");
+            Assert.NotNull(attribute);
+
+            var checkTrainer = attribute.CheckRoleAccess("Trainer");
+            Assert.False(checkTrainer);
+
+            var checkLearner = attribute.CheckRoleAccess("Learner");
+            Assert.False(checkLearner);
+        }
+
+        [Fact()]
+        public void ViewAllRequests_Check_If_Correct_Page_Is_Returned()
+        {
+            var result = _controller.ViewAllRequests() as ViewResult;
+
+            Assert.NotNull(result);
+            Assert.Equal("ViewAllRequests", result.ViewName);
+        }
+
+        [Fact()]
+        public void ViewAllRequests_Check_If_Non_Admin_Users_Can_Access()
+        {
+            var attribute = _controller.GetAuthoriseAttribute("ViewAllRequests");
+            Assert.NotNull(attribute);
+
+            var checkTrainer = attribute.CheckRoleAccess("Trainer");
+            Assert.False(checkTrainer);
+
+            var checkLearner = attribute.CheckRoleAccess("Learner");
+            Assert.False(checkLearner);
+        }
     }
 }

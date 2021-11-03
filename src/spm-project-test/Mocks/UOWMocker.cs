@@ -41,7 +41,12 @@ namespace SPM_ProjectTests.Mocks
             mockLMSUserRepository = new Mock<ILMSUserRepository>(); //
             mockCourseClassRepository = new Mock<ICourseClassRepository>();//
             mockChapterRepository = new Mock<IChapterRepository>(); //
+
+
             mockClassEnrollmentRecordRepository = new Mock<IClassEnrollmentRecordRepository>();//
+
+
+
             mockProgressTrackerRepository = new Mock<IProgressTrackerRepository>(); //
             mockQuizQuestionRepository = new Mock<IQuizQuestionRepository>();//
             mockQuizRepository = new Mock<IQuizRepository>(); // 
@@ -54,7 +59,14 @@ namespace SPM_ProjectTests.Mocks
             mockUnitOfWork.Setup(l => l.LMSUserRepository).Returns(mockLMSUserRepository.Object).Verifiable("Mock LMSUser Repository is NOT returned");
             mockUnitOfWork.Setup(l => l.CourseClassRepository).Returns(mockCourseClassRepository.Object).Verifiable("Mock CourseClass Repository is NOT returned");
             mockUnitOfWork.Setup(l => l.ChapterRepository).Returns(mockChapterRepository.Object).Verifiable("Mock Chapter Repository is NOT returned");
+
+
+
             mockUnitOfWork.Setup(l => l.ClassEnrollmentRecordRepository).Returns(mockClassEnrollmentRecordRepository.Object).Verifiable("Mock ClassEnrollmentRecord Repository is NOT returned");
+
+
+
+
             mockUnitOfWork.Setup(l => l.ProgressTrackerRepository).Returns(mockProgressTrackerRepository.Object).Verifiable("Mock ProgressTracker Repository is NOT returned");
             mockUnitOfWork.Setup(l => l.QuizQuestionRepository).Returns(mockQuizQuestionRepository.Object).Verifiable("Mock QuizQuestion Repository is NOT returned");
             mockUnitOfWork.Setup(l => l.QuizRepository).Returns(mockQuizRepository.Object).Verifiable("Mock QuizQuestion Repository is NOT returned");
@@ -63,7 +75,7 @@ namespace SPM_ProjectTests.Mocks
 
 
             //set up save changes savechanges returns an integer 
-            mockUnitOfWork.Setup(l => l.CompleteAsync()).ReturnsAsync(1); 
+            mockUnitOfWork.Setup(l => l.CompleteAsync()).ReturnsAsync(1).Verifiable("Save changes was called"); 
 
         }
 

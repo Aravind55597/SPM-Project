@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SPM_Project.CustomExceptions;
-<<<<<<< Updated upstream
-=======
 using SPM_Project.DataTableModels;
-using SPM_Project.DTOs;
->>>>>>> Stashed changes
 using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
 using System;
@@ -29,9 +25,7 @@ namespace SPM_Project.ApiControllers
 
 
 
-        [HttpPost, Route("ApproveEnrollment", Name = "ApproveEnrollment")]
 
-<<<<<<< Updated upstream
         [HttpPost, Route("Add",Name = "AddClassEnrollmentRecord")]
         public async  Task<IActionResult> AddEnrollmentRecord([FromQuery] int classId)
         {
@@ -83,27 +77,8 @@ namespace SPM_Project.ApiControllers
                         {"Class", $"Class of  Id {courseclass.Id} does not exist" }
                     };
 
-                var notFoundExp = new NotFoundException("Class does not exist", errorDict);
+        [HttpPost, Route("ApproveEnrollment", Name = "ApproveEnrollment")]
 
-                throw notFoundExp;
-            }
-
-
-            //check if enrolled 
-
-            if (await _unitOfWork.ClassEnrollmentRecordRepository.hasEnrollmentRecord(user, courseclass))
-            {
-                var errorDict = new Dictionary<string, string>()
-                    {
-                        {"Class", $"User has class of Id {courseclass.Id}  exist" }
-                    };
-
-                var notFoundExp = new NotFoundException("User has existing enrollment record with this class", errorDict);
-
-                throw notFoundExp;
-            }
-            //Create classenrollment record for the user
-=======
         public async Task<IActionResult> ApproveLearnerEnrollment([FromQuery] int learnerId, [FromQuery] int classId)
         {
 
@@ -131,39 +106,6 @@ namespace SPM_Project.ApiControllers
 
         }
         //DATATABLE-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
->>>>>>> Stashed changes
-
-            var record = new ClassEnrollmentRecord
-            {
-                CourseClass = courseclass
-                
-            };
-
-            user.Enrollments.Add(record);
-            await _unitOfWork.CompleteAsync();
-
-        }
-
-        //approve enrollment request 
-
-        public async Task<IActionResult> ApproveEnrollmentRequest(LMSUser user, CourseClass courseclass)
-        {
-
-       
-            //LMSUser learner, int classId
-            //assign user to class
-            await new UsersController(_unitOfWork).AssignLearnertoClass(user, courseclass.Id);
-
-            //TODO: trigger notification for approval
-
-            
-
-
-            return Ok();
-
-        }
-
-        //decline enrollment request 
 
         public async Task<IActionResult> DeclineEnrollmentRequest(ClassEnrollmentRecord record)
         {

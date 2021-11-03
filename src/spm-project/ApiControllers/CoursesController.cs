@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SPM_Project.DataTableModels;
 using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-
+using SPM_Project.DTOs;
 namespace SPM_Project.ApiControllers
 {
     [Route("api/[controller]")]
@@ -23,9 +23,13 @@ namespace SPM_Project.ApiControllers
         }
 
 
+
+
+
+
+
+
         [HttpPost, Route("CoursesDataTable", Name = "GetCoursesDataTable")]
-
-
         public async Task<IActionResult> GetCoursesDataTable([FromBody] DTParameterModel dTParameterModel)
         {
 
@@ -38,22 +42,93 @@ namespace SPM_Project.ApiControllers
 
         }
 
-        public async Task<bool> GetCourseEligiblity(LMSUser user, Course course)
+
+        [HttpGet, Route("GetEligibleCourses", Name = "GetEligibleCourses")]
+        public async Task<IActionResult> GetEligibleCourses()
         {
 
-            //get courses that user has completed
-            var completed_progresstrackers = (List<ProgressTracker>)_unitOfWork.LMSUserRepository.GetCompletedProgressTracker(user);
-            var completed_courses = new List<Course>();
-            foreach (var tracker in completed_progresstrackers)
-            {
-                completed_courses.Add(tracker.Course);
+            //get current user 
+            var userId = await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
+            var user = await _unitOfWork.LMSUserRepository.GetByIdAsync(userId, "Enrollments");
+            var response = await GetUserEligibleCourses(user);
+            var dto = new List<CourseDTO>();
+            foreach (var course in response) {
+                
+                dto.Add(new CourseDTO(course));
+
+
             }
-            //get the course prereq for current course
-            var course_prereq = _unitOfWork.CourseRepository.GetCoursePreReq(course);
+          
+            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(new CourseDTOTable("Courses Table",dto));
+            return Ok(responseJson);
 
-            //check if the prereq are fufilled
+        }
 
-            if (completed_courses.Equals(course_prereq))
+
+        //get list of course for eligible person
+
+        [NonAction]
+        public async Task<List<Course>> GetUserEligibleCourses(LMSUser user)
+        {
+            List<Course> eligiblecourses = new List<Course>();
+
+            //for loop enroolment and check for completionstatus 
+
+            var currentEnrollments = user.Enrollments.Where(e=>e.CompletionStatus == true);
+            //for loop the completed ones to include course class
+            var currentUserEnrollments = new List<ClassEnrollmentRecord>() ;
+            foreach (var enrollment in currentEnrollments) {
+                currentUserEnrollments.Add(await _unitOfWork.ClassEnrollmentRecordRepository.GetByIdAsync(enrollment.Id, "Course"));
+            }
+
+            var currentUserCourses = new List<Course>();
+
+            foreach (var enrollment in currentUserEnrollments)
+            {
+                currentUserCourses.Add(enrollment.Course);
+            }
+
+            //get all coursess();
+            var courses =await  _unitOfWork.CourseRepository.GetAllAsync(null,null, "PreRequisites CourseClass");
+            //foreach course, check if user is eligible and push to 
+            if (courses.Count >0)
+            {
+
+                foreach (var course in courses)
+                {
+                    //var isEligible = await GetCourseEligiblity(user, course);
+                    if (course.PreRequisites == null || course.PreRequisites.Count == 0 ) {
+                        eligiblecourses.Add(course);
+                    }
+
+                    else if (await GetCourseEligiblity(course, currentUserCourses))
+                    {
+                        eligiblecourses.Add(course);
+                    }
+                }
+
+
+
+            }
+            //return array
+            return eligiblecourses;
+
+
+        }
+
+        [NonAction]
+        public async Task<bool> GetCourseEligiblity(Course course,List<Course> courseprereq)
+        {
+            //sort arrays then check if equal
+            course.PreRequisites = course.PreRequisites.OrderBy(c => c.Id).ToList();
+            courseprereq = courseprereq.OrderBy(c => c.Id).ToList();
+            //if the count is 0 means got no prereq
+            if (course.PreRequisites.Count == 0 && courseprereq.Count == 0)
+            {
+                return true;
+            }
+
+            if (course.Equals(courseprereq))
             {
                 return true;
             }

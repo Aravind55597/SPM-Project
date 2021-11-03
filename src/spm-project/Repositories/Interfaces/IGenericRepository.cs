@@ -20,20 +20,22 @@ namespace SPM_Project.Repositories.Interfaces
 
         //Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression);
 
-        Task<IEnumerable<T>> GetAllAsync(
-    
-             Expression<Func<T, bool>> filter,
-             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy,
-            string includeProperties,
-             int pageNumber,
-             int pageSize
+        Task<List<T>> GetAllAsync(
+             Expression<Func<T, bool>> filter=null,
+             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy=null,
+            string includeProperties="",
+             int pageNumber=0,
+             int pageSize=0
             );
 
-        Task<T> GetByIdAsync(int id);
+        Task<T> GetByIdAsync(int id, string includeProperties = "");
 
         Task RemoveByIdAsync(int id);
 
         Task RemoveRangeByIdAsync(List<int> ids);
+
+
+
 
     }
 }

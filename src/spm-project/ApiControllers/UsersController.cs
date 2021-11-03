@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using SPM_Project.CustomExceptions;
 using SPM_Project.DataTableModels;
 using SPM_Project.DataTableModels.DataTableResponse;
-using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -26,7 +25,6 @@ namespace SPM_Project.ApiControllers
         }
 
 
-
         [HttpPost, Route("EngineersDataTable", Name = "GetEngineersDataTable")]
         public async Task<IActionResult> GetEngineersDataTable
             (
@@ -34,93 +32,64 @@ namespace SPM_Project.ApiControllers
             [FromBody]DTParameterModel dTParameterModel ,
             [FromQuery] int? classId,
             [FromQuery] bool isTrainer = false,
-            [FromQuery] bool isLearner = false
+            [FromQuery] bool isLearner = false,
+            [FromQuery] bool isEligible = false 
 
+            //Just class id -> retrieve engineers inside the class 
+            //No class Id -> retreive all engineers 
+            //isEligible -> if is eligible is used -> need classId AND isTrainer OR is Learner 
+
+            //with class id -> retreive every one in the class 
+            //iwhtout clas id -> retreive everyone
+            //istrainer , islearn can only be used in conjuection with is eligible
             )
-
 
         {
 
-            //if courseID is not null
+            var errorTextBadRequest = "When checking eligibility , the parameters you have to provide are : isEligible , classId , isTrainer OR isLearner";
+
+            var errorTextNotFound = "Class does not exist"; 
+
+            if (isEligible)
+            {
+                if (  (classId == null ) ||  (!isLearner && !isTrainer )    ||   (isLearner && isTrainer)  )
+                {
+                    throw new BadRequestException(errorTextBadRequest);
+                }
+            }
+            else
+            {
+                if (isLearner || isTrainer)
+                {
+                    throw new BadRequestException(errorTextBadRequest);
+                }
+
+            }
+
             if (classId != null)
             {
                 //retreive course 
-                var course = await _unitOfWork.CourseClassRepository.GetByIdAsync((int)classId);
+                var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync((int)classId);
 
-                //course does not exist
-                if (course == null)
+                //class does not exist
+                if (courseClass == null)
                 {
-                    var errorDict = new Dictionary<string, string>()
-                    {
-                        {"ClassId", $"Course of Id {classId} does not exist" }
-                    };
-
-                    var notFoundExp = new NotFoundException("Class does not exist", errorDict);
-
-                    throw notFoundExp;
+                    throw new NotFoundException(errorTextNotFound); ;
                 }
             }
 
 
-            var response = await _unitOfWork.LMSUserRepository.GetEngineersDataTable(dTParameterModel , isTrainer , isLearner, classId);
 
-            
 
-            //var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
-            return Ok(response);
-      
-        }
+            //return the data 
+            var response = await _unitOfWork.LMSUserRepository.GetEngineersDataTable(dTParameterModel, isTrainer, isLearner, isEligible, classId);
 
-        //Assignment of Single Trainer
-        public async Task<IActionResult> AssignTrainertoClass(LMSUser trainer, int classId)
-        {
-
-            //if courseID is not null
-            if (classId == null)
-            {
-                throw new NotFoundException("Class does not exist");
-
-            }
-
-            //retrieve course 
-            var course = await _unitOfWork.CourseClassRepository.GetByIdAsync((int)classId);
-            course.ClassTrainer = trainer;
-
-            await _unitOfWork.CompleteAsync();
-           
-      
-            return Ok();
+            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+            return Ok(responseJson);
 
         }
 
-        //Assignment of Single Learner to Class
-        public async Task<IActionResult> AssignLearnertoClass(LMSUser learner, int classId)
-        {
-
-            //if courseID is not null
-            if (classId == null)
-            {
-                throw new NotFoundException("Class does not exist");
-
-            }
-
-            //retrieve course 
-            var course = await _unitOfWork.CourseClassRepository.GetByIdAsync((int)classId);
-            var enrollment = learner.Enrollments.Where(e => e.Id == classId).FirstOrDefault();
-            if (enrollment == null) {
-
-                throw new NotFoundException("no such enrollment"); 
-            }
-
-            enrollment.Approved = true;
-
-            await _unitOfWork.CompleteAsync();
-
-
-            return Ok();
-
-        }
-
+        
 
     }
 }

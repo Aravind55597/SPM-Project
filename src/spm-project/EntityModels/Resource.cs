@@ -6,24 +6,25 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.EntityModels
 {
-    public class Resource
+    public class Resource : IEntityWithId
     {
-        public int Id { get; set; }
+        public int Id { get; private set;  }
 
         public string ContentUrl { get; set; }
 
+        public string DownloadableContentUrl { get; set; }
 
         public ContentType Content { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
         public DateTime CreationTimestamp { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdateTimestamp { get; set; }
 
 
         public Chapter Chapter { get; set; }
     }
+
 
     public enum ContentType
     {
@@ -31,8 +32,10 @@ namespace SPM_Project.EntityModels
         Word,
         Excel,
         Video,
-        PowerPoint,
-        Hyperlink
+        PowerPoint
     }
+
+
+
 
 }
