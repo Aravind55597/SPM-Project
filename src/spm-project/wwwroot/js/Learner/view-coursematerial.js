@@ -1,4 +1,83 @@
-﻿function view(chapterId) {
+﻿function view(chapterId, courseClassId) {
+
+    // retrieve chapter list based on the courseClassId
+    var retrieveChapters = $("#get-chapters").val() + "?courseClassId=" + courseClassId;
+    $.ajax({
+        url: retrieveChapters, success: function (result) {
+            // sort chapters in ascending order
+            result.data.sort((a, b) => (a.name > b.name ? 1 : -1))
+
+            var prevChap = 0;
+            var nextChap = 0;
+            var prevChapHtml = "";
+            var nextChapHtml = "";
+            var buttonState = "";
+            var buttonType = "";
+
+            // retrieve previous and next chapter id according to the current chapter id user is in
+            $.each(result.data, function (index, item) {
+                if (item.id == chapterId) {
+                    if (index != 0) {
+                        prevChap = result.data[index - 1]
+                    } 
+
+                    if (index < result.data.length - 1) {
+                        nextChap = result.data[index + 1]
+                    } 
+                    console.log(prevChap)
+                    console.log(nextChap)
+                }
+            });
+
+            // disable previous chapter button if there is current chapter is the first chapter of the class
+            if (prevChap == 0) {
+                buttonState = "disabled";
+                buttonType = "btn-secondary";
+            }
+
+            if (prevChap != 0) {
+                buttonState = "";
+                buttonType = "btn-primary";
+            }
+
+            // insert previous chapter button html into html page
+            prevChapHtml += `
+                    <form action="/Learner/ViewCourseMaterial" method="get">
+                        <button type="submit" name="chapterId" value="${prevChap.id}" class="btn-sign-up btn ${buttonType} ${buttonState}">
+                            Previous Chapter
+                        </button>
+                        <input type="hidden" name="courseClassId" value="${courseClassId}">
+                    </form>`;
+            $("#prev_chap_btn").html(prevChapHtml);
+
+            // disable previous chapter button if there is current chapter is the last chapter of the class
+            if (nextChap == 0) {
+                buttonState = "disabled";
+                buttonType = "btn-secondary";
+            }
+
+            if (nextChap != 0) {
+                buttonState = "";
+                buttonType = "btn-primary";
+
+            }
+
+            // insert next chapter button html into html page
+            nextChapHtml += `
+                    <form action="/Learner/ViewCourseMaterial" method="get">
+                        <button type="submit" name="chapterId" value="${nextChap.id}" class="btn-sign-up btn ${buttonType} ${buttonState}">
+                            Next Chapter
+                        </button>
+                        <input type="hidden" name="courseClassId" value="${courseClassId}">
+                    </form>`;
+            $("#next_chap_btn").html(nextChapHtml);
+
+
+
+
+        }
+    });
+
     var retrieveResources = $("#get-resources").val() + "?chapterId=" + chapterId;
     $.ajax({
         url: retrieveResources, success: function (result) {
