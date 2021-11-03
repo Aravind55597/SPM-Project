@@ -5,7 +5,7 @@
     
 }
 
-.accordion-button:hover {
+.accordion-button:hover, .accordion-body:hover {
     cursor: pointer;
     font-weight: 600;
     color: #00B2FF;
