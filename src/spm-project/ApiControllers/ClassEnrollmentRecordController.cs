@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SPM_Project.CustomExceptions;
 using SPM_Project.DataTableModels;
+using SPM_Project.DTOs;
 using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
 using System;
@@ -23,59 +24,6 @@ namespace SPM_Project.ApiControllers
             _unitOfWork = unitOfWork;
         }
 
-
-
-
-        [HttpPost, Route("Add",Name = "AddClassEnrollmentRecord")]
-        public async  Task<IActionResult> AddEnrollmentRecord([FromQuery] int classId)
-        {
-
-            var userId =await  _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync();
-
-            var user =await  _unitOfWork.LMSUserRepository.GetByIdAsync(userId);
-
-            //var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(classId); 
-
-            await AddEnrollmentRecord(user,classId); 
-
-            return Ok();
-        }
-
-        public async Task AddEnrollmentRecord(LMSUser user, int classId)
-        {
-
-            //firstly retrieve class from classservice (check if class exists)
-           var courseclass =  await _unitOfWork.CourseClassRepository.GetByIdAsync(classId);
-            if (courseclass != null)
-            {
-                if (courseclass.EndRegistration < DateTime.Today || courseclass.StartRegistration > DateTime.Today)
-                {
-                    var errorDict = new Dictionary<string, string>()
-                    {
-                        {"Class", $"Class of  {courseclass.Id} registration is over" }
-                    };
-
-                    var notFoundExp = new NotFoundException("Class registration period is over", errorDict);
-
-                    throw notFoundExp;
-                }
-            }
-            else {
-                var errorDict = new Dictionary<string, string>()
-                    {
-                        {"Class", $"Class of  Id {courseclass.Id} does not exist" }
-                    };
-
-                var notFoundExp = new NotFoundException("Class does not exist", errorDict);
-
-                throw notFoundExp;
-            }
-            //Secondly use classenrollmentrecordservice to check eligibility 
-            if (!await new CoursesController(_unitOfWork).GetCourseEligiblity(user, courseclass.Course)) {
-                var errorDict = new Dictionary<string, string>()
-                    {
-                        {"Class", $"Class of  Id {courseclass.Id} does not exist" }
-                    };
 
         [HttpPost, Route("ApproveEnrollment", Name = "ApproveEnrollment")]
 
@@ -107,21 +55,15 @@ namespace SPM_Project.ApiControllers
         }
         //DATATABLE-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<IActionResult> DeclineEnrollmentRequest(ClassEnrollmentRecord record)
+        [HttpPost, Route("ClassEnrollmentRecordsDataTable", Name = "GetClassEnrollmentRecordsDataTable")]
+        public async Task<IActionResult> GetClassEnrollmentRecordsDataTable([FromBody] DTParameterModel dTParameterModel)
         {
 
+            //return the data 
+            var response = await _unitOfWork.ClassEnrollmentRecordRepository.GetClassEnrollmentRecordsDataTable(dTParameterModel);
 
-            record.Approved = false ;
-
-
-            //TODO: trigger notification for decline
-
-            //save changes
-            await _unitOfWork.CompleteAsync();
-
-
-            return Ok();
-
+            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+            return Ok(responseJson);
         }
 
 
