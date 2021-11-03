@@ -1,6 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SPM_Project.CustomExceptions;
+<<<<<<< Updated upstream
+=======
+using SPM_Project.DataTableModels;
+using SPM_Project.DTOs;
+>>>>>>> Stashed changes
 using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
 using System;
@@ -24,7 +29,9 @@ namespace SPM_Project.ApiControllers
 
 
 
+        [HttpPost, Route("ApproveEnrollment", Name = "ApproveEnrollment")]
 
+<<<<<<< Updated upstream
         [HttpPost, Route("Add",Name = "AddClassEnrollmentRecord")]
         public async  Task<IActionResult> AddEnrollmentRecord([FromQuery] int classId)
         {
@@ -96,6 +103,35 @@ namespace SPM_Project.ApiControllers
                 throw notFoundExp;
             }
             //Create classenrollment record for the user
+=======
+        public async Task<IActionResult> ApproveLearnerEnrollment([FromQuery] int learnerId, [FromQuery] int classId)
+        {
+
+
+            var response = await ApproveEnrollment(learnerId, classId);
+
+
+            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+            return Ok(responseJson);
+
+        }
+
+
+        [HttpPost, Route("DeclineEnrollment", Name = "DeclineEnrollment")]
+
+        public async Task<IActionResult> DeclineLearnerEnrollment([FromQuery] int learnerId, [FromQuery] int classId)
+        {
+
+
+            var response = await DeclineEnrollment(learnerId, classId);
+
+
+            var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+            return Ok(responseJson);
+
+        }
+        //DATATABLE-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+>>>>>>> Stashed changes
 
             var record = new ClassEnrollmentRecord
             {
@@ -144,6 +180,68 @@ namespace SPM_Project.ApiControllers
 
             return Ok();
 
+        }
+
+
+        //Non Action Methods
+
+        [NonAction]
+        public async Task<CourseClassesDTO> ApproveEnrollment(int learnerId, int courseClassId)
+        {
+
+            //check if class exists ; otherwise return not found
+            //return courseclass
+            var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(courseClassId, "Course");
+            var learner = await _unitOfWork.LMSUserRepository.GetByIdAsync(learnerId);
+            if (courseClass == null)
+            {
+                throw new NotFoundException($"Course class of id {courseClassId} does not exist");
+            }
+            if (learner == null)
+            {
+                throw new NotFoundException($"learner not exist");
+            }
+            var currentenrollment = learner.Enrollments.Find(x => x.CourseClass.Id == courseClass.Id);
+
+            if (currentenrollment == null)
+            {
+                throw new NotFoundException($"Enrollment not exist");
+            }
+            if (currentenrollment!=null) {
+                currentenrollment.IsEnrollled = true;
+            }
+            await _unitOfWork.CompleteAsync();
+            return new CourseClassesDTO(courseClass);
+        }
+
+        [NonAction]
+        public async Task<CourseClassesDTO> DeclineEnrollment(int learnerId, int courseClassId)
+        {
+
+            //check if class exists ; otherwise return not found
+            //return courseclass
+            var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(courseClassId, "Course");
+            var learner = await _unitOfWork.LMSUserRepository.GetByIdAsync(learnerId);
+            if (courseClass == null)
+            {
+                throw new NotFoundException($"Course class of id {courseClassId} does not exist");
+            }
+            if (learner == null)
+            {
+                throw new NotFoundException($"learner not exist");
+            }
+            var currentenrollment = learner.Enrollments.Find(x => x.CourseClass.Id == courseClass.Id);
+
+            if (currentenrollment == null)
+            {
+                throw new NotFoundException($"Enrollment not exist");
+            }
+            if (currentenrollment != null)
+            {
+                currentenrollment.IsEnrollled = false;
+            }
+            await _unitOfWork.CompleteAsync();
+            return new CourseClassesDTO(courseClass);
         }
 
 
