@@ -225,9 +225,7 @@ function displayQuiz(quizId) {
                               <div class="card-body">
                                 
                                 <h5 class="card-title">Question ${questionNum}</h5>
-                                <p class="card-text">${questionName}</p>
-                                
-                              </div>`;
+                                <p class="card-text">${questionName}</p>`;
                 if (isMultiSelect) {
                     multiSelectHtml += `
                         <strong>This is a multi select question</strong>`;
@@ -236,6 +234,9 @@ function displayQuiz(quizId) {
 
                 }
                 contentHtml += multiSelectHtml
+
+                contentHtml +=`</div>`;
+                
                 if (questionType == "TFQuestion") {
                     contentHtml += tfAnswerHtml
                 } else {
@@ -250,8 +251,6 @@ function displayQuiz(quizId) {
                     </div>`;
                 multiSelectHtml = ``;
             });
-
-
 
             contentHtml += `
                             <div class="row">
