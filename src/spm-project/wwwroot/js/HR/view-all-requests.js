@@ -37,11 +37,11 @@ function queryStringHandler(action, classid, userid) {
 	var query = null;
 
 	if (action == "approve") {
-		query = "api/classenrolmentrecord/approvelearnerenrollment?learnerId=" + userid + "&classId=" + classid;
+		query = "api/classenrollmentrecord/approvelearnerenrollment?learnerId=" + userid + "&classId=" + classid;
 	}
 
 	else if (action == "reject") {
-		query = "api/classenrolmentrecord/declinelearnerenrollment?learnerId=" + userid + "&classId=" + classid;
+		query = "api/classenrollmentrecord/declinelearnerenrollment?learnerId=" + userid + "&classId=" + classid;
 	}
 
 	return query
@@ -77,8 +77,8 @@ function ApproveRejectHandler(table, action) {
 
 		console.log(row_data)
 
-		userID = row_data.UserId
-		classID = row_data.Id
+		userID = row_data.UserId;
+		classID = row_data.DT_RowData.CourseClassId;
 
 		query = queryStringHandler(action, classID, userID);
 
