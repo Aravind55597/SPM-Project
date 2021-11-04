@@ -13,12 +13,12 @@ namespace SPM_Project.DTOs
 
 
 
-        UserAnswerDTO()
+        public UserAnswerDTO()
         {
 
         }
 
-        UserAnswerDTO(UserAnswer domain)
+        public UserAnswerDTO(UserAnswer domain)
         {
             Id = domain.Id;
             QuestionId = domain.QuizQuestion.Id;
