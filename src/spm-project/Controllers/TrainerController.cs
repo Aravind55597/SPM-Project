@@ -13,7 +13,7 @@ namespace SPM_Project.Controllers
         [Authorize(Roles = "Trainer")]
         public IActionResult CreateQuiz()
         {
-            return View();
+            return View("CreateQuiz");
         }
     }
 }
