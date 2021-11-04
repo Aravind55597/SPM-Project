@@ -6,6 +6,7 @@ using SPM_Project.DataTableModels.DataTableRequest;
 using SPM_Project.DataTableModels.DataTableResponse;
 using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -57,7 +58,12 @@ namespace SPM_Project.Repositories
                     RecordStatus= ce.IsEnrollled ? RecordStatus.Enrolled.ToString() :RecordStatus.RequestedEnrollment.ToString(),
                     DateTimeRequested = ce.CreationTimestamp,
                     CourseName=ce.Course.Name,
-                    CourseClassName=ce.CourseClass.Name
+                    CourseClassName=ce.CourseClass.Name,
+                    DT_RowId=ce.CourseClass.Id,
+                    DT_RowData = new Dictionary<dynamic,dynamic>()
+                    {
+                        {"CourseClassId",ce.CourseClass.Id }
+                    }
                 });
 
             return queryable; 
