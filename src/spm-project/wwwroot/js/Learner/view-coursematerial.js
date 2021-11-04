@@ -11,9 +11,6 @@ function view(courseClassId, chapterId, gradedQuizId) {
         // remove accordion when in graded quiz
         $("#view_accordion").html(``);
 
-        //testing data for qradedQuizId
-        gradedQuizId = 415
-
         //display graded quiz question
         displayQuiz(gradedQuizId, 'graded');
 
