@@ -27,6 +27,9 @@ namespace SPM_Project.EntityModels
         public bool IsCorrect { get; set; }
 
 
+        public int Marks { get; set; }
+
+
 
     }
 }
