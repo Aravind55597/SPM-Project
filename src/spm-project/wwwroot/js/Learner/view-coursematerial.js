@@ -5,8 +5,18 @@
 
 }
 
-function view(courseClassId, chapterId) {
+function view(courseClassId, chapterId, gradedQuizId) {
     var currentChapDTO = {};
+    if (gradedQuizId != 0) {
+        // remove accordion when in graded quiz
+        $("#view_accordion").html(``);
+
+        //display graded quiz question
+        displayQuiz(gradedQuizId, 'graded');
+
+    } else {
+
+    
 
     // retrieve chapter list based on the courseClassId
     var retrieveChapters = $("#get-chapters").val() + "?courseClassId=" + courseClassId;
@@ -31,11 +41,11 @@ function view(courseClassId, chapterId) {
                     $('#current_chap_name').html(`<h1 class="align-items-center">Chapter ${chapName.toString()}</h1>`)
                     if (index != 0) {
                         prevChap = result.data[index - 1]
-                    } 
+                    }
 
                     if (index < result.data.length - 1) {
                         nextChap = result.data[index + 1]
-                    } 
+                    }
                     console.log(prevChap)
                     console.log(nextChap)
                 }
@@ -148,7 +158,7 @@ function view(courseClassId, chapterId) {
                             </h2>
                             <div id="collapse${quizNum}" class="accordion-collapse collapse " aria-labelledby="heading${quizNum}" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <button class="btn btn-primary" type="submit" name="quizId" value="${quizId}" onclick="displayQuiz(${quizId})">Take Quiz</button>
+                                    <button class="btn btn-primary" type="submit" name="quizId" value="${quizId}" onclick="displayQuiz(${quizId}, 'ungraded')">Take Quiz</button>
                                 </div>
                             </div>
                         </div>`;
@@ -163,16 +173,22 @@ function view(courseClassId, chapterId) {
                 }
             });
         }
-    });
+    })
+};
+
 
 }
 
-function displayQuiz(quizId) {
+function displayQuiz(quizId, typeOfQuiz) {
+    
     console.log(quizId)
     var retrieveQuiz = "/api/Quizzes/" + quizId;
     console.log(retrieveQuiz)
     $.ajax({
         url: retrieveQuiz, success: function (result) {
+            if (typeOfQuiz == 'graded') {
+                $("#current_chap_name").html(`<h1 class="align-items-center">Chapter ${result.name}</h1>`);
+            }
             console.log(result)
             var contentHtml = ``;
             var tfAnswerHtml = ``;
