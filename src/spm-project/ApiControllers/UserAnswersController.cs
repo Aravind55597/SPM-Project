@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SPM_Project.CustomExceptions;
 using SPM_Project.DTOs;
 using SPM_Project.EntityModels;
+using SPM_Project.Extensions;
 using SPM_Project.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -24,13 +25,12 @@ namespace SPM_Project.ApiControllers
         public UsersController _usersController;
 
 
-
         public UserAnswersController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             //_courseClassesCon = new CourseClassesController(unitOfWork);
             _courseClassesCon = new CourseClassesController(unitOfWork);
-            _usersController = new UsersController(unitOfWork); 
+            _usersController = new UsersController(unitOfWork);
 
         }
 
@@ -83,54 +83,110 @@ namespace SPM_Project.ApiControllers
         }
 
 
-        //get chaps------------------------------------------------------------------------------------------------------------
+        //get user Answers------------------------------------------------------------------------------------------------------------
 
 
-        //[NonAction]
-        //public async Task<List<UserAnswer>> GetUserAnswersAsync(int? courseClassId, string properties = "")
+        [NonAction]
+        public async Task<List<UserAnswer>> GetUserAnswersAsync(int quizId, string properties = "")
+        {
+
+            var cc = await _courseClassesCon.GetCourseClassAsync(quizId, "");
+
+            var userId = await _usersController.GetCurrentUserId();
+
+            return await _unitOfWork.UserAnswerRepository.GetAllAsync(filter: f => f.QuizQuestion.Id == cc.Id && f.User.Id == userId, includeProperties: properties);
+
+        }
+
+
+
+        [NonAction]
+        public async Task<List<UserAnswerDTO>> GetChapterDTOsAsync(int quizId, string properties = "")
+        {
+            var chaps = await GetUserAnswersAsync(quizId, properties);
+
+            var result = new List<UserAnswerDTO>();
+
+            foreach (var item in chaps)
+            {
+                result.Add(new UserAnswerDTO(item));
+            }
+
+            return result;
+
+        }
+
+
+
+        //convert UserAnswerDTO to Domain--------------------------------------------------------------------------------------------------------------------------------- 
+
+        //public async Task<UserAnswer> ConvertDTOtoDomainAsync(UserAnswerDTO userDTO , bool isUpdate)
         //{
-
-        //    if (courseClassId != null)
+        //    if (isUpdate)
         //    {
-        //        var cc = await _courseClassesCon.GetCourseClassAsync((int)courseClassId, "");
 
-        //        return await _unitOfWork.UserAnswerRepository.GetAllAsync(filter: f => f.QuizQuestion.Id == cc.Id, includeProperties: properties);
         //    }
         //    else
         //    {
-        //        return await _unitOfWork.ChapterRepository.GetAllAsync(includeProperties: properties);
+
         //    }
 
         //}
 
-
-
-        //[NonAction]
-        //public async Task<List<ChapterDTO>> GetChapterDTOsAsync(int? courseClassId, string properties = "")
+        //public async Task<UserAnswer> UpdateConversion(UserAnswerDTO userDTO)
         //{
-        //    var chaps = await GetChaptersAsync(courseClassId, properties);
-
-        //    var result = new List<ChapterDTO>();
-
-        //    foreach (var item in chaps)
-        //    {
-        //        result.Add(new ChapterDTO(item));
-        //    }
-
-        //    return result;
 
         //}
 
 
 
+        //public async Task<UserAnswer> CreateConversion(UserAnswerDTO userDTO)
+        //{
+        //    var userAnswer = new UserAnswer()
+        //    {
+        //        QuizQuestion = await _unitOfWork.QuizQuestionRepository.GetByIdAsync(userDTO.QuestionId),
+        //        User = await _unitOfWork.LMSUserRepository.GetByIdAsync(await _usersController.GetCurrentUserId()),
+
+        //    };
+        //}
 
 
+        //check if answer is right & assign marks accordingly 
+        public void  CheckAnswer(UserAnswer uAns)
+        {
+
+            var quizQuestion = uAns.QuizQuestion;
+            uAns.Marks = 0; 
+
+            if (quizQuestion.QuestionType=="McqQuestion")
+            {
+                var mcq = (McqQuestion)quizQuestion;
+
+                var userAns = new List<int>().CommaSepStringToIntList(uAns.Answer);
 
 
+                if (new HashSet<int>(mcq.GetAnswer()).SetEquals(userAns))
+                {
+                    uAns.Marks = quizQuestion.Marks; 
+                }
+
+                
+            }
+            else
+            {
+                var tf = (TFQuestion)quizQuestion;
+
+                var userAns = bool.Parse(uAns.Answer);
+
+                if (tf.GetAnswer() == userAns)
+                {
+                    uAns.Marks = quizQuestion.Marks;
+                }
+
+            }
 
 
-
-
+        }
 
     }
 }
