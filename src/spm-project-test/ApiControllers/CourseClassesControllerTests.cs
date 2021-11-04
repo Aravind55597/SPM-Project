@@ -182,7 +182,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             //return testCourseClass when courseClass id of 1 is retreived 
             _uowMocker.mockCourseClassRepository.
-                Setup(l => l.GetByIdAsync(1, "Course,ClassTrainer")).
+                Setup(l => l.GetByIdAsync(1, "Course,ClassTrainer,GradedQuiz")).
                 ReturnsAsync(TestCourseClass()).Verifiable("Course Class was NOT retreived");
 
 
@@ -211,7 +211,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             //return classes when retreiving class that has the course of Id provided 
             _uowMocker.mockCourseClassRepository
-                .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), It.IsAny<Func<IQueryable<CourseClass>, IOrderedQueryable<CourseClass>>>(), "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>()))
+                .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), It.IsAny<Func<IQueryable<CourseClass>, IOrderedQueryable<CourseClass>>>(), "Course,ClassTrainer,GradedQuiz", It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(TestCourseClassList()).Verifiable("Course Classes were not retreived");
 
             var result = await _controller.GetCourseClassesDTOAPIAsync(null, 1) as OkObjectResult;
@@ -219,7 +219,7 @@ namespace SPM_Project.ApiControllers.Tests
             _uowMocker.mockCourseRepository.Verify(l => l.GetByIdAsync(1, It.IsAny<string>()));
 
 
-            _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), null, "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>()));
+            _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), null, "Course,ClassTrainer,GradedQuiz", It.IsAny<int>(), It.IsAny<int>()));
 
 
 
@@ -254,7 +254,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             var result = await _controller.GetCourseClassesDTOAPIAsync(1, null) as OkObjectResult;
 
-            _uowMocker.mockCourseClassRepository.Verify(l => l.GetByIdAsync(1, "Course,ClassTrainer"));
+            _uowMocker.mockCourseClassRepository.Verify(l => l.GetByIdAsync(1, "Course,ClassTrainer,GradedQuiz"));
 
 
             //check if ok is returned 
@@ -275,13 +275,13 @@ namespace SPM_Project.ApiControllers.Tests
         {
             //return classes when retreiving class that has the course of Id provided 
             _uowMocker.mockCourseClassRepository
-                .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), It.IsAny<Func<IQueryable<CourseClass>, IOrderedQueryable<CourseClass>>>(), "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>()))
+                .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), It.IsAny<Func<IQueryable<CourseClass>, IOrderedQueryable<CourseClass>>>(), "Course,ClassTrainer,GradedQuiz", It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(TestCourseClassList().Concat(TestCourseClassList()).ToList()).Verifiable("Course Classes were not retreived");
 
 
 
             var result = await _controller.GetCourseClassesDTOAPIAsync(null, null) as OkObjectResult;
-            _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), It.IsAny<Func<IQueryable<CourseClass>, IOrderedQueryable<CourseClass>>>(), "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>()));
+            _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), It.IsAny<Func<IQueryable<CourseClass>, IOrderedQueryable<CourseClass>>>(), "Course,ClassTrainer,GradedQuiz", It.IsAny<int>(), It.IsAny<int>()));
 
 
             //check if ok is returned 
@@ -306,7 +306,7 @@ namespace SPM_Project.ApiControllers.Tests
             //assert that 1 class is returned 
             var result = await _controller.GetCourseClassDTOAsync(1);
 
-            _uowMocker.mockCourseClassRepository.Verify(l => l.GetByIdAsync(1, "Course,ClassTrainer"));
+            _uowMocker.mockCourseClassRepository.Verify(l => l.GetByIdAsync(1, "Course,ClassTrainer,GradedQuiz"));
 
             Assert.IsType<CourseClassesDTO>(result);
 
@@ -333,7 +333,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             //return classes when retreiving class that has the course of Id provided 
             _uowMocker.mockCourseClassRepository
-                .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), null, "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>()))
+                .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), null, "Course,ClassTrainer,GradedQuiz", It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(TestCourseClassList()).Verifiable("Course Classes were not retreived");
 
 
@@ -343,7 +343,7 @@ namespace SPM_Project.ApiControllers.Tests
 
 
             _uowMocker.mockCourseRepository.Verify(l => l.GetByIdAsync(1, It.IsAny<string>()));
-            _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), null, "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>()));
+            _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), null, "Course,ClassTrainer,GradedQuiz", It.IsAny<int>(), It.IsAny<int>()));
 
 
             Assert.IsType<List<CourseClassesDTO>>(result);
@@ -382,7 +382,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             //return classes when retreiving class that has the course of Id provided 
             _uowMocker.mockCourseClassRepository
-                .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), null, "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>()))
+                .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), null, "Course,ClassTrainer,GradedQuiz", It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(new List<CourseClass>()).Verifiable("Course Classes were not retreived");
 
 
@@ -392,7 +392,7 @@ namespace SPM_Project.ApiControllers.Tests
 
 
             _uowMocker.mockCourseRepository.Verify(l => l.GetByIdAsync(1, It.IsAny<string>()));
-            _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), null, "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>()));
+            _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), null, "Course,ClassTrainer,GradedQuiz", It.IsAny<int>(), It.IsAny<int>()));
 
 
             Assert.IsType<List<CourseClassesDTO>>(result);
@@ -408,13 +408,13 @@ namespace SPM_Project.ApiControllers.Tests
 
             //return classes when retreiving class that has the course of Id provided 
             _uowMocker.mockCourseClassRepository
-                .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), It.IsAny<Func<IQueryable<CourseClass>, IOrderedQueryable<CourseClass>>>(), "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>()))
+                .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), It.IsAny<Func<IQueryable<CourseClass>, IOrderedQueryable<CourseClass>>>(), "Course,ClassTrainer,GradedQuiz", It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(TestCourseClassList().Concat(TestCourseClassList()).ToList()).Verifiable("Course Classes were not retreived");
 
 
             var result = await _controller.GetCourseClassesDTOAsync(null);
 
-            _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), It.IsAny<Func<IQueryable<CourseClass>, IOrderedQueryable<CourseClass>>>(), "Course,ClassTrainer", It.IsAny<int>(), It.IsAny<int>()));
+            _uowMocker.mockCourseClassRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), It.IsAny<Func<IQueryable<CourseClass>, IOrderedQueryable<CourseClass>>>(), "Course,ClassTrainer,GradedQuiz", It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.IsType<List<CourseClassesDTO>>(result);
 

@@ -61,8 +61,12 @@ namespace SPM_Project.Repositories
                         NumOfChapters = cc.Chapters.Count(),
                         NumOfStudents = cc.ClassEnrollmentRecords.Where(ce => ce.IsEnrollled).Count(),
                         Slots = cc.Slots,
-                        DT_RowId = cc.Id
-                    });;
+                        DT_RowId = cc.Id,
+                        DT_RowData=new System.Collections.Generic.Dictionary<dynamic, dynamic>()
+                        {
+                            {"GradedQuizId" , cc.GradedQuiz.Id}
+                        }
+                    });
             
             return result;
 

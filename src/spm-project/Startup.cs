@@ -39,12 +39,21 @@ namespace SPM_Project
         {
             //https://www.benday.com/2017/12/20/ef-core-asp-net-core-read-connections-strings-from-environment-variables/
 
+
+
+            var dbString = Configuration.GetValue<string>(
+                    "SPM_DB_STRING");
+
+            if (dbString==""||dbString==null)
+            {
+                dbString = Environment.GetEnvironmentVariable("SPM_DB_STRING");
+            }
+
             //add db context 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    //Configuration.GetConnectionString("DefaultConnection")
-                    Environment.GetEnvironmentVariable("SPM_DB_STRING")
-                    ));
+                         dbString
+                    ));;
 
 
 
@@ -142,7 +151,7 @@ namespace SPM_Project
 
 
             //Add database seeding code here 
-            //SeedDatabase.Initialize(dbContext); 
+            //SeedDatabase.Initialize(dbContext);
 
 
 

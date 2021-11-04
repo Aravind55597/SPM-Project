@@ -23,9 +23,13 @@ namespace SPM_Project.Controllers
 
         [Authorize(Roles = "Learner")]
         [HttpGet]
-        public IActionResult ViewCourseMaterial([FromQuery] int chapterId)
+        public IActionResult ViewCourseMaterial([FromQuery] int chapterId, [FromQuery] int courseClassId, [FromQuery] int gradedQuizId)
         {
             ViewBag.ChapterId = chapterId;
+            ViewBag.CourseClassId = courseClassId;
+            ViewBag.GradedQuizId= gradedQuizId;
+
+
             return View("ViewCourseMaterial");
         }
 
