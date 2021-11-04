@@ -122,8 +122,8 @@ $(function () {
                                     <div class="col">
                                         <div class="card mb-3" style="max-width: 540px;">
                                             <div class="row g-0">
-                                                <div class="col-md-4">
-                                                    <img src="..." class="img-fluid rounded-start" alt="...">
+                                                <div class="col-md-4 align-self-center">
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJb60xwt69YAE9rYaI-Cr9be6t5xrsx4HbbA&usqp=CAU" class="img-fluid img-thumbnail rounded-start" alt="...">
                                                 </div>
                                                 <div class="col-md-8">
                                                     <div class="card-body">
