@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SPM_Project.CustomExceptions;
 using SPM_Project.DTOs;
+using SPM_Project.DTOs.RRModels;
 using SPM_Project.EntityModels;
 using SPM_Project.Extensions;
 using SPM_Project.Repositories.Interfaces;
@@ -36,13 +37,37 @@ namespace SPM_Project.ApiControllers
 
 
 
+        //get
+
+
+        [HttpGet, Route("{id:int?}", Name = "GetUserAnswers")]
+        public async Task<IActionResult> GetUserAnswerDTOs(int? id, [FromQuery] int? quizId)
+        {
+
+            if (id != null)
+            {
+                return Ok(new Response<UserAnswerDTO>(await GetUserAnswerDTOAsync((int)id, "QuizQuestion")));
+            }
+
+            else
+            {
+
+
+                return Ok(new Response<List<UserAnswerDTO>>(await GetUserAnswerDTOsAsync((int)quizId, "QuizQuestion")));
+
+
+            }
+
+        }
+
+
 
         //post
 
 
 
 
-        //get
+
 
 
 
@@ -101,7 +126,7 @@ namespace SPM_Project.ApiControllers
 
 
         [NonAction]
-        public async Task<List<UserAnswerDTO>> GetChapterDTOsAsync(int quizId, string properties = "")
+        public async Task<List<UserAnswerDTO>> GetUserAnswerDTOsAsync(int quizId, string properties = "")
         {
             var chaps = await GetUserAnswersAsync(quizId, properties);
 
@@ -120,7 +145,7 @@ namespace SPM_Project.ApiControllers
 
         //convert UserAnswerDTO to Domain--------------------------------------------------------------------------------------------------------------------------------- 
 
-        //public async Task<UserAnswer> ConvertDTOtoDomainAsync(UserAnswerDTO userDTO , bool isUpdate)
+        //public async Task<UserAnswer> ConvertDTOtoDomainAsync(UserAnswerDTO userDTO, bool isUpdate)
         //{
         //    if (isUpdate)
         //    {
@@ -132,6 +157,8 @@ namespace SPM_Project.ApiControllers
         //    }
 
         //}
+
+
 
         //public async Task<UserAnswer> UpdateConversion(UserAnswerDTO userDTO)
         //{

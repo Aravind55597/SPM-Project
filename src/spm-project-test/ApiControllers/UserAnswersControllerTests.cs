@@ -202,7 +202,7 @@ namespace SPM_Project.ApiControllers.Tests
             ////check that the type of the result is of type user answer
             Assert.IsType<UserAnswer>(result);
             ////check that the result returned is the same as the test user answer
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(_testUserAns), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(_testUserAns), JsonSerializer.Serialize(result));
 
             ////WHEN USER ANSWER DOES NOT EXIST---------------------------------------------------------------------------------------------------------------------------------------- 
 
@@ -290,7 +290,7 @@ namespace SPM_Project.ApiControllers.Tests
             //check that the type of the result is Chapter list
             Assert.IsType<List<UserAnswer>>(result);
             //check that the result returned is the same as the test Chapter
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(_testUserAnsList), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(_testUserAnsList), JsonSerializer.Serialize(result));
 
 
             //QUIZ EXISTS -> EMPTY LIST OF USER ANSWERS RETURNED---------------------------------------------------------------------------------------------------------------------------------------- 
@@ -310,7 +310,7 @@ namespace SPM_Project.ApiControllers.Tests
             //check that the type of the result is Chapter list
             Assert.IsType<List<UserAnswer>>(result);
             //check that the result returned is the same as the test Chapter
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(new List<UserAnswer>()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(new List<UserAnswer>()), JsonSerializer.Serialize(result));
 
 
             //QUIZ DOES NOT EXIST---------------------------------------------------------------------------------------------------------------------------------------- 
