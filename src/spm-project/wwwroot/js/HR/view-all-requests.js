@@ -37,11 +37,11 @@ function queryStringHandler(action, classid, userid) {
 	var query = null;
 
 	if (action == "approve") {
-		query = "api/classenrollmentrecord/approvelearnerenrollment?learnerId=" + userid + "&classId=" + classid;
+		query = "api/ClassEnrollmentRecord/ApproveEnrollment?learnerId=" + userid + "&classId=" + classid;
 	}
 
 	else if (action == "reject") {
-		query = "api/classenrollmentrecord/declinelearnerenrollment?learnerId=" + userid + "&classId=" + classid;
+		query = "api/ClassEnrollmentRecord/DeclineEnrollment?learnerId=" + userid + "&classId=" + classid;
 	}
 
 	return query

@@ -11,7 +11,7 @@ function notification(notificationString, value) {
 		CLASSNAME = "Success"
 	}
 	else if (value == "failed") {
-		CLASSNAME = "alert"
+		CLASSNAME = "error"
 	}
 
 	$.notify(notificationString, {
