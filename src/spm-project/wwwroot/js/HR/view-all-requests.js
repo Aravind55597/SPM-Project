@@ -15,6 +15,7 @@ function notification(notificationString, value) {
 	$.notify(notificationString, {
 		className: CLASSNAME,
 		globalPosition: 'top center'
+		
 	});
 }
 
@@ -32,6 +33,20 @@ function filterHandler() {
 	});
 }
 
+function queryStringHandler(action, classid, userid) {
+	var query = null;
+
+	if (action == "approve") {
+		query = "api/classenrolmentrecord/approvelearnerenrollment?learnerId=" + userid + "&classId=" + classid;
+	}
+
+	else if (action == "reject") {
+		query = "api/classenrolmentrecord/declinelearnerenrollment?learnerId=" + userid + "&classId=" + classid;
+	}
+
+	return query
+
+}
 
 
 function ApproveRejectHandler(table, action) {
@@ -62,6 +77,12 @@ function ApproveRejectHandler(table, action) {
 
 		console.log(row_data)
 
+		userID = row_data.UserId
+		classID = row_data.Id
+
+		query = queryStringHandler(action, classID, userID);
+
+		console.log(query)
 		
 		$.ajax({
 			url: query,
@@ -138,7 +159,7 @@ function viewRequestDT(filterInput) {
 
 
 		//default order and sort. In this case ,order by ID in ascending order (Id is column number 1)
-		order: [[0, "asc"]],
+		order: [[5, "desc"]],
 
 
 
@@ -186,7 +207,7 @@ function viewRequestDT(filterInput) {
 								`;
 					}
 					else {
-						return null;
+						return `<h4>No Action Required</h4>`;
                     }
 				},
 			},
