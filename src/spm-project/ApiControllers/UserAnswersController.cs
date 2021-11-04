@@ -23,14 +23,13 @@ namespace SPM_Project.ApiControllers
 
         public UsersController _usersController;
 
-        public int _userId; 
+
 
         public UserAnswersController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             //_courseClassesCon = new CourseClassesController(unitOfWork);
             _courseClassesCon = new CourseClassesController(unitOfWork);
-
             _usersController = new UsersController(unitOfWork); 
 
         }
@@ -85,8 +84,8 @@ namespace SPM_Project.ApiControllers
 
 
         //get chaps------------------------------------------------------------------------------------------------------------
-        
-        
+
+
         //[NonAction]
         //public async Task<List<UserAnswer>> GetUserAnswersAsync(int? courseClassId, string properties = "")
         //{
@@ -99,7 +98,7 @@ namespace SPM_Project.ApiControllers
         //    }
         //    else
         //    {
-        //        return  await _unitOfWork.ChapterRepository.GetAllAsync(includeProperties: properties);
+        //        return await _unitOfWork.ChapterRepository.GetAllAsync(includeProperties: properties);
         //    }
 
         //}
