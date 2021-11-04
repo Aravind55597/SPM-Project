@@ -5,6 +5,56 @@
 });
 
 
+function notification(notificationString, value) {
+	var CLASSNAME = null;
+	if (value == "success") {
+		CLASSNAME = "Success"
+	}
+	else if (value == "failed") {
+		CLASSNAME = "alert"
+	}
+
+	$.notify(notificationString, {
+		className: CLASSNAME,
+		globalPosition: 'top center'
+	});
+}
+
+
+function withdrawEvent(table) {
+
+	table.on('click', ".WithdrawClassBtn", function () {
+		var row = $(this).parents('tr')[0];
+		//for row data
+		var row_data = table.row(row).data();
+		console.log(row_data)
+		var userID = row_data.UserId;
+		var classID = row_data.DT_RowData.CourseClassId;
+
+		console.log(userID);
+		console.log(classID);
+
+		query = "/api/CourseClasses/WithdrawLearner?learnerId=" + userID + "&" + "classId=" + classID;
+
+		if (query != null) {
+			$.ajax({
+				url: query,
+				method: "POST",
+				success: function (data) {
+					table.ajax.reload();
+					notification("Successfully Withdrawn", "success");
+				},
+				error: function (data) {
+					notification("Failed Withdrawal", "failed");
+				},
+				async: true
+			});
+		}
+
+
+	});
+}
+
 
 function filterHandler(userID) {
 	$('#dropdownFilter').on('change', function () {
@@ -96,6 +146,7 @@ function viewRequestDT(filterInput, userID) {
 			{ name: 'UserId', data: 'UserId' },
 			{ name: 'LearnerName', data: 'LearnerName' },
 			{ name: 'CourseClassName', data: 'CourseClassName' },
+			{ name: 'IsAssigned', data: 'IsAssigned' },
 			{ name: 'RecordStatus', data: 'RecordStatus' },
 			//responsive priority is an option to state the priority of the column to be view when the screen is smaller
 			//data: null means it is not Retrieveing data from the server
@@ -117,10 +168,23 @@ function viewRequestDT(filterInput, userID) {
 			},
 
 			{
+				targets: 5,
+				render: function (data, type, full, meta) {
+					if (data.IsAssigned == true) {
+						return "Pre Assigned";
+					}
+					else {
+						return "Self Enrolled";
+                    }
+					
+				},
+			},
+
+			{
 				//target last column
 				targets: -1,
 				render: function (data, type, full, meta) {
-					return `<a href="javascript:;" class="btn btn-primary" title="AssignToClass" id="AssignClassbtn">Assign to Class</a>`
+					return `<a href="javascript:;" class="btn btn-danger WithdrawClassBtn">Withdrawal from class</a>`
 						;
 				},
 			},
@@ -144,7 +208,7 @@ function viewRequestDT(filterInput, userID) {
 
 	});
 
-
+	withdrawEvent(table);
 
 }
 
