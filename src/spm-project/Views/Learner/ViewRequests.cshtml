@@ -1,0 +1,48 @@
+﻿<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="d-flex flex-column-fluid">
+        <div class="container">
+            <div class="card card-custom">
+
+                @*header of the table : put tabs here *@
+                <div class="card-header"></div>
+
+                @*card body is to add content*@
+                <div class="card-body">
+
+                    <div style="display: inline-block;">Filter Status By : </div>
+                    <div style="display: inline-block;">
+                        <select id="dropdownFilter" class="form-select form-select-sm" style="width: 170px;">
+                            <option value="" style="font:bold;">No Filter</option>
+                            <option value="Enrolled" style="font:bold;">Enrolled</option>
+                            <option value="RequestedEnrollment" style="font:bold;">Requested Enrollment</option>
+                        </select>
+                    </div>
+
+
+                    @*begin: Datatable*@
+                    <table class="table table-bordered table-hover table-checkable" id="request_datatable" style="margin-top: 13px !important">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Request Date</th>
+                                <th>Requestor ID</th>
+                                <th>Requestor Name</th>
+                                <th>Class Name</th>
+                                <th>Request Status</th>
+                                @*add button*@
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    @*end: Datatable*@
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script src="~/js/Learner/view-requests.js"></script>
+}

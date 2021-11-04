@@ -12,6 +12,7 @@ namespace SPM_Project.EntityModels
 
         public string ContentUrl { get; set; }
 
+        public string DownloadableContentUrl { get; set; }
 
         public ContentType Content { get; set; }
 
@@ -31,9 +32,10 @@ namespace SPM_Project.EntityModels
         Word,
         Excel,
         Video,
-        PowerPoint,
-        Hyperlink
+        PowerPoint
     }
+
+
 
 
 }

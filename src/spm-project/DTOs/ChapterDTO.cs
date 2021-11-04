@@ -34,9 +34,7 @@ namespace SPM_Project.DTOs
             {
                 CourseClassId = domain.CourseClass.Id;
             }
-            
         }
-
 
 
         public int Id { get; set; }
@@ -52,7 +50,7 @@ namespace SPM_Project.DTOs
         public List<int> QuizIds { get; set; }
 
 
-        public int CourseClassId { get; set; }
+        public int? CourseClassId { get; set; }
 
 
 

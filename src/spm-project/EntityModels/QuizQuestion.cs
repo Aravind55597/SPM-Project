@@ -35,6 +35,8 @@ namespace SPM_Project.EntityModels
         //can't be set to private as ORM would not work otherwise
         public string Answer { get; set; }
 
+
+        //TODO REMOVE GETTERS & SETTERS
         public int Marks
         {
             get
@@ -51,7 +53,6 @@ namespace SPM_Project.EntityModels
         public List<UserAnswer> UserAnswers { get; set; }
 
    
-
         public Quiz Quiz { get; set; }
 
         //retrieve discriminators to check
@@ -87,10 +88,6 @@ namespace SPM_Project.EntityModels
             Answer = ans.ToString();
         }
 
-
-
-
-
     }
 
     public class McqQuestion : QuizQuestion
@@ -106,7 +103,6 @@ namespace SPM_Project.EntityModels
         //get answer
         public List<int> GetAnswer()
         {
-            //throw  FormatException if parse fails
             var ans = new List<int>();
 
             ans.CommaSepStringToIntList(Answer); 
@@ -122,7 +118,7 @@ namespace SPM_Project.EntityModels
         //set answer
         public void SetAnswer(List<int> ans)
         {
-            //throw  FormatException if parse fails
+           
             string stringAns = "";
 
             for (int i = 0; i < ans.Count; i++)

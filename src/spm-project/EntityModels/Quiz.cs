@@ -34,24 +34,27 @@ namespace SPM_Project.EntityModels
 
         public CourseClass CourseClass { get; set; }
 
-        //[NotMapped]
-        //public int TotalMarks
-        //{
-        //    get
-        //    {
-        //        if (this.IsGraded)
-        //        {
-        //            if (this.Questions.Count > 0)
-        //            {
-        //                var marks = this.Questions.Sum(q => q.Marks);
+        [NotMapped]
+        public int TotalMarks
+        {
+            get
+            {
 
-        //                return marks;
-        //            }
-        //        }
+                    if (this.Questions.Count > 0)
+                    {
+                        var marks = this.Questions.Sum(q => q.Marks);
 
-        //        return 0;
-        //    }
-        //}
+                        return marks;
+                    }
+      
+
+                return 0;
+            }
+        }
+
+
+
+
 
     }
 }

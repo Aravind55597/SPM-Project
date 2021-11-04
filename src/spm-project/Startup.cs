@@ -42,9 +42,10 @@ namespace SPM_Project
             //add db context 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    //Configuration.GetConnectionString("DefaultConnection")
-                    Environment.GetEnvironmentVariable("SPM_DB_STRING")
-                    ));
+                    Configuration.GetValue<string>(
+                    "SPM_DB_STRING")
+                    //Environment.GetEnvironmentVariable("SPM_DB_STRING")
+                    ));;
 
 
 
@@ -142,7 +143,10 @@ namespace SPM_Project
 
 
             //Add database seeding code here 
-   
+            //SeedDatabase.Initialize(dbContext); 
+
+
+
             //handles exceptions thrown and returns an error reponse based on the type of exception thrown 
             app.UseMiddleware<ErrorHandlerMiddleware>();
 

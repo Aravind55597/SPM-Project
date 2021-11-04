@@ -14,5 +14,27 @@ namespace SPM_Project.Controllers
         {
             return View("ViewCourses");
         }
+
+        [Authorize(Roles = "Learner")]
+        public IActionResult ViewEnrolledCourses()
+        {
+            return View("ViewEnrolledCourses");
+        }
+
+        [Authorize(Roles = "Learner")]
+        [HttpGet]
+        public IActionResult ViewCourseMaterial([FromQuery] int chapterId, [FromQuery] int courseClassId)
+        {
+            ViewBag.ChapterId = chapterId;
+            ViewBag.CourseClassId = courseClassId;
+
+            return View("ViewCourseMaterial");
+        }
+
+        [Authorize(Roles = "Learner")]
+        public IActionResult ViewRequests()
+        {
+            return View("ViewRequests");
+        }
     }
 }
