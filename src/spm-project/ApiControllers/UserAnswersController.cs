@@ -20,17 +20,17 @@ namespace SPM_Project.ApiControllers
 
         public IUnitOfWork _unitOfWork;
 
-        public CourseClassesController _courseClassesCon;
+        public QuizzesController _quizzesCon;
 
-        public UsersController _usersController;
+        public UsersController _usersCon;
 
 
         public UserAnswersController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             //_courseClassesCon = new CourseClassesController(unitOfWork);
-            _courseClassesCon = new CourseClassesController(unitOfWork);
-            _usersController = new UsersController(unitOfWork);
+            _quizzesCon = new QuizzesController(unitOfWork);
+            _usersCon = new UsersController(unitOfWork);
 
         }
 
@@ -89,10 +89,10 @@ namespace SPM_Project.ApiControllers
         [NonAction]
         public async Task<List<UserAnswer>> GetUserAnswersAsync(int quizId, string properties = "")
         {
+            //auto send badrequest exception 
+            var cc = await _quizzesCon.GetQuizAsync(quizId, "");
 
-            var cc = await _courseClassesCon.GetCourseClassAsync(quizId, "");
-
-            var userId = await _usersController.GetCurrentUserId();
+            var userId = await _usersCon.GetCurrentUserId();
 
             return await _unitOfWork.UserAnswerRepository.GetAllAsync(filter: f => f.QuizQuestion.Id == cc.Id && f.User.Id == userId, includeProperties: properties);
 

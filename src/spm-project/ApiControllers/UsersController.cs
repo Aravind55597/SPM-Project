@@ -91,7 +91,7 @@ namespace SPM_Project.ApiControllers
 
 
 
-        public async Task<int> GetCurrentUserId() {
+        public virtual  async Task<int> GetCurrentUserId() {
 
             return await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync(); 
 

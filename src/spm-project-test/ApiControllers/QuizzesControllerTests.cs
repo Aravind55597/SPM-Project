@@ -411,8 +411,17 @@ namespace SPM_Project.ApiControllers.Tests
         //    Assert.True(false, "This test needs an implementation");
         //}
 
+        //[Fact()]
+        //public void GetQuizQuestionAsyncTest()
+        //{
+        //    Assert.True(false, "This test needs an implementation");
+        //}
 
-
+        //[Fact()]
+        //public void GetQuizQuestionsAsyncTest()
+        //{
+        //    Assert.True(false, "This test needs an implementation");
+        //}
 
 
     }
