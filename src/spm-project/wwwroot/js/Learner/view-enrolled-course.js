@@ -92,7 +92,28 @@ function viewCourseClassDT(userID) {
 				//target last column
 				targets: -1,
 				render: function (data, type, full, meta) {
-					return `<a href="javascript:;" class="btn btn-primary viewChaptersbtn" >View Chapters</a>`;
+
+					// disable view chapter button if the class is not started
+					var startDate = ($.format.date(data.StartDate, "dd-MMM-yyyy"))
+					var date = new Date()
+					var month = date.getMonth() + 1;
+					var day = date.getDay();
+					var year = date.getFullYear();
+
+					var currDate = new Date(year,month,day)
+					var compareStartDate = new Date(startDate)
+
+					var btnDisabled = "";
+					var btnType = "";
+					if (currDate > compareStartDate) {
+						btnDisabled = ""
+						btnType = "btn-primary"
+					} else {
+						btnDisabled = "disabled"
+						btnType = "btn-secondary"
+                    }
+
+					return `<a href="javascript:;" class="btn ${btnType} viewChaptersbtn ${btnDisabled}" >View Chapters</a>`;
 				},
 			}
 
@@ -146,8 +167,9 @@ function get_chapter(courseClassId, gradedQuizId) {
 			var chapterId = 0;
             $.each(result.data, function (index, item) {
                 var name = item.name
-                var index = name.indexOf("Chapter");
-                var chapterName = name.slice(index, name.length)
+                var strIndex = name.indexOf("Chapter");
+				var chapterName = name.slice(strIndex, name.length)
+				var chapterNum = index + 1
                 var chapterDescription = item.description
                 var resources = item.resourceIds
                 chapterId = item.id
@@ -157,7 +179,7 @@ function get_chapter(courseClassId, gradedQuizId) {
 										<div class="row g-0">
 											<div class="col">
 												<div class="card-body">
-													<h5 class="card-title">${chapterName}</h5>
+													<h5 class="card-title">Chapter ${chapterNum.toString()}</h5>
 
 													<p class="card-text">${chapterDescription}</p>
 
