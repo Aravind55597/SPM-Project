@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.DataTableModels.DataTableData
 {
-    public class ClassEnrollmentRecordTableData
+    public class ClassEnrollmentRecordTableData : TableData
     {
         //class enrollment record id 
         public int Id { get; set; }

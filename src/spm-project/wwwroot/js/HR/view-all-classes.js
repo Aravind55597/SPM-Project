@@ -11,12 +11,12 @@ function notification(notificationString, value) {
 		CLASSNAME = "Success"
 	}
 	else if (value == "failed") {
-		CLASSNAME = "Danger"
+		CLASSNAME = "error"
 	}
 
 	$.notify(notificationString, {
 		className: CLASSNAME,
-		globalPosition: 'top center'
+		globalPosition: 'top center',
 	});
 }
 
@@ -143,7 +143,7 @@ function queryStringHandler(action, classid, userid) {
 
     }
 	else if (action == "withdrawLearner") {
-
+		query = "/api/CourseClasses/WithdrawLearner" + "?learnerId=" + userid + "&" + "classId=" + classid;
 	}
 
 	return query
@@ -287,8 +287,7 @@ function viewCourseClassDT() {
 				render: function (data, type, full, meta) {
 					return `<a href="javascript:;" class="btn btn-primary viewClassbtn" >View Class List</a>
 							`
-							//<a class="btn btn-danger deleteClassbtn" >Delete Class</a>
-						;
+					;
 				},
 			},
 
@@ -422,12 +421,18 @@ function generalDT(action, class_ID) {
 		//I suggest to use this just to render stuff such as buttons/any elements OR processign the result to display in diff format eg. format date string
 		columnDefs: [
 
-
 			{
 				//target last column
 				targets: -1,
 				render: function (data, type, full, meta) {
-					return button;
+					// prevent withdrawal of trainer
+					if (action == "viewClassList" && data.Role== "Trainer") {
+						return null;
+						
+					}
+					else {
+						return button;
+					}
 				},
 			},
 
