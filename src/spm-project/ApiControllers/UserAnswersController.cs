@@ -28,7 +28,7 @@ namespace SPM_Project.ApiControllers
             _usersCon = new UsersController(unitOfWork);
         }
 
-        //get
+        //TOO SIMPLE TO BE TESTED -> SKINNY CONTROLLER
         [HttpGet, Route("{id:int?}", Name = "GetUserAnswers")]
         public async Task<IActionResult> GetUserAnswerDTOs(int? id, [FromQuery] int? quizId)
         {
@@ -70,6 +70,7 @@ namespace SPM_Project.ApiControllers
         //get user Answer---------------------------------------------------------------------------------------------------------------
 
         [NonAction]
+        //TEST THIS -> SANITY CHECK 
         public async Task<UserAnswer> GetUserAnswerAsync(int id, string properties = "")
         {
             var userAns = await _unitOfWork.UserAnswerRepository.GetByIdAsync(id, properties);
@@ -82,6 +83,7 @@ namespace SPM_Project.ApiControllers
         }
 
         [NonAction]
+        //TEST THIS -> SEEMS SIMPLE BUT RELIES ON USER ANSWER DTO CONSTRUCTOR (BETTER TO TEST IT JUST IN CASE)
         public async Task<UserAnswerDTO> GetUserAnswerDTOAsync(int id, string properties = "")
         {
             var chap = await GetUserAnswerAsync(id, properties);
@@ -92,6 +94,7 @@ namespace SPM_Project.ApiControllers
         //get user Answers------------------------------------------------------------------------------------------------------------
 
         [NonAction]
+        //TEST THIS FOR SANITY CHECK 
         public async Task<List<UserAnswer>> GetUserAnswersAsync(int quizId, string properties = "")
         {
             //auto send badrequest exception
@@ -103,6 +106,7 @@ namespace SPM_Project.ApiControllers
         }
 
         [NonAction]
+        //TOO SIMPLE TO BE TESTED ; JUST A LOOP
         public async Task<List<UserAnswerDTO>> GetUserAnswerDTOsAsync(int quizId, string properties = "")
         {
             var chaps = await GetUserAnswersAsync(quizId, properties);
@@ -118,26 +122,42 @@ namespace SPM_Project.ApiControllers
         }
 
         //convert UserAnswerDTO to Domain---------------------------------------------------------------------------------------------------------------------------------
-
-        //public async Task<UserAnswer> ConvertDTOtoDomainAsync(UserAnswerDTO userDTO, bool isUpdate)
-        //{
-        //    var result = List<UserAnswerDTO>(); 
+        [NonAction]
+        //TOO SIMPLE TO BE TESTED ; JUST A LOOP
+        public async Task<List<UserAnswer>> ConvertDTOtoDomainAsync(List<UserAnswerDTO> userDTOs, bool isUpdate)
+        {
+            //LOOPS ARE NOT EXTRACTED AS A SEPARATE METHOD -> TOO SIMPLE & ONLY CREATES UNNECESSARY FUNCTION 
             
-        //    if (isUpdate)
-        //    {
+            List<UserAnswer> result = new List<UserAnswer>();
+
+            foreach (var item in userDTOs)
+            {
+                if (isUpdate)
+                {
+                    result.Add(await UpdateConversionAsync(item));
+                    continue;
+                }
+                result.Add(await CreateConversionAsync(item));
+            }
+
+            return result; 
+
+        }
 
 
-        //    }
-        //    else
-        //    {
-        //    }
+        //TOO SIMPLE TO BE TESTED
+        public async Task<UserAnswer> UpdateConversionAsync(UserAnswerDTO userDTO)
+        {
 
-        //}
+            var userAns = await GetUserAnswerAsync(userDTO.QuestionId);
 
-        //public async Task<UserAnswer> UpdateConversion(UserAnswerDTO userDTO)
-        //{
-        //}
+            userAns.Answer = userAns.Answer;
 
+            return userAns; 
+
+        }
+
+        //TEST THIS 
         public async Task<UserAnswer> CreateConversionAsync(UserAnswerDTO userDTO)
         {
             var userAnswer = new UserAnswer()
@@ -151,7 +171,7 @@ namespace SPM_Project.ApiControllers
         }
 
 
-        //check if answer is right & assign marks accordingly
+        //TEST THIS
         public void CheckAnswer(UserAnswer uAns)
         {
             var quizQuestion = uAns.QuizQuestion;
@@ -180,6 +200,7 @@ namespace SPM_Project.ApiControllers
                 }
             }
         }
+
 
         public Dictionary<string,string> ValidateInput(List<UserAnswerDTO> uAnsList)
         {
