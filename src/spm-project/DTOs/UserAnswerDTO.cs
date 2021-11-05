@@ -47,15 +47,20 @@ namespace SPM_Project.DTOs
         public bool IsAnswerFormated()
         {
             //try parsing as boolean 
+            var counter = 0; 
             if (!bool.TryParse(Answer, out bool flag))
             {
-                return false;
+                counter += 1; 
             }
             if (!new List<int>().CommaSepStringToIntListValidator(Answer))
             {
-                return false;
+                counter += 1;
             }
 
+            if (counter > 1)
+            {
+                return false; 
+            }
             return true;
         }
 
