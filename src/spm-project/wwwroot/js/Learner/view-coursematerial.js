@@ -204,12 +204,12 @@ function displayQuiz(quizId, typeOfQuiz) {
                 var isMultiSelect = item.isMultiSelect
                 
                 if (questionType == "TFQuestion") {
-                    var tfAnswerHtml = `<form class="card-footer">
-                                          <input type="radio" id="trueOption" name="tfAnswer" value="true">
+                    var tfAnswerHtml = `<div class="card-footer">
+                                          <input type="radio" id="trueOption" name="trueAnswer" value="true">
                                           <label for="trueOption">True</label><br>
-                                          <input type="radio" id="falseOption" name="tfAnswer" value="false">
+                                          <input type="radio" id="falseOption" name="falseAnswer" value="false">
                                           <label for="falseOption">False</label><br>
-                                        </form>`;
+                                        </div>`;
 
                 } else {
                     var option1 = item.option1
@@ -222,16 +222,16 @@ function displayQuiz(quizId, typeOfQuiz) {
                         inputType = "radio";
                     }
 
-                    mcqAnswerHtml = `<form class="card-footer">
-                                        <input type="${inputType}" id="option1" name="mcqAnswer" value="${option1}">
+                    mcqAnswerHtml = `<div class="card-footer">
+                                        <input type="${inputType}" id="option1" name="mcqAnswer1" value="${option1}">
                                         <label for="option1">${option1}</label><br>
-                                        <input type="${inputType}" id="option2" name="mcqAnswer" value="${option2}">
+                                        <input type="${inputType}" id="option2" name="mcqAnswer2" value="${option2}">
                                         <label for="option2">${option2}</label><br>
-                                        <input type="${inputType}" id="option3" name="mcqAnswer" value="${option3}">
+                                        <input type="${inputType}" id="option3" name="mcqAnswer3" value="${option3}">
                                         <label for="option3">${option3}</label><br>
-                                        <input type="${inputType}" id="option4" name="mcqAnswer" value="${option4}">
+                                        <input type="${inputType}" id="option4" name="mcqAnswer4" value="${option4}">
                                         <label for="option4">${option4}</label><br>
-                                    </form>`;
+                                    </div>`;
                 }
 
                 contentHtml += `
@@ -272,11 +272,12 @@ function displayQuiz(quizId, typeOfQuiz) {
                             <div class="row">
                                 <div class="col-8"></div>
                                 <div class="col">
-                                    <button type="button" class="btn btn-primary">Submit</button>
+                                    <button class="btn btn-primary" onclick="submitForm()" id="ajaxBtn">Submit</button>
                                 </div>
                                 <div class="col-3"></div>
 
                             </div>`;
+            contentHtml += ``;
 
             $("#view_course_material").html(contentHtml);
 
@@ -284,4 +285,37 @@ function displayQuiz(quizId, typeOfQuiz) {
     });
 }
 
+function submitForm() {
+    //console.log(data.falseAnswer.value)
+    var newData = [{
+        "Questionid": 764,
+        "Answer": "True"
+    }]
+    var dataJson = JSON.stringify(newData);
+    console.log(dataJson)
+
+    $.ajax('/api/UserAnswers', {
+        type: 'POST',  // http method
+        contentType: "application/json",
+        dataType: "json",
+        data: dataJson,  // data to submit
+        success: function (data, status, xhr) {
+            console.log(data, status)
+        },
+        error: function (jqXhr, textStatus, errorMessage) {
+            console.log(typeof (errorMessage), textStatus, jqXhr)
+        }
+    });
+
+    //$.ajax({
+    //    url: "/api/UserAnswers",
+    //    type: "POST",
+    //    data: { name: 'norm' },
+    //    contentType: "application/json;",
+    //    dataType: "json",
+    //    success: function (result) {
+    //        console.log(result)
+    //    }
+    //})
+}
 
