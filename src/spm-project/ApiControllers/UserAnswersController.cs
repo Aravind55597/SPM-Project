@@ -74,7 +74,7 @@ namespace SPM_Project.ApiControllers
         }
         //TOO SIMPLE TO BE TESTED -> SKINNY CONTROLLER
 
-        [HttpPut, Route("", Name = "PostUserAnswers")]
+        [HttpPut, Route("", Name = "UpdateUserAnswers")]
         public async Task<IActionResult> UpdateUserAnswerDTOs([FromBody] List<UserAnswerDTO> uAnsDTOList)
         {
             //validate error
