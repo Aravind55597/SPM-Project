@@ -195,8 +195,6 @@ function get_chapter(courseClassId) {
 		url: retrieveChapters, success: function (result) {
 			// sort chapters in ascending order
 			result.data.sort((a, b) => (a.name > b.name ? 1 : -1))
-			console.log(result)
-
 			var dataHtml = ``;
 			var chapterId = 0;
 			$.each(result.data, function (index, item) {
@@ -249,13 +247,13 @@ function get_chapter(courseClassId) {
 
 function createUngradedQuiz(chapterID) {
 	//need to send chapterID +  json strcuture for ungraded
-	alert("create ungraded")
-}
+	console.log(chapterID)
+}	
 
 
 function createGradedQuiz(courseClassID) {
 	//need to send courseClassID +  json strcuture for ungraded
-	alert("create graded")
+	console.log(courseClassID)
 }
 
 $("#create_qn").click(function () {
