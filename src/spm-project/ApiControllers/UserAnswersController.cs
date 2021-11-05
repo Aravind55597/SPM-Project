@@ -170,7 +170,7 @@ namespace SPM_Project.ApiControllers
         {
             var userAnswer = new UserAnswer()
             {
-                QuizQuestion = await _quizzesCon.GetQuizQuestionAsync(userDTO.Id),
+                QuizQuestion = await _quizzesCon.GetQuizQuestionAsync(userDTO.QuestionId),
                 User =  await _usersCon.GetLMSUserAsync(await _usersCon.GetCurrentUserId()),
                 Answer=userDTO.Answer
             };

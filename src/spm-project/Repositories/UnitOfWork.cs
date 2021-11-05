@@ -26,6 +26,7 @@ namespace SPM_Project.Repositories
             QuizRepository = new QuizRepository(context);
             ResourceRepository = new ResourceRepository(context);
             UserAnswerRepository = new UserAnswerRepository(context);
+            QuizQuestionRepository = new QuizQuestionRepository(context); 
         }
 
         //all the repositories 
