@@ -85,15 +85,24 @@ namespace SPM_Project.ApiControllers
             {
                 throw new NotFoundException($"learner not exist");
             }
-            var currentenrollment = learner.Enrollments.Find(x => x.CourseClass.Id == courseClass.Id);
-
-            if (currentenrollment == null)
+            if (learner.Enrollments != null)
             {
-                throw new NotFoundException($"Enrollment not exist");
-            }
-            if (currentenrollment!=null) {
+                var currentenrollment = learner.Enrollments.Find(x => x.CourseClass.Id == courseClass.Id);
                 currentenrollment.IsEnrollled = true;
             }
+            else {
+                learner.Enrollments = new List<ClassEnrollmentRecord>();
+                learner.Enrollments.Add(new ClassEnrollmentRecord { 
+                    LMSUser = learner,
+                    CourseClass = courseClass,
+                    Course = courseClass.Course,
+                    IsEnrollled = true
+                });
+            }
+
+          
+          
+          
             await _unitOfWork.CompleteAsync();
             return new CourseClassesDTO(courseClass);
         }
