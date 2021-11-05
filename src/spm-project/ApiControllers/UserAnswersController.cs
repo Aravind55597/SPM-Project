@@ -43,6 +43,7 @@ namespace SPM_Project.ApiControllers
         }
 
         ////post
+        //TOO SIMPLE TO BE TESTED -> SKINNY CONTROLLER
         [HttpPost, Route("", Name = "PostUserAnswers")]
         public async Task<IActionResult> PostUserAnswerDTOs([FromBody] List<UserAnswerDTO> uAnsDTOList)
         {
@@ -151,6 +152,7 @@ namespace SPM_Project.ApiControllers
 
 
         //TOO SIMPLE TO BE TESTED
+        [NonAction]
         public async Task<UserAnswer> UpdateConversionAsync(UserAnswerDTO userDTO)
         {
 
@@ -163,6 +165,7 @@ namespace SPM_Project.ApiControllers
         }
 
         //TEST THIS 
+        [NonAction]
         public async Task<UserAnswer> CreateConversionAsync(UserAnswerDTO userDTO)
         {
             var userAnswer = new UserAnswer()
@@ -179,6 +182,7 @@ namespace SPM_Project.ApiControllers
 
         //convert list of userAnswer back to DTO---------------------------------------------------------------------------------------------------------------------------------------------
         //TOO SIMPLE TO TEST
+        [NonAction]
         public List<UserAnswerDTO> ConvertDomaintoDTO(List<UserAnswer> userAnsList)
         {
             var result = new List<UserAnswerDTO>();
@@ -193,6 +197,7 @@ namespace SPM_Project.ApiControllers
         //autograding---------------------------------------------------------------------------------------------------------------------------------
 
         //NO NEED TO TEST THIS (JUST A LOOP)
+        [NonAction]
         public void CheckAnswerList(List<UserAnswer> uAnsList)
         {
             foreach (var item in uAnsList)
@@ -202,6 +207,7 @@ namespace SPM_Project.ApiControllers
         }
 
         //TEST THIS
+        [NonAction]
         public void CheckAnswer(UserAnswer uAns)
         {
             var quizQuestion = uAns.QuizQuestion;
@@ -233,7 +239,8 @@ namespace SPM_Project.ApiControllers
             }
         }
 
-
+        [NonAction]
+        //NO NEED TO TEST THIS -> TOO SIMPLE
         public Dictionary<string,string> ValidateInput(List<UserAnswerDTO> uAnsList)
         {
             var errorDict = new Dictionary<string, string>();
