@@ -217,7 +217,7 @@ function get_chapter(courseClassId) {
 														<div class="col"></div>
 														<div class="col-6">
 															
-															<a style="width:180px" href="javascript:;" class="btn btn-primary EditUngradedbtn" onclick="createUngradedQuiz(${chapterId})">Create Ungraded Quiz</a>
+															<a style="width:180px" href="javascript:;" class="btn btn-primary EditUngradedbtn" onclick="createUngradedQuiz(${chapterId}, ${courseClassId} )">Create Ungraded Quiz</a>
 															<br/>
 															<br/>
 															<a style="width:180px" href="javascript:;" class="btn btn-primary UpdateUngradedbtn" >Update Ungraded Quiz</a>
@@ -245,9 +245,10 @@ function get_chapter(courseClassId) {
 }
 
 
-function createUngradedQuiz(chapterID) {
-	//need to send chapterID +  json strcuture for ungraded
+function createUngradedQuiz(chapterID, courseClassId) {
+	//need to send chapterID + courseClassId +  json strcuture for ungraded
 	console.log(chapterID)
+	console.log(courseClassId)
 }	
 
 
