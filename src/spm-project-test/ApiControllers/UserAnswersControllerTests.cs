@@ -15,7 +15,7 @@ using System.Text.Json;
 
 namespace SPM_Project.ApiControllers.Tests
 {
-    public class UserAnswersControllerTests:IDisposable
+    public class UserAnswersControllerTests : IDisposable
     {
 
         private UOWMocker _uowMocker;
@@ -35,7 +35,9 @@ namespace SPM_Project.ApiControllers.Tests
 
         private Quiz _testQuiz;
 
-        private UserAnswerDTO _testUserAnsDTO; 
+        private UserAnswerDTO _testUserAnsDTO;
+
+        private LMSUser _testUser; 
 
 
         private Mock<CourseClassesController> _mockCourseClassesCon;
@@ -54,7 +56,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             typeof(UserAnswer).GetProperty(nameof(uAns.Id)).SetValue(uAns, 1);
 
-            return uAns; 
+            return uAns;
         }
 
         private Quiz TestQuizCreator()
@@ -65,11 +67,25 @@ namespace SPM_Project.ApiControllers.Tests
             };
             typeof(Quiz).GetProperty(nameof(q.Id)).SetValue(q, 1);
 
-            return q; 
+            return q;
         }
+
+
+        private LMSUser TestUserCreator()
+        {
+            var q = new LMSUser()
+            {
+
+            };
+            typeof(LMSUser).GetProperty(nameof(q.Id)).SetValue(q, 1);
+
+            return q;
+        }
+
+
         private List<UserAnswer> TestUserAnswerListCreator()
         {
-            List<UserAnswer> answers = new List<UserAnswer>(); 
+            List<UserAnswer> answers = new List<UserAnswer>();
 
             for (int i = 0; i < 3; i++)
             {
@@ -79,7 +95,7 @@ namespace SPM_Project.ApiControllers.Tests
                 };
 
                 typeof(UserAnswer).GetProperty(nameof(uAns.Id)).SetValue(uAns, i);
-                answers.Add(uAns); 
+                answers.Add(uAns);
             }
 
 
@@ -102,7 +118,7 @@ namespace SPM_Project.ApiControllers.Tests
             };
             typeof(McqQuestion).GetProperty(nameof(val.Id)).DeclaringType.GetProperty(nameof(val.Id)).SetValue(val, 1);
 
-            return val; 
+            return val;
         }
 
         private TFQuestion TestTFQuestionCreator()
@@ -119,7 +135,7 @@ namespace SPM_Project.ApiControllers.Tests
             };
             typeof(McqQuestion).GetProperty(nameof(val.Id)).DeclaringType.GetProperty(nameof(val.Id)).SetValue(val, 1);
 
-            return val; 
+            return val;
         }
 
         private UserAnswerDTO TestUserAnswerDTO()
@@ -128,9 +144,7 @@ namespace SPM_Project.ApiControllers.Tests
             {
                 Id = 1,
                 QuestionId = 1,
-                IsCorrect = false,
                 Marks = 5,
-                Answer = "true"
             };
         }
 
@@ -142,7 +156,7 @@ namespace SPM_Project.ApiControllers.Tests
             _mockUsersCon = new Mock<UsersController>(null);
             _mockCourseClassesCon = new Mock<CourseClassesController>(null);
             _mockQuizzesCon = new Mock<QuizzesController>(null);
-  
+
 
             //retrive userId of 1 
             _mockUsersCon.Setup(u => u.GetCurrentUserId()).ReturnsAsync(1).Verifiable("User Id WAS NOT retreived");
@@ -158,6 +172,7 @@ namespace SPM_Project.ApiControllers.Tests
             _testUserAnsList = TestUserAnswerListCreator();
             _testQuiz = TestQuizCreator();
             _testUserAnsDTO = TestUserAnswerDTO();
+            _testUser = TestUserCreator();
 
             //controller tested 
             _controller = new UserAnswersController(_uowMocker.mockUnitOfWork.Object);
@@ -223,7 +238,7 @@ namespace SPM_Project.ApiControllers.Tests
         [Fact()]
         public async Task GetUserAnswerDTOAsyncTest()
         {
-           
+
             //ANS IS FOR TF QUESTION -> Domain entity converted to DTO obejct 
             _testUserAns.Answer = "true";
             _testUserAns.Marks = 5;
@@ -231,7 +246,7 @@ namespace SPM_Project.ApiControllers.Tests
             _testUserAns.QuizQuestion = _testTFQuestion;
 
             _testUserAnsDTO.Answer = "true";
-            _testUserAnsDTO.Marks = 5; 
+            _testUserAnsDTO.Marks = 5;
 
             _uowMocker.mockUserAnswerRepository.Setup(l => l.GetByIdAsync(1, It.IsAny<string>())).ReturnsAsync(_testUserAns).Verifiable("GetByIdAsync  was not called");
 
@@ -279,12 +294,12 @@ namespace SPM_Project.ApiControllers.Tests
                 .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<UserAnswer, bool>>>(), It.IsAny<Func<IQueryable<UserAnswer>, IOrderedQueryable<UserAnswer>>>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(_testUserAnsList).Verifiable("Quiz exist : GetAllAsync() is not called to retreive a list of user answers");
             Assert.Equal(_testQuiz, await _mockQuizzesCon.Object.GetQuizAsync(1));
-            var result = await _controller.GetUserAnswersAsync(1,"");
+            var result = await _controller.GetUserAnswersAsync(1, "");
 
 
 
             //check GetAllAsync is called 
-            _uowMocker.mockUserAnswerRepository.Verify(l=> l.GetAllAsync(It.IsAny<Expression<Func<UserAnswer, bool>>>(), It.IsAny<Func<IQueryable<UserAnswer>, IOrderedQueryable<UserAnswer>>>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()));
+            _uowMocker.mockUserAnswerRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<UserAnswer, bool>>>(), It.IsAny<Func<IQueryable<UserAnswer>, IOrderedQueryable<UserAnswer>>>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()));
             //check that user answer repository is accessed 
             _uowMocker.mockUnitOfWork.Verify(u => u.UserAnswerRepository);
             //check that the type of the result is Chapter list
@@ -315,7 +330,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             //QUIZ DOES NOT EXIST---------------------------------------------------------------------------------------------------------------------------------------- 
 
-            _mockQuizzesCon.Setup(q => q.GetQuizAsync(2, It.IsAny<string>())).ThrowsAsync(new NotFoundException()).Verifiable("GetQuizAsync is not called"); 
+            _mockQuizzesCon.Setup(q => q.GetQuizAsync(2, It.IsAny<string>())).ThrowsAsync(new NotFoundException()).Verifiable("GetQuizAsync is not called");
 
             Func<Task> action = (async () => await _controller.GetUserAnswersAsync(2));
 
@@ -336,7 +351,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             //setup 
             _testUserAns.Answer = "true";
-            _testTFQuestion.Answer = "true"; 
+            _testTFQuestion.Answer = "true";
             _testUserAns.QuizQuestion = _testTFQuestion;
 
             //act 
@@ -401,9 +416,61 @@ namespace SPM_Project.ApiControllers.Tests
 
             Assert.Equal(0, _testUserAns.Marks);
 
+        }
+
+        [Fact()]
+        public async Task CreateConversionAsyncTest()
+        {
+            //TF QUESTION 
+
+            //setup mocks
+            _mockQuizzesCon.Setup(l => l.GetQuizQuestionAsync(1, It.IsAny<string>())).ReturnsAsync(_testTFQuestion).Verifiable("GetQuizAsync  was not called");
+            _mockUsersCon.Setup(l => l.GetLMSUserAsync(1, It.IsAny<string>())).ReturnsAsync(_testUser).Verifiable("GetLMSUserAsync  was not called");
+
+            //expected user answer -> 
+            _testUserAns.User = _testUser;
+            _testUserAns.QuizQuestion = _testTFQuestion;
+            _testUserAns.Answer = "true";
+                //change id to 0 since this is a creation processs
+            typeof(UserAnswer).GetProperty(nameof(_testUserAns.Id)).SetValue(_testUserAns, 0);
+
+            //change ans in dto 
+            _testUserAnsDTO.Answer = "true";
+
+            //user ans domain object is as expected 
+            Assert.Equal(JsonSerializer.Serialize(_testUserAns), JsonSerializer.Serialize(await _controller.CreateConversionAsync(_testUserAnsDTO) ));
+
+            //MCQ QUESTION SINGLE 
+
+            //setup mocks 
+            _mockQuizzesCon.Setup(l => l.GetQuizQuestionAsync(1, It.IsAny<string>())).ReturnsAsync(_testMcqQuestion).Verifiable("GetQuizAsync  was not called");
+
+            //expected user answer -> 
+            _testUserAns.QuizQuestion = _testMcqQuestion;
+            _testUserAns.Answer = "1";
+            //change ans in dto 
+            _testUserAnsDTO.Answer = "1";
+
+            //user ans domain object is as expected 
+            Assert.Equal(JsonSerializer.Serialize(_testUserAns), JsonSerializer.Serialize(await _controller.CreateConversionAsync(_testUserAnsDTO)));
 
 
 
+            //MCQ QUESTION MULTI
+
+            //setup mocks 
+            _mockQuizzesCon.Setup(l => l.GetQuizQuestionAsync(1, It.IsAny<string>())).ReturnsAsync(_testMcqQuestion).Verifiable("GetQuizAsync  was not called");
+
+            //expected user answer -> 
+            _testUserAns.QuizQuestion = _testMcqQuestion;
+            _testUserAns.Answer = "1,2";
+            //change ans in dto 
+            _testUserAnsDTO.Answer = "1,2";
+
+            //set mcq question to multi
+            _testMcqQuestion.IsMultiSelect = true;
+            //user ans domain object is as expected 
+            Assert.Equal(JsonSerializer.Serialize(_testUserAns), JsonSerializer.Serialize(await _controller.CreateConversionAsync(_testUserAnsDTO)));
 
         }
     }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SPM_Project.CustomExceptions;
 using SPM_Project.DataTableModels;
 using SPM_Project.DataTableModels.DataTableResponse;
+using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -90,14 +91,27 @@ namespace SPM_Project.ApiControllers
         }
 
 
-
+        [NonAction]
+        //LOW PRIORITY TO BE TESTED 
         public virtual  async Task<int> GetCurrentUserId() {
 
             return await _unitOfWork.LMSUserRepository.RetrieveCurrentUserIdAsync(); 
 
-        } 
+        }
 
 
+        [NonAction]
+        //LOW PRIORITY TO BE TESTED 
+        public virtual async Task<LMSUser> GetLMSUserAsync(int id, string properties = "")
+        {
+            var user = await _unitOfWork.LMSUserRepository.GetByIdAsync(id, properties);
+
+            if (user == null)
+            {
+                throw new NotFoundException($"User of id {id} is not found");
+            }
+            return user;
+        }
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using SPM_Project.EntityModels;
+using SPM_Project.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -41,6 +42,26 @@ namespace SPM_Project.DTOs
         public bool IsCorrect { get; set; }
 
         public int Marks { get; set; }
+
+
+        public bool IsAnswerFormated()
+        {
+            //try parsing as boolean 
+            if (!bool.TryParse(Answer, out bool flag))
+            {
+                return false;
+            }
+            if (!new List<int>().CommaSepStringToIntListValidator(Answer))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+
+
+
 
     }
 }

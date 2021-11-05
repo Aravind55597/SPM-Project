@@ -1,14 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SPM_Project.CustomExceptions;
 using SPM_Project.DTOs;
 using SPM_Project.DTOs.RRModels;
 using SPM_Project.EntityModels;
 using SPM_Project.Extensions;
 using SPM_Project.Repositories.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SPM_Project.ApiControllers
@@ -17,14 +14,11 @@ namespace SPM_Project.ApiControllers
     [ApiController]
     public class UserAnswersController : ControllerBase
     {
-
-
         public IUnitOfWork _unitOfWork;
 
         public QuizzesController _quizzesCon;
 
         public UsersController _usersCon;
-
 
         public UserAnswersController(IUnitOfWork unitOfWork)
         {
@@ -32,60 +26,48 @@ namespace SPM_Project.ApiControllers
             //_courseClassesCon = new CourseClassesController(unitOfWork);
             _quizzesCon = new QuizzesController(unitOfWork);
             _usersCon = new UsersController(unitOfWork);
-
         }
 
-
-
         //get
-
-
         [HttpGet, Route("{id:int?}", Name = "GetUserAnswers")]
         public async Task<IActionResult> GetUserAnswerDTOs(int? id, [FromQuery] int? quizId)
         {
-
             if (id != null)
             {
                 return Ok(new Response<UserAnswerDTO>(await GetUserAnswerDTOAsync((int)id, "QuizQuestion")));
             }
-
             else
             {
-
-
                 return Ok(new Response<List<UserAnswerDTO>>(await GetUserAnswerDTOsAsync((int)quizId, "QuizQuestion")));
-
-
             }
-
         }
 
+        ////post
+        //[HttpPost, Route("", Name = "PostUserAnswers")]
+        //public async Task<IActionResult> PostUserAnswerDTOs([FromBody] List<UserAnswerDTO> uAnsList)
+        //{
+        //    //validate error
+        //    var errorDict =  ValidateInput(uAnsList);
 
 
-        //post
+        //    if (errorDict.Count>0)
+        //    {
+        //        throw new BadRequestException("Answers have been formatted wrongly",errorDict); 
+        //    }
+
+        //    //loop through & convert to User answer
 
 
 
+        //    //loop through & set the marks
 
+        //    //pass back the ans to the ui to show the marks
 
-
-
-
-
-
-
+        //}
 
         //put
 
-
-
-
-
-
-
-
         //get user Answer---------------------------------------------------------------------------------------------------------------
-
 
         [NonAction]
         public async Task<UserAnswer> GetUserAnswerAsync(int id, string properties = "")
@@ -107,23 +89,18 @@ namespace SPM_Project.ApiControllers
             return new UserAnswerDTO(chap);
         }
 
-
         //get user Answers------------------------------------------------------------------------------------------------------------
-
 
         [NonAction]
         public async Task<List<UserAnswer>> GetUserAnswersAsync(int quizId, string properties = "")
         {
-            //auto send badrequest exception 
+            //auto send badrequest exception
             var cc = await _quizzesCon.GetQuizAsync(quizId, "");
 
             var userId = await _usersCon.GetCurrentUserId();
 
             return await _unitOfWork.UserAnswerRepository.GetAllAsync(filter: f => f.QuizQuestion.Id == cc.Id && f.User.Id == userId, includeProperties: properties);
-
         }
-
-
 
         [NonAction]
         public async Task<List<UserAnswerDTO>> GetUserAnswerDTOsAsync(int quizId, string properties = "")
@@ -138,66 +115,58 @@ namespace SPM_Project.ApiControllers
             }
 
             return result;
-
         }
 
-
-
-        //convert UserAnswerDTO to Domain--------------------------------------------------------------------------------------------------------------------------------- 
+        //convert UserAnswerDTO to Domain---------------------------------------------------------------------------------------------------------------------------------
 
         //public async Task<UserAnswer> ConvertDTOtoDomainAsync(UserAnswerDTO userDTO, bool isUpdate)
         //{
+        //    var result = List<UserAnswerDTO>(); 
+            
         //    if (isUpdate)
         //    {
+
 
         //    }
         //    else
         //    {
-
         //    }
 
         //}
 
-
-
         //public async Task<UserAnswer> UpdateConversion(UserAnswerDTO userDTO)
         //{
-
         //}
 
-
-
-        //public async Task<UserAnswer> CreateConversion(UserAnswerDTO userDTO)
-        //{
-        //    var userAnswer = new UserAnswer()
-        //    {
-        //        QuizQuestion = await _unitOfWork.QuizQuestionRepository.GetByIdAsync(userDTO.QuestionId),
-        //        User = await _unitOfWork.LMSUserRepository.GetByIdAsync(await _usersController.GetCurrentUserId()),
-
-        //    };
-        //}
-
-
-        //check if answer is right & assign marks accordingly 
-        public void  CheckAnswer(UserAnswer uAns)
+        public async Task<UserAnswer> CreateConversionAsync(UserAnswerDTO userDTO)
         {
+            var userAnswer = new UserAnswer()
+            {
+                QuizQuestion = await _quizzesCon.GetQuizQuestionAsync(userDTO.Id),
+                User =  await _usersCon.GetLMSUserAsync(await _usersCon.GetCurrentUserId()),
+                Answer=userDTO.Answer
+            };
 
+            return userAnswer;
+        }
+
+
+        //check if answer is right & assign marks accordingly
+        public void CheckAnswer(UserAnswer uAns)
+        {
             var quizQuestion = uAns.QuizQuestion;
-            uAns.Marks = 0; 
+            uAns.Marks = 0;
 
-            if (quizQuestion.QuestionType=="McqQuestion")
+            if (quizQuestion.QuestionType == "McqQuestion")
             {
                 var mcq = (McqQuestion)quizQuestion;
 
                 var userAns = new List<int>().CommaSepStringToIntList(uAns.Answer);
 
-
                 if (new HashSet<int>(mcq.GetAnswer()).SetEquals(userAns))
                 {
-                    uAns.Marks = quizQuestion.Marks; 
+                    uAns.Marks = quizQuestion.Marks;
                 }
-
-                
             }
             else
             {
@@ -209,11 +178,22 @@ namespace SPM_Project.ApiControllers
                 {
                     uAns.Marks = quizQuestion.Marks;
                 }
-
             }
-
-
         }
 
+        public Dictionary<string,string> ValidateInput(List<UserAnswerDTO> uAnsList)
+        {
+            var errorDict = new Dictionary<string, string>();
+
+            for (int i = 0; i < uAnsList.Count; i++)
+            {
+                if (!uAnsList[i].IsAnswerFormated())
+                {
+                    errorDict.Add($"UserAnswerDTO[{i}]","Ans is not formatted correctly"); 
+                }
+            }
+
+            return errorDict; 
+        }
     }
 }

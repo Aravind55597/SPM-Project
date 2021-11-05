@@ -33,20 +33,6 @@ namespace SPM_Project.EntityModels
 
 
 
-        public bool IsAnswerFormated()
-        {
-            //try parsing as boolean 
-            if (!bool.TryParse(Answer, out bool flag))
-            {
-                return false; 
-            }
-            if (! new List<int>().CommaSepStringToIntListValidator(Answer))
-            {
-                return false;
-            }
-
-            return true; 
-        }
-
+        
     }
 }
