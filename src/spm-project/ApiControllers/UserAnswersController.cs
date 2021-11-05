@@ -43,29 +43,34 @@ namespace SPM_Project.ApiControllers
         }
 
         ////post
-        //[HttpPost, Route("", Name = "PostUserAnswers")]
-        //public async Task<IActionResult> PostUserAnswerDTOs([FromBody] List<UserAnswerDTO> uAnsList)
-        //{
-        //    //validate error
-        //    var errorDict =  ValidateInput(uAnsList);
+        [HttpPost, Route("", Name = "PostUserAnswers")]
+        public async Task<IActionResult> PostUserAnswerDTOs([FromBody] List<UserAnswerDTO> uAnsDTOList)
+        {
+            //validate error
+            var errorDict = ValidateInput(uAnsDTOList);
 
 
-        //    if (errorDict.Count>0)
-        //    {
-        //        throw new BadRequestException("Answers have been formatted wrongly",errorDict); 
-        //    }
+            if (errorDict.Count > 0)
+            {
+                throw new BadRequestException("Answers have been formatted wrongly", errorDict);
+            }
 
-        //    //loop through & convert to User answer
+            //loop through & convert to User answer
+            List<UserAnswer> userAnswers = await ConvertDTOtoDomainAsync(uAnsDTOList, false);
 
+            //loop through & set the marks
+            CheckAnswerList(userAnswers);
 
+            //save changes 
+            await _unitOfWork.UserAnswerRepository.AddRangeAsync(userAnswers);
 
-        //    //loop through & set the marks
+            await _unitOfWork.CompleteAsync();
 
-        //    //pass back the ans to the ui to show the marks
+            //pass back the ans to the ui to show the marks
+            //return Ok(new Response<List<UserAnswerDTO>>( ConvertDomaintoDTO(userAnswers), "QuizQuestion")));
 
-        //}
-
-        //put
+            return Ok(new Response<List<UserAnswerDTO>>(ConvertDomaintoDTO(userAnswers)));
+        }
 
         //get user Answer---------------------------------------------------------------------------------------------------------------
 
@@ -149,7 +154,7 @@ namespace SPM_Project.ApiControllers
         public async Task<UserAnswer> UpdateConversionAsync(UserAnswerDTO userDTO)
         {
 
-            var userAns = await GetUserAnswerAsync(userDTO.QuestionId);
+            var userAns = await GetUserAnswerAsync(userDTO.QuestionId, "QuizQuestion");
 
             userAns.Answer = userAns.Answer;
 
@@ -171,6 +176,31 @@ namespace SPM_Project.ApiControllers
         }
 
 
+
+        //convert list of userAnswer back to DTO---------------------------------------------------------------------------------------------------------------------------------------------
+        //TOO SIMPLE TO TEST
+        public List<UserAnswerDTO> ConvertDomaintoDTO(List<UserAnswer> userAnsList)
+        {
+            var result = new List<UserAnswerDTO>();
+            foreach (var item in userAnsList)
+            {
+                result.Add(new UserAnswerDTO(item)); 
+            }
+            return result; 
+        }
+
+
+        //autograding---------------------------------------------------------------------------------------------------------------------------------
+
+        //NO NEED TO TEST THIS (JUST A LOOP)
+        public void CheckAnswerList(List<UserAnswer> uAnsList)
+        {
+            foreach (var item in uAnsList)
+            {
+                CheckAnswer(item); 
+            }
+        }
+
         //TEST THIS
         public void CheckAnswer(UserAnswer uAns)
         {
@@ -186,6 +216,7 @@ namespace SPM_Project.ApiControllers
                 if (new HashSet<int>(mcq.GetAnswer()).SetEquals(userAns))
                 {
                     uAns.Marks = quizQuestion.Marks;
+                    uAns.IsCorrect = true;
                 }
             }
             else
@@ -197,6 +228,7 @@ namespace SPM_Project.ApiControllers
                 if (tf.GetAnswer() == userAns)
                 {
                     uAns.Marks = quizQuestion.Marks;
+                    uAns.IsCorrect = true;
                 }
             }
         }
