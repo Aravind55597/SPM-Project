@@ -72,6 +72,37 @@ namespace SPM_Project.ApiControllers
 
             return Ok(new Response<List<UserAnswerDTO>>(ConvertDomaintoDTO(userAnswers)));
         }
+        //TOO SIMPLE TO BE TESTED -> SKINNY CONTROLLER
+
+        [HttpPut, Route("", Name = "UpdateUserAnswers")]
+        public async Task<IActionResult> UpdateUserAnswerDTOs([FromBody] List<UserAnswerDTO> uAnsDTOList)
+        {
+            //validate error
+            var errorDict = ValidateInput(uAnsDTOList);
+
+
+            if (errorDict.Count > 0)
+            {
+                throw new BadRequestException("Answers have been formatted wrongly", errorDict);
+            }
+
+            //loop through & convert to User answer
+            List<UserAnswer> userAnswers = await ConvertDTOtoDomainAsync(uAnsDTOList, true);
+
+            //loop through & set the marks
+            CheckAnswerList(userAnswers);
+
+            //save changes 
+
+            await _unitOfWork.CompleteAsync();
+
+            //pass back the ans to the ui to show the marks
+            //return Ok(new Response<List<UserAnswerDTO>>( ConvertDomaintoDTO(userAnswers), "QuizQuestion")));
+
+            return Ok(new Response<List<UserAnswerDTO>>(ConvertDomaintoDTO(userAnswers)));
+        }
+
+
 
         //get user Answer---------------------------------------------------------------------------------------------------------------
 
