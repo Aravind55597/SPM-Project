@@ -372,19 +372,19 @@ function submitForm(numOfQuestions, quizId) {
             console.log(data, status)
             // check if user has attempted the quiz
             if (data.length != 0) {
-                console.log("User has attempted this quiz")
                 attemptedQuiz = true
                 prevAttemptAnswer = data
 
-            } else {
-                attemptedQuiz = false
             }
         },
         error: function (jqXhr, textStatus, errorMessage) {
             console.log(typeof (errorMessage), textStatus, jqXhr)
+            attemptedQuiz = false
+            console.log("there is no user answer")
+
         }
     });
-    console.log(prevAttemptAnswer)
+    //console.log(prevAttemptAnswer)
     console.log(attemptedQuiz)
 
     // retrieve question answer
@@ -394,6 +394,14 @@ function submitForm(numOfQuestions, quizId) {
         async: false,
         success: function (data, status, xhr) {
             console.log(data, status)
+            var questionsArr = data.questions
+            for (let x = 0; x < questionsArr.length; x++) {
+                let quesObj = questionsArr[x]
+                let currQnId = quesObj["questionId"]
+                let currQnAnswer = quesObj["answer"]
+
+
+            }
             
         },
         error: function (jqXhr, textStatus, errorMessage) {
@@ -426,18 +434,18 @@ function submitForm(numOfQuestions, quizId) {
 
     var dataJson = JSON.stringify(dataList);
     console.log(dataJson)
-    //$.ajax('/api/UserAnswers', {
-    //    type: httpMethod,  // http method
-    //    contentType: "application/json",
-    //    dataType: "json",
-    //    data: dataJson,  // data to submit
-    //    success: function (data, status, xhr) {
-    //        console.log(data, status)
-    //    },
-    //    error: function (jqXhr, textStatus, errorMessage) {
-    //        console.log(typeof (errorMessage), textStatus, jqXhr)
-    //    }
-    //});
+    $.ajax('/api/UserAnswers', {
+        type: httpMethod,  // http method
+        contentType: "application/json",
+        dataType: "json",
+        data: dataJson,  // data to submit
+        success: function (data, status, xhr) {
+            console.log(data, status)
+        },
+        error: function (jqXhr, textStatus, errorMessage) {
+            console.log(typeof (errorMessage), textStatus, jqXhr)
+        }
+    });
 
 }
 
