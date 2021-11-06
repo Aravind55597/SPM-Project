@@ -6,6 +6,7 @@ using SPM_Project.EntityModels;
 using SPM_Project.Extensions;
 using SPM_Project.Repositories.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SPM_Project.ApiControllers
@@ -132,14 +133,26 @@ namespace SPM_Project.ApiControllers
 
         [NonAction]
         //TEST THIS FOR SANITY CHECK 
+        //TODO UNIT TESTING 
         public async Task<List<UserAnswer>> GetUserAnswersAsync(int quizId, string properties = "")
         {
+            var result = new  List<UserAnswer>(); 
             //auto send badrequest exception
-            var cc = await _quizzesCon.GetQuizAsync(quizId, "");
+            var quiz = await _quizzesCon.GetQuizAsync(quizId, "Questions");
+
+            var quesIdList = quiz.Questions.Select(q => q.Id).ToList();
 
             var userId = await _usersCon.GetCurrentUserId();
 
-            return await _unitOfWork.UserAnswerRepository.GetAllAsync(filter: f => f.QuizQuestion.Id == cc.Id && f.User.Id == userId, includeProperties: properties);
+            foreach (var item in quesIdList)
+            {
+
+                var uAns = await _unitOfWork.UserAnswerRepository.GetAllAsync(filter: f => f.QuizQuestion.Id == item && f.User.Id == userId, includeProperties: properties);
+                result.Add(uAns[0]); 
+            }
+            return result; 
+            //return await _unitOfWork.QuizQuestionRepository.GetAllAsync(filter: f => f..Id == cc.Id && f.User.Id == userId, includeProperties: properties);
+
         }
 
         [NonAction]

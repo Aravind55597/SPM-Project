@@ -190,11 +190,13 @@ function displayQuiz(quizId, typeOfQuiz) {
                 $("#current_chap_name").html(`<h1 class="align-items-center">Chapter ${result.name}</h1>`);
             }
             console.log(result)
-            var contentHtml = ``;
+            var numOfQuestions = result.questions.length
+            var contentHtml = `<form id="quizForm">`;
             var tfAnswerHtml = ``;
             var multiSelectHtml = ``;
             var inputType = ``;
             var mcqAnswerHtml = ``;
+            var selectType = ``;
 
 
             $.each(result.questions, function (index, item) {
@@ -202,13 +204,15 @@ function displayQuiz(quizId, typeOfQuiz) {
                 var questionName = item.question
                 var questionType = item.questionType
                 var isMultiSelect = item.isMultiSelect
+                var questionId = item.id
                 
                 if (questionType == "TFQuestion") {
                     var tfAnswerHtml = `<div class="card-footer">
-                                          <input type="radio" id="trueOption" name="trueAnswer" value="true">
+                                          <input type="radio" id="trueOption" name="tfAnswer" value="true" required>
                                           <label for="trueOption">True</label><br>
-                                          <input type="radio" id="falseOption" name="falseAnswer" value="false">
+                                          <input type="radio" id="falseOption" name="tfAnswer" value="false" required>
                                           <label for="falseOption">False</label><br>
+                                          <input type="hidden" name="tfAnswerQnId" value="${questionId}">
                                         </div>`;
 
                 } else {
@@ -218,19 +222,22 @@ function displayQuiz(quizId, typeOfQuiz) {
                     var option4 = item.option4
                     if (isMultiSelect) {
                         inputType = "checkbox";
+                        selectType = "multiSelect"
                     } else {
                         inputType = "radio";
+                        selectType = "singleSelect"
                     }
 
                     mcqAnswerHtml = `<div class="card-footer">
-                                        <input type="${inputType}" id="option1" name="mcqAnswer1" value="${option1}">
+                                        <input type="${inputType}" id="option1" name="mcq${selectType}" value="${option1}">
                                         <label for="option1">${option1}</label><br>
-                                        <input type="${inputType}" id="option2" name="mcqAnswer2" value="${option2}">
+                                        <input type="${inputType}" id="option2" name="mcq${selectType}" value="${option2}">
                                         <label for="option2">${option2}</label><br>
-                                        <input type="${inputType}" id="option3" name="mcqAnswer3" value="${option3}">
+                                        <input type="${inputType}" id="option3" name="mcq${selectType}" value="${option3}">
                                         <label for="option3">${option3}</label><br>
-                                        <input type="${inputType}" id="option4" name="mcqAnswer4" value="${option4}">
+                                        <input type="${inputType}" id="option4" name="mcq${selectType}" value="${option4}">
                                         <label for="option4">${option4}</label><br>
+                                        <input type="hidden" name="mcq${selectType}QnId" value="${questionId}">
                                     </div>`;
                 }
 
@@ -272,12 +279,12 @@ function displayQuiz(quizId, typeOfQuiz) {
                             <div class="row">
                                 <div class="col-8"></div>
                                 <div class="col">
-                                    <button class="btn btn-primary" onclick="submitForm()" id="ajaxBtn">Submit</button>
+                                    <button class="btn btn-primary" onclick="submitForm(${numOfQuestions}, ${quizId})" id="ajaxBtn">Submit</button>
                                 </div>
                                 <div class="col-3"></div>
 
                             </div>`;
-            contentHtml += ``;
+            contentHtml += `</form>`;
 
             $("#view_course_material").html(contentHtml);
 
@@ -285,37 +292,152 @@ function displayQuiz(quizId, typeOfQuiz) {
     });
 }
 
-function submitForm() {
-    //console.log(data.falseAnswer.value)
-    var newData = [{
-        "Questionid": 764,
-        "Answer": "True"
-    }]
-    var dataJson = JSON.stringify(newData);
-    console.log(dataJson)
 
-    $.ajax('/api/UserAnswers', {
-        type: 'POST',  // http method
-        contentType: "application/json",
-        dataType: "json",
-        data: dataJson,  // data to submit
+
+function submitForm(numOfQuestions, quizId) {
+    event.preventDefault();
+    //form validation
+    const singleSelectRadio = document.querySelectorAll('input[name="mcqsingleSelect"]:checked');
+    const multiSelectCheckBoxes = document.querySelectorAll('input[name="mcqmultiSelect"]:checked');
+    const tfAnswer = document.querySelectorAll('input[name="tfAnswer"]:checked');
+
+    if (singleSelectRadio.length == 0 || multiSelectCheckBoxes.length == 0 || tfAnswer.length == 0) {
+        alert("All question must be answered")
+        return;
+    }
+
+
+    var dataList = [];
+
+    // retrieve single select answer
+    var singleSelectQnId = document.querySelectorAll('input[name="mcqsingleSelectQnId"]')[0].value;
+
+    let singleSelectList = [];
+    let singleSelectObj = {};
+    singleSelectRadio.forEach((checkbox) => {
+        var strArr = checkbox.value.split(" ")
+        var singleSelectAns = strArr[strArr.length - 1]
+        singleSelectObj["questionId"] = singleSelectQnId
+        singleSelectObj["answer"] = singleSelectAns
+/*        singleSelectObj[singleSelectQnId] = singleSelectAns*/
+    });
+    dataList.push(singleSelectObj);
+
+    console.log(dataList)
+
+    // retrieve multi select answer
+    var multiSelectQnId = document.querySelectorAll('input[name="mcqmultiSelectQnId"]')[0].value;
+
+    let multiSelectList = [];
+    let multiSelectObj = {};
+    multiSelectCheckBoxes.forEach((checkbox) => {
+        var strArr = checkbox.value.split(" ")
+        var multiSelectAns = strArr[strArr.length - 1]
+        if (multiSelectList.length != 0) {
+            var currentStr = multiSelectObj["answer"]
+            currentStr += "," + multiSelectAns
+            multiSelectObj["answer"] = currentStr
+        } else {
+            multiSelectObj["questionId"] = multiSelectQnId
+            multiSelectObj["answer"] = multiSelectAns
+            multiSelectList.push(multiSelectObj);
+        }
+    });
+    dataList.push(multiSelectList[0])
+    console.log(dataList)
+
+     //retrieve true or false answer
+    var tfAnswerQnId = document.querySelectorAll('input[name="tfAnswerQnId"]')[0].value;
+    let tfAnswerList = [];
+    let trAnswerObj = {};
+    tfAnswer.forEach((checkbox) => {
+        if (checkbox.checked) {
+            trAnswerObj["questionId"] = tfAnswerQnId
+            trAnswerObj["answer"] = checkbox.value
+            tfAnswerList.push(trAnswerObj);
+        }
+    });
+    dataList.push(tfAnswerList[0])
+    console.log(dataList)
+
+    
+    //Get request to retrieve user ans
+    var attemptedQuiz = true
+    var prevAttemptAnswer = {}
+    $.ajax(`/api/UserAnswers?quizId=${quizId}`, {
+        type: 'GET',  // http method
+        // async need to be false in order to access variable outside of ajax function
+        async: false,
         success: function (data, status, xhr) {
             console.log(data, status)
+            // check if user has attempted the quiz
+            if (data.length != 0) {
+                console.log("User has attempted this quiz")
+                attemptedQuiz = true
+                prevAttemptAnswer = data
+
+            } else {
+                attemptedQuiz = false
+            }
+        },
+        error: function (jqXhr, textStatus, errorMessage) {
+            console.log(typeof (errorMessage), textStatus, jqXhr)
+        }
+    });
+    console.log(prevAttemptAnswer)
+    console.log(attemptedQuiz)
+
+    // retrieve question answer
+    $.ajax(`/api/Quizzes/${quizId}`, {
+        type: 'GET',  // http method
+        // async need to be false in order to access variable outside of ajax function
+        async: false,
+        success: function (data, status, xhr) {
+            console.log(data, status)
+            
         },
         error: function (jqXhr, textStatus, errorMessage) {
             console.log(typeof (errorMessage), textStatus, jqXhr)
         }
     });
 
-    //$.ajax({
-    //    url: "/api/UserAnswers",
-    //    type: "POST",
-    //    data: { name: 'norm' },
-    //    contentType: "application/json;",
-    //    dataType: "json",
-    //    success: function (result) {
-    //        console.log(result)
+    //for (let i = 0; i < prevAttemptAnswer.length; i++) {
+    //    let prevAnsObj = prevAttemptAnswer[i]
+    //    let prevQnId = prevAnsObj["questionId"]
+    //    let prevAnsId = prevAnsObj["id"]
+    //    for (let x = 0; x < dataList.length; x++) {
+    //        let userAnsObj = dataList[i]
+    //        let currQnId = userAnsObj["questionId"]
+    //        if (prevQnId == currQnId) {
+    //            userAnsObj["id"] = prevAnsId
+    //        }
+
     //    }
-    //})
+    //}
+
+    var httpMethod = ""
+    if (attemptedQuiz) {
+        httpMethod = "PUT"
+    } else {
+        httpMethod = "POST"
+        
+
+    }
+
+    var dataJson = JSON.stringify(dataList);
+    console.log(dataJson)
+    //$.ajax('/api/UserAnswers', {
+    //    type: httpMethod,  // http method
+    //    contentType: "application/json",
+    //    dataType: "json",
+    //    data: dataJson,  // data to submit
+    //    success: function (data, status, xhr) {
+    //        console.log(data, status)
+    //    },
+    //    error: function (jqXhr, textStatus, errorMessage) {
+    //        console.log(typeof (errorMessage), textStatus, jqXhr)
+    //    }
+    //});
+
 }
 
