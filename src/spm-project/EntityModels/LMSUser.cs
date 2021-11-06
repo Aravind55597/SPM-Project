@@ -33,6 +33,10 @@ namespace SPM_Project.EntityModels
         public ApplicationUser ApplicationUser { get; set; }
 
 
+        public DateTime CreationTimestamp { get; set; }
+
+        public DateTime UpdateTimestamp { get; set; }
+
     }
 
 
