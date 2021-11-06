@@ -23,10 +23,10 @@ namespace SPM_Project.EntityModels
         public string  Description { get; set; }
 
         //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreationTimeStamp { get; set; }
+        public DateTime CreationTimestamp { get; set; }
 
         //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime UpdateTimeStamp { get; set; }
+        public DateTime UpdateTimestamp { get; set; }
 
         
         public List<Resource> Resources { get; set; }
