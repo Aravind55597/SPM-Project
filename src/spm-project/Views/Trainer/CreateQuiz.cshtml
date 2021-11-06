@@ -52,6 +52,10 @@
                                 <!--begin::Time Limit section-->
                                 <!--end::Time Limit section-->
                                 <!--begin::Qn Card (at least preset 1)-->
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="quizName" placeholder="Quiz Name">
+                                    <textarea class="form-control my-4 ml-2 qnText" id="quizDescription" rows="2" placeholder="Write question description"></textarea>
+                                </div>
                                 <div class="form-check form-check-inline justify-content-center">
                                     <input class="form-check-input gradedRadio" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="true">
                                     <label class="form-check-label" for="inlineRadio1">Graded Quiz</label>
@@ -61,7 +65,8 @@
                                     <label class="form-check-label" for="inlineRadio2">Ungraded Quiz</label>
                                 </div>
                                 <div class="d-flex justify-content-end mb-2">
-                                    <button type="button" class="btn btn-success btn-sm btn-block" id="create_qn">Add question</button>
+                                    <button type="button" class="btn btn-success btn-sm btn-block" id="create_TFqn">Add True/False question</button>
+                                    <button type="button" class="btn btn-success btn-sm btn-block" id="create_MCQqn">Add MCQ question</button>
                                 </div>
                                 <div id="question_cards">
                                     <div class="questions card p-4 m-4">
@@ -76,6 +81,10 @@
                                             <span class="input-group-text" id="inputGroup-sizing-default">Set Answer</span>
                                             <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                         </div>
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text" id="inputGroup-sizing-default">Set Marks</span>
+                                            <input type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                        </div>
                                         <div class="d-flex justify-content-end mb-2 mt-4">
                                             <button type="button" class="btn btn-danger btn-block" id="delete">Delete</button>
                                         </div>
@@ -88,7 +97,7 @@
                             <div class="container d-flex align-items-end flex-column" id="containerRight">
                                 <div class="form-group">
                                     <label for="exampleFormControlSelect1">Set Quiz Duration</label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
+                                    <select class="form-control" id="quizDuration">
                                         <option value='5'>5 min</option>
                                         <option value='10'>10 min</option>
                                         <option value='15'>15 min</option>
