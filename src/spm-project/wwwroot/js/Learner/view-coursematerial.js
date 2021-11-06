@@ -36,7 +36,6 @@ function view(courseClassId, chapterId, gradedQuizId) {
             $.each(result.data, function (index, item) {
                 if (item.id == chapterId) {
                     currentChapDTO = result.data[index]
-                    console.log(currentChapDTO)
                     var chapName = index + 1
                     $('#current_chap_name').html(`<h1 class="align-items-center">Chapter ${chapName.toString()}</h1>`)
                     if (index != 0) {
@@ -46,8 +45,6 @@ function view(courseClassId, chapterId, gradedQuizId) {
                     if (index < result.data.length - 1) {
                         nextChap = result.data[index + 1]
                     }
-                    console.log(prevChap)
-                    console.log(nextChap)
                 }
             });
 
@@ -101,7 +98,6 @@ function view(courseClassId, chapterId, gradedQuizId) {
             var retrieveResources = $("#get-resources").val() + "?chapterId=" + chapterId;
             $.ajax({
                 url: retrieveResources, success: function (result) {
-                    console.log(result)
                     var contentHtml = ``;
                     var accordionHtml = `<div class="accordion" id="accordionExample">`;
                     var contentHtml = ``;
@@ -147,7 +143,6 @@ function view(courseClassId, chapterId, gradedQuizId) {
                     // add quiz into accordion
                     var quizNum = result.data.length + 1;
                     var quizId = currentChapDTO.quizIds[0]
-                    console.log(quizId)
 
                     accordionHtml += `
                         <div class="accordion-item">
@@ -180,8 +175,6 @@ function view(courseClassId, chapterId, gradedQuizId) {
 }
 
 function displayQuiz(quizId, typeOfQuiz) {
-    
-    console.log(quizId)
     var retrieveQuiz = "/api/Quizzes/" + quizId;
     console.log(retrieveQuiz)
     $.ajax({
@@ -208,12 +201,17 @@ function displayQuiz(quizId, typeOfQuiz) {
                 
                 if (questionType == "TFQuestion") {
                     var tfAnswerHtml = `<div class="card-footer">
-                                          <input type="radio" id="trueOption" name="tfAnswer" value="true" required>
+                                          <input type="radio" id="trueOption" name="tfAnswer-${questionId}" value="True" required>
                                           <label for="trueOption">True</label><br>
-                                          <input type="radio" id="falseOption" name="tfAnswer" value="false" required>
+                                          <input type="radio" id="falseOption" name="tfAnswer-${questionId}" value="False" required>
                                           <label for="falseOption">False</label><br>
-                                          <input type="hidden" name="tfAnswerQnId" value="${questionId}">
-                                        </div>`;
+                                          <div class="row">
+                                            <div id="TFQuesCorrectAnswer" class="col text-center p-4">
+                                                <strong class="displayCorrectAnswer" id="tfAnswer-${questionId}"></strong>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        `;
 
                 } else {
                     var option1 = item.option1
@@ -229,16 +227,21 @@ function displayQuiz(quizId, typeOfQuiz) {
                     }
 
                     mcqAnswerHtml = `<div class="card-footer">
-                                        <input type="${inputType}" id="option1" name="mcq${selectType}" value="${option1}">
+                                        <input type="${inputType}" id="option1" name="mcq${selectType}-${questionId}" value="${option1}">
                                         <label for="option1">${option1}</label><br>
-                                        <input type="${inputType}" id="option2" name="mcq${selectType}" value="${option2}">
+                                        <input type="${inputType}" id="option2" name="mcq${selectType}-${questionId}" value="${option2}">
                                         <label for="option2">${option2}</label><br>
-                                        <input type="${inputType}" id="option3" name="mcq${selectType}" value="${option3}">
+                                        <input type="${inputType}" id="option3" name="mcq${selectType}-${questionId}" value="${option3}">
                                         <label for="option3">${option3}</label><br>
-                                        <input type="${inputType}" id="option4" name="mcq${selectType}" value="${option4}">
+                                        <input type="${inputType}" id="option4" name="mcq${selectType}-${questionId}" value="${option4}">
                                         <label for="option4">${option4}</label><br>
-                                        <input type="hidden" name="mcq${selectType}QnId" value="${questionId}">
-                                    </div>`;
+                                        <div class="row">
+                                            <div class="col text-center p-4">
+                                                <strong class="displayCorrectAnswer" id="mcq${selectType}-${questionId}"></strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    `;
                 }
 
                 contentHtml += `
@@ -292,75 +295,59 @@ function displayQuiz(quizId, typeOfQuiz) {
     });
 }
 
+function getUserAns() {
+    // Loop through the quizForm
+    var quizForm = document.getElementById("quizForm")
+    var dataList = []
+    var quesObj = {}
+    var multiSelectList = []
+    var multiSelectObj = {}
+    var checkQuesType = ""
+    // Retrieve the input elements in the quizForm
+    for (var i = 0; i < quizForm.length; i++) {
+        if (quizForm[i].checked == true) {
+            var quesId = quizForm[i].name.split("-")[1]
+            var quesType = quizForm[i].name.split("-")[0]
 
+            let tempArr = quizForm[i].value.split(" ")
+            var ansOption = tempArr[tempArr.length - 1]
+            if (quesType == "mcqmultiSelect") {
+                checkQuesType = true
+
+                if (multiSelectList.length != 0) {
+                    var currentStr = multiSelectObj["answer"]
+                    currentStr += "," + ansOption
+                    multiSelectObj["answer"] = currentStr
+                } else {
+                    multiSelectObj["questionId"] = parseInt(quesId)
+                    multiSelectObj["answer"] = ansOption
+                    multiSelectList.push(multiSelectObj);
+                }
+            } else {
+                if (checkQuesType == true) {
+                    dataList.push(multiSelectList[0])
+
+                }
+                quesObj["questionId"] = parseInt(quesId)
+                quesObj["answer"] = ansOption
+                dataList.push(quesObj)
+            }
+
+            quesObj = {}
+
+        }
+    }
+    return dataList
+}
 
 function submitForm(numOfQuestions, quizId) {
     event.preventDefault();
-    //form validation
-    const singleSelectRadio = document.querySelectorAll('input[name="mcqsingleSelect"]:checked');
-    const multiSelectCheckBoxes = document.querySelectorAll('input[name="mcqmultiSelect"]:checked');
-    const tfAnswer = document.querySelectorAll('input[name="tfAnswer"]:checked');
 
-    if (singleSelectRadio.length == 0 || multiSelectCheckBoxes.length == 0 || tfAnswer.length == 0) {
-        alert("All question must be answered")
-        return;
-    }
+    // Get user answer
+    var userAnswer = getUserAns()
+    console.log(userAnswer)
 
-
-    var dataList = [];
-
-    // retrieve single select answer
-    var singleSelectQnId = document.querySelectorAll('input[name="mcqsingleSelectQnId"]')[0].value;
-
-    let singleSelectList = [];
-    let singleSelectObj = {};
-    singleSelectRadio.forEach((checkbox) => {
-        var strArr = checkbox.value.split(" ")
-        var singleSelectAns = strArr[strArr.length - 1]
-        singleSelectObj["questionId"] = singleSelectQnId
-        singleSelectObj["answer"] = singleSelectAns
-/*        singleSelectObj[singleSelectQnId] = singleSelectAns*/
-    });
-    dataList.push(singleSelectObj);
-
-    console.log(dataList)
-
-    // retrieve multi select answer
-    var multiSelectQnId = document.querySelectorAll('input[name="mcqmultiSelectQnId"]')[0].value;
-
-    let multiSelectList = [];
-    let multiSelectObj = {};
-    multiSelectCheckBoxes.forEach((checkbox) => {
-        var strArr = checkbox.value.split(" ")
-        var multiSelectAns = strArr[strArr.length - 1]
-        if (multiSelectList.length != 0) {
-            var currentStr = multiSelectObj["answer"]
-            currentStr += "," + multiSelectAns
-            multiSelectObj["answer"] = currentStr
-        } else {
-            multiSelectObj["questionId"] = multiSelectQnId
-            multiSelectObj["answer"] = multiSelectAns
-            multiSelectList.push(multiSelectObj);
-        }
-    });
-    dataList.push(multiSelectList[0])
-    console.log(dataList)
-
-     //retrieve true or false answer
-    var tfAnswerQnId = document.querySelectorAll('input[name="tfAnswerQnId"]')[0].value;
-    let tfAnswerList = [];
-    let trAnswerObj = {};
-    tfAnswer.forEach((checkbox) => {
-        if (checkbox.checked) {
-            trAnswerObj["questionId"] = tfAnswerQnId
-            trAnswerObj["answer"] = checkbox.value
-            tfAnswerList.push(trAnswerObj);
-        }
-    });
-    dataList.push(tfAnswerList[0])
-    console.log(dataList)
-
-    
+    // check if user has attemptted the quiz using GET request
     //Get request to retrieve user ans
     var attemptedQuiz = true
     var prevAttemptAnswer = {}
@@ -373,7 +360,7 @@ function submitForm(numOfQuestions, quizId) {
             // check if user has attempted the quiz
             if (data.length != 0) {
                 attemptedQuiz = true
-                prevAttemptAnswer = data
+                prevAttemptAnswer = data.data
 
             }
         },
@@ -384,9 +371,12 @@ function submitForm(numOfQuestions, quizId) {
 
         }
     });
-    //console.log(prevAttemptAnswer)
-    console.log(attemptedQuiz)
+    console.log(prevAttemptAnswer)
 
+    var totalMarks = 0
+    var correctOrWrong = ""
+    var updatedDataList = []
+    var newObj = {}
     // retrieve question answer
     $.ajax(`/api/Quizzes/${quizId}`, {
         type: 'GET',  // http method
@@ -395,44 +385,77 @@ function submitForm(numOfQuestions, quizId) {
         success: function (data, status, xhr) {
             console.log(data, status)
             var questionsArr = data.questions
+            var isCorrect = ""
+            var marksAwarded = 0
             for (let x = 0; x < questionsArr.length; x++) {
                 let quesObj = questionsArr[x]
                 let currQnId = quesObj["questionId"]
-                let currQnAnswer = quesObj["answer"]
+                let actualQnAnswer = quesObj["answer"]
+                let userAnsObj = userAnswer[x]
+                console.log(userAnsObj)
+
+                // Mark user answer
+                if (actualQnAnswer == userAnsObj["answer"]) {
+                    correctOrWrong = "<span class='text-success'>You are correct! </span>"
+                    totalMarks += quesObj.marks
+                    marksAwarded += quesObj.marks
+                    isCorrect = true
+                } else {
+                    correctOrWrong = "<span class='text-danger'>Sorry, that is the wrong answer... </span>"
+                    isCorrect = false
+                }
+
+                // display correct answer on UI
+                // Retrieve the displayCorrectAnswer elements in the quizForm
+                $('.displayCorrectAnswer').each(function () {
+                    var elementID = this.id.split("-")[this.id.split("-").length - 1]
+                    if (elementID == userAnsObj["questionId"]) {
+                        this.innerHTML = correctOrWrong + "The answer is " + actualQnAnswer
+                    }
+
+                })
+                prevAttemptObj = prevAttemptAnswer.find(obj => obj.questionId == userAnsObj["questionId"]);
+                newObj["id"] = prevAttemptObj["id"]
+                newObj["questionId"] = userAnsObj["questionId"]
+                newObj["answer"] = userAnsObj["answer"]
+                newObj["isCorrect"] = isCorrect
+                newObj["marks"] = marksAwarded
+                marksAwarded = 0
+                updatedDataList.push(newObj)
+                newObj = {}
+
+
+
+
 
 
             }
-            
+
         },
         error: function (jqXhr, textStatus, errorMessage) {
             console.log(typeof (errorMessage), textStatus, jqXhr)
         }
     });
+    console.log(updatedDataList)
+    console.log(totalMarks)
 
-    //for (let i = 0; i < prevAttemptAnswer.length; i++) {
-    //    let prevAnsObj = prevAttemptAnswer[i]
-    //    let prevQnId = prevAnsObj["questionId"]
-    //    let prevAnsId = prevAnsObj["id"]
-    //    for (let x = 0; x < dataList.length; x++) {
-    //        let userAnsObj = dataList[i]
-    //        let currQnId = userAnsObj["questionId"]
-    //        if (prevQnId == currQnId) {
-    //            userAnsObj["id"] = prevAnsId
-    //        }
 
-    //    }
-    //}
+    // Have not attempt, use POST request with qn & ans jsonData
 
+    // Attempted the quiz, use PUT request with all the JSON data
     var httpMethod = ""
+    var dataJson = ""
     if (attemptedQuiz) {
         httpMethod = "PUT"
+        dataJson = JSON.stringify(updatedDataList);
+        console.log(dataJson)
     } else {
         httpMethod = "POST"
+        console.log(userAnswer)
+        dataJson = JSON.stringify(userAnswer);
+        console.log(dataJson)
     }
-    console.log(httpMethod)
 
-    var dataJson = JSON.stringify(dataList);
-    console.log(dataJson)
     $.ajax('/api/UserAnswers', {
         type: httpMethod,  // http method
         contentType: "application/json",
@@ -445,6 +468,5 @@ function submitForm(numOfQuestions, quizId) {
             console.log(typeof (errorMessage), textStatus, jqXhr)
         }
     });
-
 }
 
