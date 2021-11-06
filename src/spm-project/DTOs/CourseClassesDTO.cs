@@ -24,6 +24,11 @@ namespace SPM_Project.DTOs
                 TrainerName = domain.ClassTrainer.Name;
                 TrainerId = domain.ClassTrainer.Id; 
             }
+
+            if (domain.GradedQuiz!=null)
+            {
+                GradedQuizId = domain.GradedQuiz.Id; 
+            }
     
             CourseName = domain.Course.Name;
             CourseId = domain.Course.Id;
@@ -69,7 +74,7 @@ namespace SPM_Project.DTOs
         [Required(ErrorMessage = "Please provide the number of slots")]
         public int Slots { get; set; }
 
-
+        public int GradedQuizId { get; set; }
 
     }
 

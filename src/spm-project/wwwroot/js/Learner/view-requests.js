@@ -1,7 +1,9 @@
 ﻿$(document).ready(function () {
-	viewRequestDT("No Filter");
-	filterHandler();
+	var userID = $('#userid').val();
+	viewRequestDT("No Filter", userID);
+	filterHandler(userID);
 });
+
 
 function notification(notificationString, value) {
 	var CLASSNAME = null;
@@ -15,105 +17,69 @@ function notification(notificationString, value) {
 	$.notify(notificationString, {
 		className: CLASSNAME,
 		globalPosition: 'top center'
-		
 	});
 }
 
 
+function withdrawEvent(table) {
 
-function filterHandler() {
-	$('#dropdownFilter').on('change', function () {
-		var filterInput = this.value;
-		//destroy DT
-		$('#request_datatable').DataTable().clear().destroy();
-		//remove previous event listeners
-		$('#request_datatable').off();
-		//initialize DT with filter
-		viewRequestDT(filterInput);
-	});
-}
-
-function queryStringHandler(action, classid, userid) {
-	var query = null;
-
-	if (action == "approve") {
-		query = "api/ClassEnrollmentRecord/ApproveEnrollment?learnerId=" + userid + "&classId=" + classid;
-	}
-
-	else if (action == "reject") {
-		query = "api/ClassEnrollmentRecord/DeclineEnrollment?learnerId=" + userid + "&classId=" + classid;
-	}
-
-	return query
-
-}
-
-
-function ApproveRejectHandler(table, action) {
-	var buttonName = null;
-	var message = null;
-	var failMsg = null;
-	var query = null;
-
-
-	if (action == "approve") {
-		buttonName = ".ApproveRequestBtn";
-		message = "Successfully Approved Request";
-		failMsg = "Failed to Approve Request";
-
-	}
-	else if (action == "reject") {
-		buttonName = ".RejectRequestBtn"
-		message = "Successfully Rejected Request";
-		failMsg = "Failed to Reject Request";
-	}
-
-
-	table.on('click', buttonName, function () {
-
+	table.on('click', ".WithdrawClassBtn", function () {
 		var row = $(this).parents('tr')[0];
 		//for row data
 		var row_data = table.row(row).data();
-
 		console.log(row_data)
+		var userID = row_data.UserId;
+		var classID = row_data.DT_RowData.CourseClassId;
 
-		userID = row_data.UserId;
-		classID = row_data.DT_RowData.CourseClassId;
+		console.log(userID);
+		console.log(classID);
 
-		query = queryStringHandler(action, classID, userID);
+		query = "/api/CourseClasses/WithdrawLearner?learnerId=" + userID + "&" + "classId=" + classID;
 
-		console.log(query)
-		
-		$.ajax({
-			url: query,
-			method: "POST",
-			success: function (data) {
-				table.ajax.reload();
-				notification(message, "success");
-			},
-			error: function (data) {
-				notification(failMsg, "failed");
-			},
-			async: false
-		});
-	
-		
+		if (query != null) {
+			$.ajax({
+				url: query,
+				method: "POST",
+				success: function (data) {
+					table.ajax.reload();
+					notification("Successfully Withdrawn", "success");
+				},
+				error: function (data) {
+					notification("Failed Withdrawal", "failed");
+				},
+				async: true
+			});
+		}
+
+
 	});
-
 }
 
 
-function viewRequestDT(filterInput) {
+function filterHandler(userID) {
+	$('#dropdownFilter').on('change', function () {
+		console.log(this.value)
+		var filterInput = this.value;
+		//destroy DT
+		$('#request_datatable').DataTable().clear().destroy();
+		//initialize DT with filter
+		viewRequestDT(filterInput, userID);
+	});
+}
+
+
+
+function viewRequestDT(filterInput, userID) {
 	var filterValue = null;
 
-	if (filterInput =="No Filter") {
-		filterValue = [];
+	if (filterInput == "No Filter" || filterInput == "" ) {
+		filterValue = [{ column: "UserId", value: userID }];
 	}
-	else if (filterInput == "Enrolled"){
-		filterValue = [{ column: "RecordStatus", value: "Enrolled" }]
+	else if (filterInput == "Enrolled") {
+		filterValue = [{ column: "UserId", value: userID }, { column: "RecordStatus", value: "Enrolled" }]
 	}
 	else if (filterInput == "RequestedEnrollment") {
-		filterValue = [{ column: "RecordStatus", value: "RequestedEnrollment" }]
+		filterValue = [{ column: "UserId", value: userID }, { column: "RecordStatus", value: "RequestedEnrollment" }]
 	}
 
 	var RetrieveRequest = $("#get-class-enrollment-records-datatable").val();
@@ -123,9 +89,9 @@ function viewRequestDT(filterInput) {
 		//width of column siwll be auto 
 		autoWidth: false,
 
-		filter:true,
+		filter: true,
 
-		searching:true,
+		searching: true,
 
 		//make the table responsive 
 		responsive: true,
@@ -139,6 +105,8 @@ function viewRequestDT(filterInput) {
 
 		//enable server side 
 		serverSide: true,
+
+
 
 		//send ajax request to server to Retrieve customers
 		ajax: {
@@ -158,8 +126,10 @@ function viewRequestDT(filterInput) {
 		},
 
 
+
+
 		//default order and sort. In this case ,order by ID in ascending order (Id is column number 1)
-		order: [[5, "desc"]],
+		order: [[1, "asc"]],
 
 
 
@@ -176,6 +146,7 @@ function viewRequestDT(filterInput) {
 			{ name: 'UserId', data: 'UserId' },
 			{ name: 'LearnerName', data: 'LearnerName' },
 			{ name: 'CourseClassName', data: 'CourseClassName' },
+			{ name: 'IsAssigned', data: 'IsAssigned' },
 			{ name: 'RecordStatus', data: 'RecordStatus' },
 			//responsive priority is an option to state the priority of the column to be view when the screen is smaller
 			//data: null means it is not Retrieveing data from the server
@@ -197,23 +168,30 @@ function viewRequestDT(filterInput) {
 			},
 
 			{
-				//target last column
-				targets: -1,
+				targets: 5,
 				render: function (data, type, full, meta) {
-					//only render approve button to requests with status RequestedEnrollment
-					if (data.RecordStatus == "RequestedEnrollment") {
-						return `<a href="javascript:;" class="btn btn-success ApproveRequestBtn">Approve</a>
-								<a href="javascript:;" class="btn btn-danger RejectRequestBtn">Reject</a>
-								`;
+					if (data.IsAssigned == true) {
+						return "Pre Assigned";
 					}
 					else {
-						return `<h4>No Action Required</h4>`;
+						return "Self Enrolled";
                     }
+					
 				},
 			},
 
-			
+			{
+				//target last column
+				targets: -1,
+				render: function (data, type, full, meta) {
+					return `<a href="javascript:;" class="btn btn-danger WithdrawClassBtn">Withdrawal from class</a>`
+						;
+				},
+			},
+
+
 		],
+
 
 		//https://datatables.net/reference/option/createdRow
 		// add events, class name information or otherwise format the row when it is created
@@ -227,16 +205,12 @@ function viewRequestDT(filterInput) {
 		},
 
 
+
 	});
 
-	ApproveRejectHandler(table, "approve");
-	ApproveRejectHandler(table, "reject");
+	withdrawEvent(table);
 
 }
-
-
-
-
 
 
 
