@@ -74,20 +74,22 @@ function viewClassEvent(table) {
 		$(".classNameInput").html(classname);
 
 
+
 		//get selected row classID
 		var classID = row_data.DT_RowId;
-		console.log(classID)
+		var presentCount = row_data.NumOfStudents
+		var maxCount = row_data.Slots
 
 		//destroy previous datatable before you can initialize a new table 
 		destroyDT(["#individual_class_datatable", "#assign_trainer_datatable", "#assign_learner_datatable"]);
 
 
 		//initialize class list DT using classID
-		generalDT("viewClassList", classID);
+		generalDT("viewClassList", classID, presentCount, maxCount );
 		//initialize eligible trainers DT using classID
-		generalDT("assignTrainer", classID);
+		generalDT("assignTrainer", classID, presentCount, maxCount);
 		//initialize eligible Learners DT using classID
-		generalDT("assignLearner", classID);
+		generalDT("assignLearner", classID, presentCount, maxCount);
 
 		//open modal 
 		openViewClassModal();
@@ -318,7 +320,7 @@ function viewCourseClassDT() {
 
 
 
-function generalDT(action, class_ID) {
+function generalDT(action, class_ID, presentCount, maxCount) {
 
 	//optional_ID can be the class ID or isEligible = true
 	var RetrieveValue = null;
@@ -426,8 +428,8 @@ function generalDT(action, class_ID) {
 				//target last column
 				targets: -1,
 				render: function (data, type, full, meta) {
-					// prevent withdrawal of trainer
-					if (action == "viewClassList" && data.Role== "Trainer") {
+					// prevent withdrawal of trainer or assiging of learner if present class slots is more than or equal to max slots
+					if ((action == "viewClassList" && data.Role == "Trainer") || (action == "assignLearner" && presentCount >= maxCount) ) {
 						return null;
 						
 					}
