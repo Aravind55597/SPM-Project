@@ -15,10 +15,10 @@ namespace SPM_Project.EntityModels
 
         public string Description { get; set; }
 
-        public DateTime CreationTimeStamp { get; set; }
+        public DateTime CreationTimestamp { get; set; }
 
 
-        public DateTime UpdateTimeStamp { get; set; }
+        public DateTime UpdateTimestamp { get; set; }
 
         //check if it is graded
         public bool IsGraded { get; set; }
@@ -34,24 +34,29 @@ namespace SPM_Project.EntityModels
 
         public CourseClass CourseClass { get; set; }
 
-        //[NotMapped]
-        //public int TotalMarks
-        //{
-        //    get
-        //    {
-        //        if (this.IsGraded)
-        //        {
-        //            if (this.Questions.Count > 0)
-        //            {
-        //                var marks = this.Questions.Sum(q => q.Marks);
 
-        //                return marks;
-        //            }
-        //        }
 
-        //        return 0;
-        //    }
-        //}
+        [NotMapped]
+        public int TotalMarks
+        {
+            get
+            {
+
+                    if (this.Questions.Count > 0)
+                    {
+                        var marks = this.Questions.Sum(q => q.Marks);
+
+                        return marks;
+                    }
+      
+
+                return 0;
+            }
+        }
+
+
+
+
 
     }
 }

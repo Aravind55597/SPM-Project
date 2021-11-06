@@ -150,10 +150,10 @@ namespace SPM_Project.ApiControllers
             [FromBody] DTParameterModel dTParameterModel,
             [FromQuery] int? courseId,
             [FromQuery] int? lmsUserId,
-            [FromQuery] bool isTrainer = false,
-            [FromQuery] bool isLearner = false
+            [FromQuery] bool isTrainer=false , 
+            [FromQuery] bool isLearner=false
 
-
+            
             )
         {
             var response = new DTResponse<CourseClassTableData>();
@@ -202,6 +202,8 @@ namespace SPM_Project.ApiControllers
             response = await _unitOfWork.CourseClassRepository.GetCourseClassesDataTable(dTParameterModel, courseId, userId, isTrainer, isLearner);
 
             var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+
+
             return Ok(responseJson);
         }
 
@@ -294,7 +296,7 @@ namespace SPM_Project.ApiControllers
 
             //check if class exists ; otherwise return not found
             //return courseclass
-            var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(courseClassId, "Course,ClassTrainer");
+            var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(courseClassId, "Course,ClassTrainer,GradedQuiz");
 
             if (courseClass == null)
             {
@@ -409,13 +411,13 @@ namespace SPM_Project.ApiControllers
                 }
 
 
-                courseClasses = await _unitOfWork.CourseClassRepository.GetAllAsync(cc=>cc.Course.Id==(int)courseId,null, "Course,ClassTrainer");
+                courseClasses = await _unitOfWork.CourseClassRepository.GetAllAsync(cc=>cc.Course.Id==(int)courseId,null, "Course,ClassTrainer,GradedQuiz");
             }
 
 
             else
             {
-                courseClasses = await _unitOfWork.CourseClassRepository.GetAllAsync(null,null,"Course,ClassTrainer");
+                courseClasses = await _unitOfWork.CourseClassRepository.GetAllAsync(null,null, "Course,ClassTrainer,GradedQuiz");
             }
  
 
@@ -443,7 +445,7 @@ namespace SPM_Project.ApiControllers
 
 
         [NonAction]
-        public async Task<CourseClass> GetCourseClass(int id, string properties = "")
+        public async Task<CourseClass> GetCourseClassAsync(int id, string properties = "")
         {
             var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(id, properties);
 

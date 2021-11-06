@@ -14,7 +14,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SPM_Project.ApiControllers.Tests
 {
-    public class CoursesControllerTests
+
+    //TODO ASSERT THE EXCEPTION MESSAGE 
+    //https://www.meziantou.net/quick-introduction-to-xunitdotnet.htm
+    public class CoursesControllerTests:IDisposable
     {
         private UOWMocker _uowMocker;
 
@@ -41,7 +44,9 @@ namespace SPM_Project.ApiControllers.Tests
             _uowMocker = null;
             _controller = null;
         }
-        //if you are not validating your input or manipulate it ; just mock it 
+       
+
+        //TODO FIX THIS TEST
         [Fact()]
         public async Task GetCourseDataTableTest_FunctionReturnsObjectReturnedByRepository_Returns_DTResponse()
         {
@@ -72,10 +77,6 @@ namespace SPM_Project.ApiControllers.Tests
 
             //pass if function is not implemented (COMMNENT THIS OUT AFTER THE FUNCTION IS IMPLEMENTED)
             //await Assert.ThrowsAsync<System.NotImplementedException>(action);
-
-
-
-
 
 
             //var result = await _service.GetCoursesForAdminDataTable(input.Object);

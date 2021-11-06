@@ -12,21 +12,27 @@ namespace SPM_Project.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+    //TODO ADD TESTS TO RETREIVE QUIZZES 
     public class QuizzesController : ControllerBase
     {
         public IUnitOfWork _unitOfWork;
 
-        public CourseClassesController _courseClassCon;
+        public CourseClassesController _courseClassesCon;
 
-        public CoursesController _courseCon;
+        public CoursesController _coursesCon;
+
+        public ChaptersController _chaptersCon; 
 
         public QuizzesController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
 
-            _courseClassCon = new CourseClassesController(unitOfWork);
+            _courseClassesCon = new CourseClassesController(unitOfWork);
 
-            _courseCon = new CoursesController(unitOfWork);
+            _coursesCon = new CoursesController(unitOfWork);
+
+            _chaptersCon = new ChaptersController(unitOfWork); 
         }
 
         //POST QUESTION-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -43,15 +49,7 @@ namespace SPM_Project.ApiControllers
                 throw new BadRequestException("Inputs are not formatted corectly" , ValidateQuizDTOInput(quizDTO)); 
             }
 
-            //check if courseclass exists 
-
-            var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(quizDTO.CourseClassId, "Chapters,GradedQuiz" ); 
-            
-            if (courseClass==null)
-            {
-                throw new NotFoundException($"Course Class of {quizDTO.CourseClassId} is not found");
-            }
-
+            var courseClass = await _courseClassesCon.GetCourseClassAsync(quizDTO.CourseClassId, "Chapters,GradedQuiz");
 
 
             //check the datetine of the class start if class has not started, throw badrequest
@@ -60,40 +58,22 @@ namespace SPM_Project.ApiControllers
                 throw new BadRequestException("Course Class has already started; material can't be modified");
             }
 
- 
-            ////check if  classes exists
-            //if (quizDTO.IsGraded)
-            //{
-            //    if (courseClass.GradedQuiz!=null)
-            //    {
-            //        throw new BadRequestException("Quiz already exists. Please update the graded quiz instead");
-            //    }
 
 
-            //    courseClass.GradedQuiz = new Quiz();
-            //    courseClass.GradedQuiz = await ConvertQuizDTOToQuiz(quizDTO);
-       
- 
-            //}
+            if (quizDTO.IsGraded)
+            {
+                courseClass.GradedQuiz = await ConvertQuizDTOToQuizAsync(quizDTO); 
 
-            //check if chapter exists 
+            }
+
             else
             {
-               
-                var chap = await _unitOfWork.ChapterRepository.GetByIdAsync((int)quizDTO.ChapterId, "Quizzes");
-                if (chap == null)
-                {
-                    throw new NotFoundException("Chapter does not exist");
-                }
-
-                if (chap.Quizzes==null)
-                {
-                    throw new BadRequestException("Quiz already exists. Please update the ungraded quiz instead quiz instead");
-                }
+                var chap = await _chaptersCon.GetChapterAsync((int)quizDTO.ChapterId, "Quizzes");
 
                 chap.Quizzes = new List<Quiz>();
 
-                chap.Quizzes.Add(await ConvertQuizDTOToQuiz(quizDTO)); 
+                chap.Quizzes.Add(await ConvertQuizDTOToQuizAsync(quizDTO)); 
+
             }
 
             await _unitOfWork.CompleteAsync(); 
@@ -105,7 +85,9 @@ namespace SPM_Project.ApiControllers
         public async Task<IActionResult> DeleteQuizAPIAsync(int id)
         {
             //check if quiz exists 
-            var quiz = await _unitOfWork.QuizRepository.GetByIdAsync(id); 
+
+            //TODO CREATE REUSABLE FUNCTION TO RETREIVE QUIZ
+            var quiz = await _unitOfWork.QuizRepository.GetByIdAsync(id, "Questions"); 
 
             if (quiz == null)
             {
@@ -119,17 +101,54 @@ namespace SPM_Project.ApiControllers
         }
 
 
+        [HttpGet, Route("{id:int}", Name = "GetQuiz")]
+        public async Task<IActionResult> GetQuizAPIAsync(int id)
+        {
+            //check if quiz exists 
+
+            //TODO CREATE REUSABLE FUNCTION TO RETREIVE QUIZ
+            var quiz = await GetQuizDTOAsync(id, "CourseClass,Chapter,Questions"); 
+
+            if (quiz == null)
+            {
+                throw new NotFoundException($"Quiz of Id {id} does not exist");
+            }
+
+
+            return Ok(quiz);
+        }
+
+
+
+        //NON-API FUNCTIONS----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
         [NonAction]
         public Dictionary<string, string> ValidateQuizDTOInput(QuizDTO quizDTO)
         {
             Dictionary<string, string> inputErrors = new Dictionary<string, string>();
 
-            IsChapterIdProvided(inputErrors, quizDTO);
+
+            if (!quizDTO.IsChapterIdProvided())
+            {
+                inputErrors.Add($"QuizDTO", "Please provide ChapterId for ungraded quizzes");
+ 
+            }
 
             for (int i = 0; i < quizDTO.Questions.Count; i++)
             {
-                IsQuestionTypeProvided(inputErrors, quizDTO.Questions[i],  i);
-                IsAnswerFormated(inputErrors, quizDTO.Questions[i],  i);
+
+                if (!quizDTO.Questions[i].IsQuestionTypeProvided())
+                {
+                     inputErrors.Add($"Questions[{i}]" + ".QuestionType", $"Question types are {string.Join(",", QuizQuestion.Discriminators)}");
+
+                }
+
+                if (!quizDTO.Questions[i].IsAnswerFormatted())
+                {
+                    inputErrors.Add($"Questions[{i}]" + ".Answer", $"Please provide the proper format for the answer");
+                }
+
             }
 
             return inputErrors;
@@ -137,7 +156,7 @@ namespace SPM_Project.ApiControllers
 
 
         [NonAction]
-        public async Task<Quiz> ConvertQuizDTOToQuiz(QuizDTO quizDTO)    
+        public async Task<Quiz> ConvertQuizDTOToQuizAsync(QuizDTO quizDTO)    
         {
             var quiz = new Quiz()
             {
@@ -146,14 +165,18 @@ namespace SPM_Project.ApiControllers
                 IsGraded = quizDTO.IsGraded,
                 TimeLimit = quizDTO.TimeLimit,
                 Questions = new List<QuizQuestion>()
+
             };
 
             //if not null , add chapter
             if (quizDTO.ChapterId != null)
             {
-                quiz.Chapter = await _unitOfWork.ChapterRepository.GetByIdAsync((int)quizDTO.ChapterId);
+                quiz.Chapter = await _chaptersCon.GetChapterAsync((int)quizDTO.ChapterId);
             };
 
+
+            quiz.CourseClass = await _courseClassesCon.GetCourseClassAsync((int)quizDTO.CourseClassId);
+     
 
             //TODO CHECK THIS
             if (quizDTO.Id != 0)
@@ -189,7 +212,7 @@ namespace SPM_Project.ApiControllers
                 };
 
                 mcq.SetAnswer(new List<int>().CommaSepStringToIntList(quizQuestionDTO.Answer));
-                //typeof(McqQuestion).GetProperty(nameof(mcq.Id)).SetValue(mcq, 1, null);
+
                 //TODO CHECK THIS
 
                 if (quizQuestionDTO.Id !=0)
@@ -210,6 +233,7 @@ namespace SPM_Project.ApiControllers
                     TrueOption=quizQuestionDTO.TrueOption,
                     FalseOption=quizQuestionDTO.FalseOption
                 };
+
                 tf.SetAnswer(bool.Parse(quizQuestionDTO.Answer));
                 
                 if (quizQuestionDTO.Id != 0)
@@ -220,64 +244,89 @@ namespace SPM_Project.ApiControllers
                 return  tf;
             }
 
+            
         }
 
 
-        //[NonAction]
-        //public Quiz CheckIfQuizExists(int id)
-        //{
-        //    var quiz = _unitOfWork.QuizRepository.GetByIdAsync(id,""); 
-        //}
-
-        //PRIVATE METHODS------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
         [NonAction]
-        private void IsQuestionTypeProvided(Dictionary<string, string> inputErrors, QuizQuestionDTO questionDTO, int index)
+        public QuizDTO ConvertQuizToQuizDTO(Quiz quiz)
         {
-            if (!QuizQuestion.Discriminators.Contains(questionDTO.QuestionType))
+            var quizDTO = new QuizDTO(quiz);
+
+            //loop through questions to add to QuizDTO 
+
+            if (quiz.Questions != null)
             {
-                inputErrors.Add($"Questions[{index}]" + nameof(questionDTO.QuestionType), $"Question types are  {string.Join(",", QuizQuestion.Discriminators)}");
-            }
-        }
-        [NonAction]
-        private void IsAnswerFormated(Dictionary<string, string> inputErrors, QuizQuestionDTO questionDTO, int index)
-        {
-            if (QuizQuestion.Discriminators.Contains(questionDTO.QuestionType))
-            {
-                bool flag;
-                switch (questionDTO.QuestionType)
+                foreach (var item in quiz.Questions)
                 {
-                    case "TFQuestion":
+                    if (item.QuestionType=="McqQuestion")
+                    {
+                        var ques = (McqQuestion)item;
+                        quizDTO.Questions.Add(new QuizQuestionDTO(ques)); 
 
-                        if (!Boolean.TryParse(questionDTO.Answer, out flag))
-                        {
-                            inputErrors.Add($"Questions[{index}]" + nameof(questionDTO.Answer), $"Please provide the proper format for the answer for a True/False Question");
-                        }
-                        break;
-
-                    case "McqQuestion":
-
-                        if (!new List<int>().CommaSepStringToIntListValidator(questionDTO.Answer))
-                        {
-                            inputErrors.Add($"Questions[{index}]" + nameof(questionDTO.Answer), $"Please provide the proper format for the answer for a MCQ Question ");
-                        }
-
-                        break;
+                    }
+                    else
+                    {
+                        var ques = (TFQuestion)item;
+                        quizDTO.Questions.Add(new QuizQuestionDTO(ques));
+                    }
                 }
             }
+
+            return quizDTO; 
+
+        }
+
+
+        
+        [NonAction]
+        public virtual async Task<Quiz> GetQuizAsync(int id, string properties = "")
+        {
+            var quiz = await _unitOfWork.QuizRepository.GetByIdAsync(id, properties);
+
+            if (quiz == null)
+            {
+                throw new NotFoundException($"Quiz of id {id} is not found");
+            }
+            return quiz;
         }
 
         [NonAction]
-        private void IsChapterIdProvided(Dictionary<string, string> inputErrors, QuizDTO quizDTO)
+        public async Task<QuizDTO> GetQuizDTOAsync(int id, string properties = "")
         {
-            if (!quizDTO.IsGraded && quizDTO.ChapterId == null)
+            var quiz = await GetQuizAsync(id, properties);
+
+
+            return ConvertQuizToQuizDTO(quiz); 
+        }
+
+
+        //get quiz question
+        [NonAction]
+        public virtual async Task<QuizQuestion> GetQuizQuestionAsync(int id , string properties="")
+        {
+            var quizQuestion = await _unitOfWork.QuizQuestionRepository.GetByIdAsync(id, properties);
+
+            if (quizQuestion == null)
             {
-
-                inputErrors.Add($"QuizDTO", "Please provide marks for graded quizzes");
-
+                throw new NotFoundException($"Quiz Question of id {id} is not found");
             }
+            return quizQuestion;
 
         }
+
+        //get quiz question
+        [NonAction]
+        public virtual async Task<List<QuizQuestion>> GetQuizQuestionsAsync(int quizId, string properties = "")
+        {
+            var q = await GetQuizAsync(quizId, "");
+
+            return await _unitOfWork.QuizQuestionRepository.GetAllAsync(filter: f => f.Quiz.Id == q.Id , includeProperties: properties);
+
+        }
+
+
+
 
 
     }

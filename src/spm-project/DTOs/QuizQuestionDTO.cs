@@ -3,6 +3,7 @@ using SPM_Project.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace SPM_Project.DTOs
 {
@@ -10,6 +11,7 @@ namespace SPM_Project.DTOs
     //https://www.intertech.com/unit-test-net-entity-validation/
 
     public class QuizQuestionDTO
+        //TODO TESTS NOT REQUIRED   
     {
         public QuizQuestionDTO()
         {
@@ -77,6 +79,74 @@ namespace SPM_Project.DTOs
 
         //check if multiselect or not
         public bool IsMultiSelect { get; set; }
+
+
+
+
+        public bool IsQuestionTypeProvided()
+        {
+            if (!QuizQuestion.Discriminators.Contains(QuestionType))
+            {
+                return false; 
+            }
+            return true; 
+        }
+
+        public bool IsAnswerFormatted()
+        {
+            if (QuizQuestion.Discriminators.Contains(QuestionType))
+            {
+                switch (QuestionType)
+                {
+                    case "TFQuestion":
+
+                        if (!Boolean.TryParse(Answer, out bool flag))
+                        {
+                            return false;
+                        }
+                        break;
+
+                    case "McqQuestion":
+
+                        if (!new List<int>().CommaSepStringToIntListValidator(Answer))
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            var ans = new List<int>().CommaSepStringToIntList(Answer);
+
+                            if (ans.Any(a => a < 1 || a > 4))
+                            {
+                                return false;
+                            }
+
+                            if (IsMultiSelect)
+                            {
+                                if ((ans.Count <= 1 || ans.Count > 4))
+                                {
+                                    return false;
+                                }
+
+                            }
+
+                            else
+                            {
+                                if (ans.Count > 1 || ans.Count < 1)
+                                {
+                                    return false;
+                                }
+                            }
+
+                        }
+                        break;
+
+                }
+                return true; 
+            }
+            return false; 
+        }
+
 
 
 

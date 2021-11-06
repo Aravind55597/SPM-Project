@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.EntityModels.Tests
 {
-    public class McqQuestionTests
+    public class McqQuestionTests : IDisposable
     {
 
 

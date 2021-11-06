@@ -244,10 +244,8 @@ namespace SPM_Project.Data.Migrations
                     b.Property<int?>("CourseClassId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreationTimeStamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                    b.Property<DateTime>("CreationTimestamp")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -255,10 +253,8 @@ namespace SPM_Project.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdateTimeStamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                    b.Property<DateTime>("UpdateTimestamp")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -284,9 +280,7 @@ namespace SPM_Project.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreationTimestamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsAssigned")
                         .HasColumnType("bit");
@@ -301,9 +295,7 @@ namespace SPM_Project.Data.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("UpdateTimestamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -327,9 +319,7 @@ namespace SPM_Project.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreationTimestamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -341,9 +331,7 @@ namespace SPM_Project.Data.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("UpdateTimestamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -365,10 +353,8 @@ namespace SPM_Project.Data.Migrations
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreationTimeStamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                    b.Property<DateTime>("CreationTimestamp")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EndClass")
                         .HasColumnType("datetime2");
@@ -391,10 +377,8 @@ namespace SPM_Project.Data.Migrations
                     b.Property<DateTime>("StartRegistration")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("UpdateTimeStamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                    b.Property<DateTime>("UpdateTimestamp")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -416,6 +400,9 @@ namespace SPM_Project.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("CreationTimestamp")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
 
@@ -424,6 +411,9 @@ namespace SPM_Project.Data.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateTimestamp")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -447,9 +437,7 @@ namespace SPM_Project.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreationTimestamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("HaveViewedResources")
                         .HasColumnType("bit");
@@ -458,9 +446,7 @@ namespace SPM_Project.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdateTimestamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -483,10 +469,8 @@ namespace SPM_Project.Data.Migrations
                     b.Property<int?>("ChapterId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreationTimeStamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                    b.Property<DateTime>("CreationTimestamp")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -500,10 +484,8 @@ namespace SPM_Project.Data.Migrations
                     b.Property<decimal>("TimeLimit")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("UpdateTimeStamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                    b.Property<DateTime>("UpdateTimestamp")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -522,6 +504,9 @@ namespace SPM_Project.Data.Migrations
                     b.Property<string>("Answer")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreationTimestamp")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -537,6 +522,9 @@ namespace SPM_Project.Data.Migrations
 
                     b.Property<int?>("QuizId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdateTimestamp")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -564,14 +552,13 @@ namespace SPM_Project.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationTimestamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DownloadableContentUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdateTimestamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -591,20 +578,19 @@ namespace SPM_Project.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationTimestamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
+
+                    b.Property<int>("Marks")
+                        .HasColumnType("int");
 
                     b.Property<int?>("QuizQuestionId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdateTimestamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
@@ -762,7 +748,8 @@ namespace SPM_Project.Data.Migrations
 
                     b.HasOne("SPM_Project.EntityModels.Quiz", "GradedQuiz")
                         .WithOne("CourseClass")
-                        .HasForeignKey("SPM_Project.EntityModels.CourseClass", "GradedQuizId");
+                        .HasForeignKey("SPM_Project.EntityModels.CourseClass", "GradedQuizId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("ClassTrainer");
 
