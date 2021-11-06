@@ -201,9 +201,9 @@ function displayQuiz(quizId, typeOfQuiz) {
                 
                 if (questionType == "TFQuestion") {
                     var tfAnswerHtml = `<div class="card-footer">
-                                          <input type="radio" id="trueOption" name="tfAnswer-${questionId}" value="True" required>
+                                          <input type="radio" id="trueOption" class="tfAnswer" name="tfAnswer-${questionId}" value="True" required>
                                           <label for="trueOption">True</label><br>
-                                          <input type="radio" id="falseOption" name="tfAnswer-${questionId}" value="False" required>
+                                          <input type="radio" id="falseOption" class="tfAnswer" name="tfAnswer-${questionId}" value="False" required>
                                           <label for="falseOption">False</label><br>
                                           <div class="row">
                                             <div id="TFQuesCorrectAnswer" class="col text-center p-4">
@@ -227,13 +227,13 @@ function displayQuiz(quizId, typeOfQuiz) {
                     }
 
                     mcqAnswerHtml = `<div class="card-footer">
-                                        <input type="${inputType}" id="option1" name="mcq${selectType}-${questionId}" value="${option1}">
+                                        <input type="${inputType}" id="option1" class="mcq${selectType}" name="mcq${selectType}-${questionId}" value="${option1}">
                                         <label for="option1">${option1}</label><br>
-                                        <input type="${inputType}" id="option2" name="mcq${selectType}-${questionId}" value="${option2}">
+                                        <input type="${inputType}" id="option2" class="mcq${selectType}" name="mcq${selectType}-${questionId}" value="${option2}">
                                         <label for="option2">${option2}</label><br>
-                                        <input type="${inputType}" id="option3" name="mcq${selectType}-${questionId}" value="${option3}">
+                                        <input type="${inputType}" id="option3" class="mcq${selectType}" name="mcq${selectType}-${questionId}" value="${option3}">
                                         <label for="option3">${option3}</label><br>
-                                        <input type="${inputType}" id="option4" name="mcq${selectType}-${questionId}" value="${option4}">
+                                        <input type="${inputType}" id="option4" class="mcq${selectType}" name="mcq${selectType}-${questionId}" value="${option4}">
                                         <label for="option4">${option4}</label><br>
                                         <div class="row">
                                             <div class="col text-center p-4">
@@ -342,6 +342,27 @@ function getUserAns() {
 
 function submitForm(numOfQuestions, quizId) {
     event.preventDefault();
+    //form validation
+    const singleSelectRadio = document.querySelectorAll('input[class="mcqsingleSelect"]:checked');
+    const multiSelectCheckBoxes = document.querySelectorAll('input[class="mcqmultiSelect"]:checked');
+    const tfAnswer = document.querySelectorAll('input[class="tfAnswer"]:checked');
+
+    if (singleSelectRadio.length == 0 || multiSelectCheckBoxes.length == 0 || tfAnswer.length == 0) {
+        /*alert("All question must be answered")*/
+        $('#liveToast').addClass('bg-danger')
+        $('#toastHeader').addClass('bg-danger')
+        var option = {
+            animation: true,
+            delay: 5000
+        }
+        var myAlert = document.getElementById('liveToast')
+        var dataHtml = `All question must be answered`;
+        $('#toastBody').html(dataHtml)
+        var bsAlert = new bootstrap.Toast(myAlert, option);
+        bsAlert.show();
+        return;
+    }
+
 
     // Get user answer
     var userAnswer = getUserAns()
