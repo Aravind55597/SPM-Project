@@ -428,9 +428,8 @@ function submitForm(numOfQuestions, quizId) {
         httpMethod = "PUT"
     } else {
         httpMethod = "POST"
-        
-
     }
+    console.log(httpMethod)
 
     var dataJson = JSON.stringify(dataList);
     console.log(dataJson)

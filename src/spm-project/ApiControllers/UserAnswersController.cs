@@ -132,28 +132,37 @@ namespace SPM_Project.ApiControllers
         //get user Answers------------------------------------------------------------------------------------------------------------
 
         [NonAction]
-        //TEST THIS FOR SANITY CHECK 
-        //TODO UNIT TESTING 
+ 
+        //DIIFICULT TO TEST THIS
         public async Task<List<UserAnswer>> GetUserAnswersAsync(int quizId, string properties = "")
         {
-            var result = new  List<UserAnswer>(); 
+           
             //auto send badrequest exception
             var quiz = await _quizzesCon.GetQuizAsync(quizId, "Questions");
 
             var quesIdList = quiz.Questions.Select(q => q.Id).ToList();
 
             var userId = await _usersCon.GetCurrentUserId();
+            
+             return  await RetreiveUserAnsList(properties, quesIdList, userId);
+            
 
+            //return await _unitOfWork.QuizQuestionRepository.GetAllAsync(filter: f => f..Id == cc.Id && f.User.Id == userId, includeProperties: properties);
+
+        }
+
+        private async Task<List<UserAnswer>> RetreiveUserAnsList(string properties, List<int> quesIdList, int userId)
+        {
+            var result = new List<UserAnswer>();
             foreach (var item in quesIdList)
             {
 
                 var uAns = await _unitOfWork.UserAnswerRepository.GetAllAsync(filter: f => f.QuizQuestion.Id == item && f.User.Id == userId, includeProperties: properties);
-                result.Add(uAns[0]); 
+                result.Add(uAns[0]);
             }
             return result; 
-            //return await _unitOfWork.QuizQuestionRepository.GetAllAsync(filter: f => f..Id == cc.Id && f.User.Id == userId, includeProperties: properties);
-
         }
+
 
         [NonAction]
         //TOO SIMPLE TO BE TESTED ; JUST A LOOP
