@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SPM_Project.Extensions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -27,6 +28,11 @@ namespace SPM_Project.EntityModels
         public bool IsCorrect { get; set; }
 
 
+        public int Marks { get; set; }
 
+
+
+
+        
     }
 }

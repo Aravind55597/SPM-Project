@@ -202,6 +202,8 @@ namespace SPM_Project.ApiControllers
             response = await _unitOfWork.CourseClassRepository.GetCourseClassesDataTable(dTParameterModel, courseId, userId, isTrainer, isLearner);
 
             var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+
+
             return Ok(responseJson);
         }
 

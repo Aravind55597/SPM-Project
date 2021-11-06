@@ -9,5 +9,12 @@ namespace SPM_Project.EntityModels
     {
 
         public int Id { get;  }
+
+
+        public DateTime CreationTimestamp { get; set; }
+
+        public DateTime UpdateTimestamp { get; set; }
+
+
     }
 }

@@ -208,28 +208,6 @@ namespace SPM_Project.ApiControllers.Tests
         }
 
 
-
-
-        //TODO TESTS FOR API ENDPOINT
-
-        //[Fact()]
-        //public void PostQuizDTOAPIAsyncTest()
-        //{
-        //    Assert.True(false, "This test needs an implementation");
-        //}
-
-        //[Fact()]
-        //public void DeleteQuizAPIAsyncTest()
-        //{
-        //    Assert.True(false, "This test needs an implementation");
-        //}
-
-        //[Fact()]
-        //public void GetQuizAPIAsyncTest()
-        //{
-        //    Assert.True(false, "This test needs an implementation");
-        //}
-
         [Fact()]
 
         public void ValidateQuizDTOInputTest_QuizAllCorrectInput_ReturnEmptyDictionary()
@@ -427,10 +405,15 @@ namespace SPM_Project.ApiControllers.Tests
         //    Assert.True(false, "This test needs an implementation");
         //}
 
+
+
         //[Fact()]
-        //public void GetQuizDTOAsyncTest()
+        //public void GetQuizQuestionAsyncTest()
         //{
         //    Assert.True(false, "This test needs an implementation");
         //}
+
+
+
     }
 }

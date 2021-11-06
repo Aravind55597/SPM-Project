@@ -10,6 +10,10 @@ namespace SPM_Project.EntityModels
     {
         private int _Marks;
 
+
+        public DateTime CreationTimestamp { get; set; }
+      
+        public DateTime UpdateTimestamp { get; set; }
         public int Id { get; private set; }
 
         public string ImageUrl { get; set; }
