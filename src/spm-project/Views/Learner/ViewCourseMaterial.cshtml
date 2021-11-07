@@ -1,0 +1,49 @@
+﻿@section styles{
+    <link href="~/css/Learner/view-course-material.css" rel="stylesheet" type="text/css" />
+
+}
+
+@*go back row*@
+<div class="row m-3">
+    <div class="col-1"></div>
+    <div class="col">
+        <a class="menu-link" asp-controller="Learner" asp-action="ViewEnrolledCourses">
+            <span class="menu-title">Go back to view enrolled courses</span>
+        </a>
+    </div>
+</div>
+
+@*buttons row*@
+<div class="row align-items-center justify-content-between bg-light-info mtb-5 mx-0 p-4">
+    <div id="prev_chap_btn" class="col-4 text-center">
+
+    </div>
+    <div id="current_chap_name" class="col-4 text-center">
+        
+    </div>
+    <div id="next_chap_btn" class="col-4 text-center">
+
+    </div>
+</div>
+
+@*course material content*@
+<div id="" class="container">
+
+    <div class="row mt-5">
+        <div id="view_course_material" class="col">
+
+        </div>
+        <div id="view_accordion" class="col-4">
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+@section scripts {
+    <script onload="view('@ViewBag.CourseClassId', '@ViewBag.ChapterId')" src="~/js/Learner/view-coursematerial.js"></script>
+}

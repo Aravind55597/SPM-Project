@@ -25,8 +25,5 @@ namespace SPM_Project.DataTableModels.DataTableData
 
         public int NumOfStudents { get; set; }
 
-
-
-
     }
 }

@@ -15,12 +15,13 @@ using SPM_Project.EntityModels;
 using SPM_Project.Extensions;
 using SPM_Project.Repositories;
 using SPM_Project.Repositories.Interfaces;
-using SPM_Project.Utility;
+using SPM_Project;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+
 
 namespace SPM_Project
 {
@@ -41,9 +42,10 @@ namespace SPM_Project
             //add db context 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    //Configuration.GetConnectionString("DefaultConnection")
-                    Environment.GetEnvironmentVariable("SPM_DB_STRING")
-                    ));
+                    Configuration.GetValue<string>(
+                    "SPM_DB_STRING")
+                    //Environment.GetEnvironmentVariable("SPM_DB_STRING")
+                    ));;
 
 
 
@@ -71,9 +73,7 @@ namespace SPM_Project
                     new BadRequestObjectResult(
 
                         Newtonsoft.Json.JsonConvert.SerializeObject(
-
                             new Response<object>((int)HttpStatusCode.BadRequest, actionContext.ModelState.AllErrors(),"Invalid Request")
-
                     )
 
 
@@ -136,16 +136,17 @@ namespace SPM_Project
 
 
             //handles exceptions thrown and returns an error reponse based on the type of exception thrown 
-            app.UseMiddleware<ErrorHandlerMiddleware>();
-
-
+            //    app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
 
             //Add database seeding code here 
-            //SeedDatabase.Initialize(dbContext);
+            //SeedDatabase.Initialize(dbContext); 
+
+
+
             //handles exceptions thrown and returns an error reponse based on the type of exception thrown 
             app.UseMiddleware<ErrorHandlerMiddleware>();
 

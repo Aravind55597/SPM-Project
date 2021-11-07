@@ -31,15 +31,7 @@ function viewEngineerDT() {
 		//enable server side 
 		serverSide: true,
 
-		//enable select in the table 
-		select: {
-			//allow us to select multiple rows
-			style: 'multi',
-			//retricts which cells in the table that will trigger table selection 
-			//td first child (for each td tag , only the first item (cell) will allow selection. Within the cell , the element with .checkable class is only allowed)
-			//this is essentially a css selector used here 
-			selector: 'td:first-child .checkable',
-		},
+
 
 		//send ajax request to server to Retrieve customers
 		ajax: {
@@ -50,24 +42,17 @@ function viewEngineerDT() {
 			data: function (d) {
 				console.log(JSON.stringify(d))
 				return JSON.stringify(d);
+			},
+			error: function (xhr, error, code) {
+				console.log(xhr);
+				console.log(code);
 			}
 		},
 
 
-		//every time the table get initialised (draw or ajax.reload()) , 
-		//render this for the header 
-		//in this case , render a checkbox for the first header 
-		headerCallback: function (thead, data, start, end, display) {
-			thead.getElementsByTagName('th')[0].innerHTML = `
-                    <label class="checkbox checkbox-single checkbox-solid checkbox-primary mb-0">
-                        <input type="checkbox" value="" class="group-checkable"/>
-                        <span></span>
-                    </label>`;
-		},
-
 
 		//default order and sort. In this case ,order by ID in ascending order (Id is column number 1)
-		order: [[1, "asc"]],
+		order: [[0, "asc"]],
 
 
 
@@ -79,37 +64,16 @@ function viewEngineerDT() {
 			//data: null means it is not Retrieveing data from the server
 			//column can't be ordered
 			//regarding name (https://datatables.net/reference/option/columns.name)
-			{ name: 'Checkbox', data: null, orderable: false },
 			{ name: 'Id', data: 'Id' },
 			{ name: 'Name', data: 'Name' },
 			{ name: 'Role', data: 'Role' },
-			//responsive priority is an option to state the priority of the column to be view when the screen is smaller
-			//data: null means it is not Retrieveing data from the server
-			{ name: 'Actions', data: null, responsivePriority: -1, orderable: false },
+
 		],
 
 		//define the properties of each column (very similar function as columns option above.Don't need to define all the column )
 		//I suggest to use this just to render stuff such as buttons/any elements OR processign the result to display in diff format eg. format date string
 		columnDefs: [
-			{
-				//target first collumn 
-				targets: 0,
-				render: function (data, type, full, meta) {
-					return `
-                        <label class="checkbox checkbox-single checkbox-primary mb-0">
-                            <input type="checkbox" value="" class="checkable"/>
-                            <span></span>
-                        </label>`;
-				},
-			},
-			{
-				//target last column
-				targets: -1,
-				render: function (data, type, full, meta) {
-					return `<a href="javascript:;" class="btn btn-primary" title="AssignToClass" id="AssignClassbtn">Assign to Class</a>`
-						;
-				},
-			},
+
 
 			
 		],
@@ -130,28 +94,6 @@ function viewEngineerDT() {
 
 	});
 
-	//check box 
-	table.on('change', '.group-checkable', function () {
-
-
-		var set = $(this).closest('table').find('td:first-child .checkable');
-		var checked = $(this).is(':checked');
-
-
-
-		$(set).each(function () {
-			if (checked) {
-				$(this).prop('checked', true);
-				table.rows($(this).closest('tr')).select();
-				
-
-			}
-			else {
-				$(this).prop('checked', false);
-				table.rows($(this).closest('tr')).deselect();
-			}
-		});
-	});
 
 
 }

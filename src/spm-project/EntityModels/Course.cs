@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 
 namespace SPM_Project.EntityModels
 {
-    public class Course
+    public class Course : IEntityWithId
     {
 
+        //TODO UNIT TESTS
         public Course()
         {
             PassingPercentage = (decimal)0.85; 
         }
 
 
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
         public string Name { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
         public DateTime CreationTimestamp { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdateTimestamp { get; set; }
 
 
@@ -34,5 +34,19 @@ namespace SPM_Project.EntityModels
 
 
         public decimal PassingPercentage  { get; set; }
+
+
+        public int GetNumCourseClasses()
+        {
+            if (CourseClass!=null) {
+                return CourseClass.Count;
+            }
+            return 0;
+        }
+
+        
+
+
+
     }
 }

@@ -14,10 +14,11 @@
     <!--end::Fonts-->
     <!--begin::Global Stylesheets Bundle(used by all pages)-->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css" />
     <link href="~/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
     <link href="~/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
     <!--end::Global Stylesheets Bundle-->
-
     @*include custom stylesheet for other pages*@
     @RenderSection("styles", required: false)
 
@@ -76,6 +77,9 @@
     <script src="~/assets/plugins/global/plugins.bundle.js"></script>
     <script src="~/assets/js/scripts.bundle.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js" integrity="sha512-efUTj3HdSPwWJ9gjfGR71X9cvsrthIA78/Fvd/IN+fttQVy7XWkOAXb295j8B3cmm/kFKVxjiNYzKw9IQJHIuQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!--end::Global Javascript Bundle-->
@@ -85,6 +89,21 @@
     <input type="hidden" id="get-engineers-datatable" value="@Url.RouteUrl("GetEngineersDataTable")">
     <input type="hidden" id="get-course-classes-datatable" value="@Url.RouteUrl("GetCourseClassesDataTable")">
     <input type="hidden" id="get-courses-datatable" value="@Url.RouteUrl("GetCoursesDataTable")">
+    <input type="hidden" id="get-class-enrollment-records-datatable" value="@Url.RouteUrl("GetClassEnrollmentRecordsDataTable")">
+    <input type="hidden" id="get-eligible-courses" value="@Url.RouteUrl("GetEligibleCourses")">
+    <input type="hidden" id="get-course-classes" value="@Url.RouteUrl("GetCourseClasses")">
+    <input type="hidden" id="submit-enrollment-request" value="@Url.RouteUrl("SubmitEnrollmentRequest")">
+    <input type="hidden" id="get-chapters" value="@Url.RouteUrl("GetChapters")">
+    <input type="hidden" id="get-resources" value="@Url.RouteUrl("GetResources")">
+    @*Get userid of the user logged in*@
+    @{
+        var person = await UserManager.GetUserAsync(User);
+        if (person != null)
+        {
+            <input id="userid" type="hidden" value="@person.LMSUserId">
+        }
+
+    }
 
     <!--end::Page Custom Javascript-->
     @RenderSection("scripts", required: false)
