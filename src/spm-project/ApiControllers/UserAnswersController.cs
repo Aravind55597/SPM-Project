@@ -209,9 +209,9 @@ namespace SPM_Project.ApiControllers
         public async Task<UserAnswer> UpdateConversionAsync(UserAnswerDTO userDTO)
         {
 
-            var userAns = await GetUserAnswerAsync(userDTO.QuestionId, "QuizQuestion");
+            var userAns = await GetUserAnswerAsync(userDTO.Id, "QuizQuestion");
 
-            userAns.Answer = userAns.Answer;
+            userAns.Answer = userDTO.Answer;
 
             return userAns; 
 

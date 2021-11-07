@@ -1,4 +1,6 @@
-﻿function loadContent(contentUrl, contentType) {
+﻿const { isEmptyObject } = require("jquery");
+
+function loadContent(contentUrl, contentType) {
     var contentHtml = ``;
     contentHtml += `<iframe src="${contentUrl}" width="600" height="480" allow="autoplay"></iframe>`;
     $("#view_course_material").html(contentHtml);
@@ -184,21 +186,41 @@ function displayQuiz(quizId, typeOfQuiz) {
             }
             console.log(result)
             var numOfQuestions = result.questions.length
-            var contentHtml = `<form id="quizForm">`;
+            var contentHtml = ``;
             var tfAnswerHtml = ``;
             var multiSelectHtml = ``;
             var inputType = ``;
             var mcqAnswerHtml = ``;
             var selectType = ``;
 
+            contentHtml += `<div class="row m-4">
+                                <div class="col">
+                                    <div id="displayUserMarks-card" class="d-none">
+                                        <div class="card" style="width: 620px; min-height: 50px;">
+                                            <div class="card-body text-center">
+                                                <strong id="displayUserMarks-text">Marks</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
 
+            contentHtml += `<form id="quizForm">`;
             $.each(result.questions, function (index, item) {
                 var questionNum = index + 1
                 var questionName = item.question
                 var questionType = item.questionType
                 var isMultiSelect = item.isMultiSelect
                 var questionId = item.id
-                
+                contentHtml += `
+                    <div class="row m-4">
+                        <div class="col">
+                            <div class="card" style="width: 620px; min-height: 200px;">
+                              <div class="card-body">
+                                
+                                <h5 class="card-title">Question ${questionNum}</h5>
+                                <p class="card-text">${questionName}</p>`;
+
                 if (questionType == "TFQuestion") {
                     var tfAnswerHtml = `<div class="card-footer">
                                           <input type="radio" id="trueOption" class="tfAnswer" name="tfAnswer-${questionId}" value="True" required>
@@ -244,14 +266,7 @@ function displayQuiz(quizId, typeOfQuiz) {
                                     `;
                 }
 
-                contentHtml += `
-                    <div class="row m-4">
-                        <div class="col">
-                            <div class="card" style="width: 620px; min-height: 200px;">
-                              <div class="card-body">
-                                
-                                <h5 class="card-title">Question ${questionNum}</h5>
-                                <p class="card-text">${questionName}</p>`;
+
                 if (isMultiSelect) {
                     multiSelectHtml += `
                         <strong>This is a multi select question</strong>`;
@@ -280,11 +295,12 @@ function displayQuiz(quizId, typeOfQuiz) {
 
             contentHtml += `
                             <div class="row">
-                                <div class="col-8"></div>
+                                <div class="col-6"></div>
                                 <div class="col">
+                                    <button class="btn btn-primary" onclick="resetForm()">Re-attempt</button>
                                     <button class="btn btn-primary" onclick="submitForm(${numOfQuestions}, ${quizId})" id="ajaxBtn">Submit</button>
                                 </div>
-                                <div class="col-3"></div>
+                                <div class="col-2"></div>
 
                             </div>`;
             contentHtml += `</form>`;
@@ -293,6 +309,24 @@ function displayQuiz(quizId, typeOfQuiz) {
 
         }
     });
+}
+
+function resetForm() {
+    var quizForm = document.getElementById("quizForm")
+    var dataList = []
+    var quesObj = {}
+    var multiSelectList = []
+    var multiSelectObj = {}
+    var checkQuesType = ""
+    // Retrieve the input elements in the quizForm
+    for (var i = 0; i < quizForm.length; i++) {
+        if (quizForm[i].checked == true) {
+            quizForm[i].checked = false
+        }
+    }
+    $("#displayUserMarks-card").attr("class", "d-none")
+    $(".displayCorrectAnswer").html(``)
+
 }
 
 function getUserAns() {
@@ -435,15 +469,22 @@ function submitForm(numOfQuestions, quizId) {
                     }
 
                 })
-                prevAttemptObj = prevAttemptAnswer.find(obj => obj.questionId == userAnsObj["questionId"]);
-                newObj["id"] = prevAttemptObj["id"]
-                newObj["questionId"] = userAnsObj["questionId"]
-                newObj["answer"] = userAnsObj["answer"]
-                newObj["isCorrect"] = isCorrect
-                newObj["marks"] = marksAwarded
-                marksAwarded = 0
-                updatedDataList.push(newObj)
-                newObj = {}
+
+                // fix this .find issue when it is post request
+                console.log(!jQuery.isEmptyObject(prevAttemptAnswer))
+                if (!jQuery.isEmptyObject(prevAttemptAnswer)) {
+                    prevAttemptObj = prevAttemptAnswer.find(obj => obj.questionId == userAnsObj["questionId"]);
+                    newObj["id"] = prevAttemptObj["id"]
+                    newObj["questionId"] = userAnsObj["questionId"]
+                    newObj["answer"] = userAnsObj["answer"]
+                    newObj["isCorrect"] = isCorrect
+                    newObj["marks"] = marksAwarded
+                    marksAwarded = 0
+                    updatedDataList.push(newObj)
+                    newObj = {}
+                }
+
+                
 
 
 
@@ -459,6 +500,10 @@ function submitForm(numOfQuestions, quizId) {
     });
     console.log(updatedDataList)
     console.log(totalMarks)
+    // Display user total marks
+    $("#displayUserMarks-card").attr("class", "")
+    $("#displayUserMarks-text").html(`Your quiz score is ${totalMarks}`)
+
 
 
     // Have not attempt, use POST request with qn & ans jsonData
