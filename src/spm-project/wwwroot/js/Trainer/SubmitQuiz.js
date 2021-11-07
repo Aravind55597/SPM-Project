@@ -105,7 +105,7 @@ $("#create_TFqn").click(function () {
 			"Option4": null,
 			"IsMultiSelect": false,
 		};
-		console.log(jsObjectForm);
+
 		//Check if graded
 		jsObjectForm.Name = $("#quizName").val();
 		jsObjectForm.Description = $("#quizDescription").val();
