@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SPM_Project.CustomExceptions;
+
 using SPM_Project.DataTableModels;
+
 using SPM_Project.DTOs;
 using SPM_Project.EntityModels;
 using SPM_Project.Repositories.Interfaces;
@@ -44,6 +46,22 @@ namespace SPM_Project.ApiControllers
 
         public async Task<IActionResult> DeclineLearnerEnrollment([FromQuery] int learnerId, [FromQuery] int classId)
         {
+
+                throw notFoundExp;
+            }
+            //Secondly use classenrollmentrecordservice to check eligibility 
+            if (!await new CoursesController(_unitOfWork).GetCourseEligiblity(user, courseclass.Course)) {
+                var errorDict = new Dictionary<string, string>()
+                    {
+                        {"Class", $"Class of  Id {courseclass.Id} does not exist" }
+                    };
+
+                var notFoundExp = new NotFoundException("Class does not exist", errorDict);
+
+
+                throw notFoundExp;
+            }
+
 
 
             var response = await DeclineEnrollment(learnerId, classId);
@@ -136,10 +154,6 @@ namespace SPM_Project.ApiControllers
             await _unitOfWork.CompleteAsync();
             return new CourseClassesDTO(courseClass);
         }
-
-
-
-
 
     }
 }
