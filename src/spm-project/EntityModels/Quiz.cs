@@ -15,10 +15,10 @@ namespace SPM_Project.EntityModels
 
         public string Description { get; set; }
 
-        public DateTime CreationTimeStamp { get; set; }
+        public DateTime CreationTimestamp { get; set; }
 
 
-        public DateTime UpdateTimeStamp { get; set; }
+        public DateTime UpdateTimestamp { get; set; }
 
         //check if it is graded
         public bool IsGraded { get; set; }
@@ -33,6 +33,8 @@ namespace SPM_Project.EntityModels
         public decimal TimeLimit { get; set; }
 
         public CourseClass CourseClass { get; set; }
+
+
 
         [NotMapped]
         public int TotalMarks

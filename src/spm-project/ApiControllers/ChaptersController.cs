@@ -75,11 +75,6 @@ namespace SPM_Project.ApiControllers
         }
 
 
-
-
-
-
-
         //get chaps------------------------------------------------------------------------------------------------------------
         [NonAction]
         public async Task<List<Chapter>> GetChaptersAsync(int? courseClassId, string properties = "")

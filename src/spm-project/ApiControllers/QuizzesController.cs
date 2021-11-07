@@ -280,7 +280,7 @@ namespace SPM_Project.ApiControllers
 
         
         [NonAction]
-        public async Task<Quiz> GetQuizAsync(int id, string properties = "")
+        public virtual async Task<Quiz> GetQuizAsync(int id, string properties = "")
         {
             var quiz = await _unitOfWork.QuizRepository.GetByIdAsync(id, properties);
 
@@ -300,6 +300,30 @@ namespace SPM_Project.ApiControllers
             return ConvertQuizToQuizDTO(quiz); 
         }
 
+
+        //get quiz question
+        [NonAction]
+        public virtual async Task<QuizQuestion> GetQuizQuestionAsync(int id , string properties="")
+        {
+            var quizQuestion = await _unitOfWork.QuizQuestionRepository.GetByIdAsync(id, properties);
+
+            if (quizQuestion == null)
+            {
+                throw new NotFoundException($"Quiz Question of id {id} is not found");
+            }
+            return quizQuestion;
+
+        }
+
+        //get quiz question
+        [NonAction]
+        public virtual async Task<List<QuizQuestion>> GetQuizQuestionsAsync(int quizId, string properties = "")
+        {
+            var q = await GetQuizAsync(quizId, "");
+
+            return await _unitOfWork.QuizQuestionRepository.GetAllAsync(filter: f => f.Quiz.Id == q.Id , includeProperties: properties);
+
+        }
 
 
 
