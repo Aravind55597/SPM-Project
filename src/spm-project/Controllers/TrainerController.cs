@@ -15,5 +15,19 @@ namespace SPM_Project.Controllers
         {
             return View("CreateQuiz");
         }
+
+        [Authorize(Roles = "Trainer")]
+        public IActionResult SubmitQuiz([FromQuery] int? chapterid, [FromQuery] int? courseClassId, [FromQuery] int? quizId)
+        {
+
+            ViewBag.chapterid = chapterid;
+
+            ViewBag.courseClassId = courseClassId;
+
+            ViewBag.quizId = quizId;
+
+
+            return View("SubmitQuiz");
+        }
     }
 }

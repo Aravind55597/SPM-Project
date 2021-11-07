@@ -216,8 +216,25 @@ function get_chapter(courseClassId) {
 													<div class="row">
 														<div class="col"></div>
 														<div class="col-6">
+
+
+
+
+
+
 															
-															<a style="width:180px" href="javascript:;" class="btn btn-primary EditUngradedbtn" onclick="createUngradedQuiz(${chapterId}, ${courseClassId} )">Create Ungraded Quiz</a>
+															<a style="width:180px" href="/Trainer/SubmitQuiz?chapterId=${chapterId}&courseClassId=${courseClassId}" class="btn btn-primary                       EditUngradedbtn">Create Ungraded Quiz</a>
+
+
+
+
+
+
+
+
+
+
+
 															<br/>
 															<br/>
 															<a style="width:180px" href="javascript:;" class="btn btn-primary UpdateUngradedbtn" >Update Ungraded Quiz</a>
@@ -247,71 +264,15 @@ function get_chapter(courseClassId) {
 
 function createUngradedQuiz(chapterID, courseClassId) {
 	//need to send chapterID + courseClassId +  json strcuture for ungraded
-	console.log(chapterID)
-	console.log(courseClassId)
+
+	window.location.href = `/Trainer/QuizForm?chapterId=${chapterId}&courseClassId=${courseClassId}`
+
+
 }	
 
 
 function createGradedQuiz(courseClassID) {
 	//need to send courseClassID +  json strcuture for ungraded
-	console.log(courseClassID)
+	window.location.href = `/Trainer/QuizForm?courseClassId=${courseClassId}`
 }
 
-$("#create_qn").click(function () {
-    alert("Handler for .click() called.");
-    $("#question_cards").append('<div class="questions card p-4 m-4"><textarea class="form-control my-4 ml-2 qnText" id="exampleFormControlTextarea1" rows="2" placeholder="Write question here"></textarea><div class="question_options"><h5 class="form-label">A.</h5><h5 class="form-label">B.</h5><h5 class="form-label">C.</h5><h5 class="form-label">D.</h5></div><div class="d-flex justify-content-end mb-2"><button type="button" class="btn btn-success btn-sm" id="add_option">Add option</button></div><div class="input-group mb-3"><span class="input-group-text" id="inputGroup-sizing-default">Set Answer</span><input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"></div><div class="d-flex justify-content-end mb-2 mt-4"><button type="button" class="btn btn-danger btn-block">Delete</button></div></div>');
-});
-//Ajax method of sending JSON
-//loop through qns and append to array
-$('#delete').click(function () {
-    //Set var to store javascript
-    //Set defaults then change after looking through the form
-    var jsObjectForm = {
-        "Name": "Test",
-        "IsGraded": false,
-        "Description": "Test descriptionsdfsdfsdfsd",
-        "ChapterId": 504,
-        "CourseClassId": 25,
-        "TimeLimit": 20,
-        "Questions": [
-        ]
-    };
-    var questionObject = {
-        "ImageUrl": "https://www.howtogeek.com/wp-content/uploads/2018/06/shutterstock_1006988770.png?height=200p&trim=2,2,2,2",
-        "Marks": 0,
-        "Question": "Test",
-        "QuestionType": "TFQuestion",
-        "Answer": "true",
-        "TrueOption": "sdfsdf",
-        "FalseOption": "sdfsdf",
-        "Option1": "test option",
-        "Option2": "test option",
-        "Option3": "test option",
-        "Option4": "test option",
-        "IsMultiSelect": false,
-    };
-    //Check if graded
-    if ($('#inlineRadio1').is(':checked')) {
-        jsObjectForm.IsGraded = true;
-    };
-    //Loop through questions
-    $(".questions").each(function () {
-        //Retrieve qn from textarea
-        questionObject.Question = $(this).find("textarea").val();
-        //Retrieve answer from set answers field
-        //Retrieve option from options
-        //Retrieve Ismultiselect from options
-        jsObjectForm.Questions.push(questionObject);
-    });
-    console.log(jsObjectForm);
-    //parse javascript
-    //$.ajax({
-    //   url: '/api/Questions',
-    //   data: JSON.stringify(jsObjectForm),
-    //   error: function() {
-    //      alert("error");
-    //   },
-    //   dataType: 'jsonp',
-    //   type: 'POST'
-    //});
-});

@@ -1,0 +1,121 @@
+﻿@section styles{
+    <link href="~/css/Trainer/CreateQuiz.css" rel="stylesheet" type="text/css" />
+}
+
+
+
+
+
+<div class="card card-custom">
+
+                @*header of the table : put tabs here *@
+                <div class="card-header">
+                    @*<p hidden id="CourseClassID" value="@ViewBag.courseClassId"></p>
+                    <p hidden id="ChapterID" value="@ViewBag.chapterId"></p>
+                     <p hidden id="QuizID" value="@ViewBag.quizId"></p>*@
+                </div>
+
+
+                @*card body is to add content*@
+                <div class="card-body ">
+                    <form method="post" action="" id="quizForm">
+                        <div class="d-flex flex-row">
+                            <div class="container flex-column" id="containerLeft">
+
+                                <!--begin::Time Limit section-->
+                                <!--end::Time Limit section-->
+                                <!--begin::Qn Card (at least preset 1)-->
+                                <p hidden id="CourseClassID" value="@ViewBag.courseClassId"></p>
+                                <p hidden id="ChapterID" value="@ViewBag.chapterId"></p>
+                                <p hidden id="QuizID" value="@ViewBag.quizId"></p>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="quizName" placeholder="Quiz Name">
+                                    <textarea class="form-control my-4 ml-2 qnText" id="quizDescription" rows="2" placeholder="Write question description"></textarea>
+                                </div>
+                                
+                                    <div class="form-check form-check-inline justify-content-center">
+                                        <input class="form-check-input gradedRadio" type="radio" name="inlineRadioOptions" id="gradedQuiz" value="true">
+                                        <label class="form-check-label" for="inlineRadio1">Graded Quiz</label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline justify-content-center">
+                                        <input class="form-check-input gradedRadio" type="radio" name="inlineRadioOptions" id="ungradedQuiz" value="false" checked>
+                                        <label class="form-check-label" for="inlineRadio2">Ungraded Quiz</label>
+                                    </div>
+                                
+                                <div class="d-flex justify-content-end mb-2">
+                                    <button type="button" class="btn btn-success btn-sm btn-block" id="create_TFqn">Add True/False question</button>
+                                    <button type="button" class="btn btn-success btn-sm btn-block" id="create_MCQqn">Add MCQ question</button>
+                                </div>
+                                <div id="question_cards">
+                                    <div class="questions card p-4 m-4">
+                                        
+                                            <div class="form-check form-check-inline justify-content-center">
+                                                <input class="form-check-input multiSelectRadio" type="radio" name="multiselectRadio" id="multiselectTrue" value="true" checked>
+                                                <label class="form-check-label" for="inlineRadio2">MultiSelect Qn</label>
+                                            </div>
+                                            <div class="form-check form-check-inline justify-content-center">
+                                                <input class="form-check-input multiSelectRadio" type="radio" name="multiselectRadio" id="multiselectFalse" value="false" >
+                                                <label class="form-check-label" for="inlineRadio2">Single Answer Qn</label>
+                                            </div>
+                                        
+                                        <textarea class="form-control my-4 ml-2 qnText" id="exampleFormControlTextarea1" rows="2" placeholder="Write question here"></textarea>
+                                        <div class="question_options">
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text" id="inputGroup-sizing-default">1.</span>
+                                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="option1">
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text" id="inputGroup-sizing-default">2.</span>
+                                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="option2">
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text" id="inputGroup-sizing-default">3.</span>
+                                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="option3">
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text" id="inputGroup-sizing-default">4.</span>
+                                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="option4">
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text" id="inputGroup-sizing-default">Set Answer</span>
+                                            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="qnAnswer">
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text" id="inputGroup-sizing-default">Set Marks</span>
+                                            <input type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="qnMarks">
+                                        </div>
+                                        <div class="d-flex justify-content-end mb-2 mt-4">
+                                            <button type="button" class="btn btn-danger btn-block" id="delete">Delete</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!--end::Qn Card-->
+                                <button type="button" class="btn btn-info" id="createQuiz"> Create new quiz</button>
+                            </div>
+                            <div class="container d-flex align-items-end flex-column" id="containerRight">
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1">Set Quiz Duration</label>
+                                    <select class="form-control" id="quizDuration">
+                                        <option value='5'>5 min</option>
+                                        <option value='10'>10 min</option>
+                                        <option value='15'>15 min</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+</div>
+
+
+
+@section scripts {
+    <script src="~/js/Trainer/SubmitQuiz.js"></script>
+}
+
+
