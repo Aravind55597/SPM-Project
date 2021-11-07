@@ -382,7 +382,6 @@ function submitForm(numOfQuestions, quizId) {
     const tfAnswer = document.querySelectorAll('input[class="tfAnswer"]:checked');
 
     if (singleSelectRadio.length == 0 || multiSelectCheckBoxes.length == 0 || tfAnswer.length == 0) {
-        /*alert("All question must be answered")*/
         $('#liveToast').addClass('bg-danger')
         $('#toastHeader').addClass('bg-danger')
         var option = {
@@ -529,9 +528,31 @@ function submitForm(numOfQuestions, quizId) {
         data: dataJson,  // data to submit
         success: function (data, status, xhr) {
             console.log(data, status)
+            var option = {
+                animation: true,
+                delay: 5000
+            }
+            $('#liveToast').addClass('bg-success')
+            $('#toastHeader').addClass('bg-success')
+            var myAlert = document.getElementById('liveToast')
+            var dataHtml = `Your quiz has been submitted successfully.`;
+            $('#toastBody').html(dataHtml)
+            var bsAlert = new bootstrap.Toast(myAlert, option);
+            bsAlert.show();
         },
         error: function (jqXhr, textStatus, errorMessage) {
             console.log(typeof (errorMessage), textStatus, jqXhr)
+            $('#liveToast').addClass('bg-danger')
+            $('#toastHeader').addClass('bg-danger')
+            var option = {
+                animation: true,
+                delay: 5000
+            }
+            var myAlert = document.getElementById('liveToast')
+            var dataHtml = `There is an error in submitting the quiz. Error message: ${errorMessage}`;
+            $('#toastBody').html(dataHtml)
+            var bsAlert = new bootstrap.Toast(myAlert, option);
+            bsAlert.show();
         }
     });
 }
