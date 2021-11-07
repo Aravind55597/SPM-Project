@@ -85,8 +85,23 @@ namespace SPM_Project.ApiControllers
         }
 
 
+            [HttpPost, Route("AssignLearner", Name = "AssignLearner")]
 
-        [HttpPost, Route("SubmitEnrollmentRequest", Name = "SubmitEnrollmentRequest")]
+            public async Task<IActionResult> AssignLearnerToClass ([FromQuery] int learnerId, [FromQuery] int classId)
+            {
+
+
+                var response = await AssignLearner(learnerId, classId);
+
+
+                var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+                return Ok(responseJson);
+
+            }
+
+
+
+            [HttpPost, Route("SubmitEnrollmentRequest", Name = "SubmitEnrollmentRequest")]
         public async Task<IActionResult> SubmitEnrollmentRequest([FromQuery] int classId, [FromQuery] int userid)
         {
 
@@ -204,14 +219,6 @@ namespace SPM_Project.ApiControllers
             var responseJson = Newtonsoft.Json.JsonConvert.SerializeObject(response);
             return Ok(responseJson);
         }
-
-
-
-
-      
-
-
-
 
 
         //NON-API FUNCTIONS-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
@@ -372,7 +379,7 @@ namespace SPM_Project.ApiControllers
             //check if class exists ; otherwise return not found
             //return courseclass
             var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(courseClassId, "Course");
-            var learner = await _unitOfWork.LMSUserRepository.GetByIdAsync(learnerId);
+            var learner = await _unitOfWork.LMSUserRepository.GetByIdAsync(learnerId, "ClassEnrollmentRecord");
             if (courseClass == null)
             {
                 throw new NotFoundException($"Course class of id {courseClassId} does not exist");
@@ -381,12 +388,86 @@ namespace SPM_Project.ApiControllers
             {
                 throw new NotFoundException($"learner not exist");
             }
-            var currentenrollment = learner.Enrollments.Find(x => x.CourseClass.Id == courseClass.Id);
+            var currentenrollment = await _unitOfWork.ClassEnrollmentRecordRepository.GetAllAsync(filter: f => f.CourseClass.Id == courseClassId && f.LMSUser.Id == learner.Id);
 
-            if (currentenrollment == null) {
+
+            if (currentenrollment == null || currentenrollment.Count ==0 ) {
                 throw new NotFoundException($"Enrollment not exist");
             }
-            learner.Enrollments.Remove(currentenrollment);
+            await _unitOfWork.ClassEnrollmentRecordRepository.RemoveByIdAsync(currentenrollment[0].Id);
+            await _unitOfWork.CompleteAsync();
+            return new CourseClassesDTO(courseClass);
+        }
+
+
+
+        [NonAction]
+        public async Task<CourseClassesDTO> AssignLearner(int learnerId, int courseClassId)
+        {
+
+            //check if class exists ; otherwise return not found
+            //return courseclass
+            var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(courseClassId, "Course");
+            var learner = await _unitOfWork.LMSUserRepository.GetByIdAsync(learnerId, "ClassEnrollmentRecord");
+            if (courseClass == null)
+            {
+                throw new NotFoundException($"Course class of id {courseClassId} does not exist");
+            }
+            //check if the learner exists  and throw if not exist
+            if (learner == null)
+            {
+                throw new NotFoundException($"learner not exist");
+            }
+
+            var currentenrollment = await _unitOfWork.ClassEnrollmentRecordRepository.GetAllAsync(filter: f => f.CourseClass.Id == courseClassId && f.LMSUser.Id == learner.Id);
+
+
+
+            //checks if there is existing enrolment and throw if exist
+            if (currentenrollment.Count >0 && currentenrollment[0].IsEnrollled == true )
+            {
+                throw new NotFoundException($"Enrollment already exist and is enrolled");
+            }
+
+            //check if class is full
+            if (await CheckIfClassFull(courseClassId)) {
+
+                //is full
+                throw new NotFoundException($"Class is full");
+
+            }
+            //has learner and no existing enrolment with the class, so lets add him or change to enrolled
+
+            if ( currentenrollment.Count > 0 && currentenrollment[0].IsEnrollled == false)
+            {
+                currentenrollment[0].IsEnrollled = true;
+
+
+            }
+            else {
+                //no such record so lets just add him
+                await _unitOfWork.ClassEnrollmentRecordRepository.AddAsync(new ClassEnrollmentRecord
+                {
+
+                    LMSUser = learner,
+                    IsEnrollled = true,
+                    CourseClass = courseClass,
+                    Course = courseClass.Course
+
+                });
+
+                //learner.Enrollments.Add(new ClassEnrollmentRecord
+                //{
+
+                //    LMSUser = learner,
+                //    IsEnrollled = true,
+                //    CourseClass = courseClass,
+                //    Course = courseClass.Course
+
+                //});
+            }
+
+
             await _unitOfWork.CompleteAsync();
             return new CourseClassesDTO(courseClass);
         }
@@ -452,6 +533,37 @@ namespace SPM_Project.ApiControllers
                 throw new NotFoundException($"Course Class of id {id} is not found");
             }
             return courseClass;
+        }
+
+
+        [NonAction]
+        public async Task<bool> CheckIfClassFull(int courseClassId)
+        {
+            var courseClass = await _unitOfWork.CourseClassRepository.GetByIdAsync(courseClassId);
+            //check if courseclass exist
+            if (courseClass == null)
+            {
+                throw new NotFoundException($"Course Class of id {courseClassId} is not found");
+            }
+
+            //get the current class slots 
+            var classSlots = courseClass.Slots;
+
+            //get the current enrollments 
+            var currentClassEnrolled = await _unitOfWork.ClassEnrollmentRecordRepository.GetAllAsync(filter: f => f.CourseClass.Id == courseClassId);
+
+
+            if (currentClassEnrolled.Count >= classSlots)
+            {
+                return true;
+            }
+            else
+            {
+
+                return false;
+
+            }
+
         }
 
 
