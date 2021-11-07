@@ -42,9 +42,7 @@ $("#create_MCQqn").click(function () {
                                             <span class="input-group-text" id="inputGroup-sizing-default">Set Marks</span>
                                             <input type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="qnMarks">
                                         </div>
-                                        <div class="d-flex justify-content-end mb-2 mt-4">
-                                            <button type="button" class="btn btn-danger btn-block" id="delete">Delete</button>
-                                        </div>
+                                        
 
                                     </div>`);
 });
@@ -72,9 +70,7 @@ $("#create_TFqn").click(function () {
                                             <span class="input-group-text" id="inputGroup-sizing-default">Set Marks</span>
                                             <input type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="qnMarks">
                                         </div>
-                                        <div class="d-flex justify-content-end mb-2 mt-4">
-                                            <button type="button" class="btn btn-danger btn-block" id="delete">Delete</button>
-                                        </div>
+                                        
 
                                     </div>`);
 });
