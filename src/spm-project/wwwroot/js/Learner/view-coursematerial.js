@@ -1,6 +1,4 @@
-﻿const { isEmptyObject } = require("jquery");
-
-function loadContent(contentUrl, contentType) {
+﻿function loadContent(contentUrl, contentType) {
     var contentHtml = ``;
     contentHtml += `<iframe src="${contentUrl}" width="600" height="480" allow="autoplay"></iframe>`;
     $("#view_course_material").html(contentHtml);
@@ -175,6 +173,32 @@ function view(courseClassId, chapterId, gradedQuizId) {
 
 
 }
+function startTimer() {
+    var presentTime = document.getElementById('countdownTime-text').innerHTML;
+    var timeArray = presentTime.split(/[:]+/);
+    var m = timeArray[0];
+    var s = checkSecond((timeArray[1] - 1));
+    if (s == 59) { m = m - 1 }
+    if ((m + '').length == 1) {
+        m = '0' + m;
+    }
+    if (m < 0) {
+        //action to do when countdown time hit 0
+        $("#countdownTime-body").attr("class", "card-body text-center")
+        $("#countdownTime-timeup").html(`Time is up! Please submit the quiz now!`)
+        return
+    }
+    document.getElementById('countdownTime-text').innerHTML = m + ":" + s;
+    setTimeout(startTimer, 1000);
+}
+
+function checkSecond(sec) {
+    if (sec < 10 && sec >= 0) { sec = "0" + sec }; // add zero in front of numbers < 10
+    if (sec < 0) {
+        sec = "59"
+    };
+    return sec;
+}
 
 function displayQuiz(quizId, typeOfQuiz) {
     var retrieveQuiz = "/api/Quizzes/" + quizId;
@@ -192,7 +216,24 @@ function displayQuiz(quizId, typeOfQuiz) {
             var inputType = ``;
             var mcqAnswerHtml = ``;
             var selectType = ``;
+            var timeLimit = result.timeLimit
+            //display quiz countdown timer
+            contentHtml += `<div class="row m-4">
+                                <div class="col">
+                                    <div id="countdownTime-card" class="">
+                                        <div class="card" style="width: 620px; min-height: 50px;">
+                                            <div class="card-body text-center">
+                                                <strong id="countdownTime-text">${timeLimit}:00</strong>
+                                            </div>
+                                            <div id="countdownTime-body" class="card-body text-center d-none">
+                                                <strong id="countdownTime-timeup" class="text-danger"></strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
 
+            //display user quiz score
             contentHtml += `<div class="row m-4">
                                 <div class="col">
                                     <div id="displayUserMarks-card" class="d-none">
@@ -306,6 +347,7 @@ function displayQuiz(quizId, typeOfQuiz) {
             contentHtml += `</form>`;
 
             $("#view_course_material").html(contentHtml);
+            startTimer()
 
         }
     });
@@ -469,7 +511,6 @@ function submitForm(numOfQuestions, quizId) {
 
                 })
 
-                // fix this .find issue when it is post request
                 console.log(!jQuery.isEmptyObject(prevAttemptAnswer))
                 if (!jQuery.isEmptyObject(prevAttemptAnswer)) {
                     prevAttemptObj = prevAttemptAnswer.find(obj => obj.questionId == userAnsObj["questionId"]);
