@@ -418,6 +418,8 @@ function getUserAns() {
 
 function submitForm(numOfQuestions, quizId) {
     event.preventDefault();
+    $("#countdownTime-card").attr("class", "card-body text-center d-none")
+
     //form validation
     const singleSelectRadio = document.querySelectorAll('input[class="mcqsingleSelect"]:checked');
     const multiSelectCheckBoxes = document.querySelectorAll('input[class="mcqmultiSelect"]:checked');
