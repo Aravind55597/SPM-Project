@@ -63,6 +63,7 @@ namespace SPM_Project.ApiControllers.Tests
         {
             var q = new Quiz()
             {
+                Questions=new List<QuizQuestion>()
 
             };
             typeof(Quiz).GetProperty(nameof(q.Id)).SetValue(q, 1);
@@ -281,66 +282,7 @@ namespace SPM_Project.ApiControllers.Tests
 
         }
 
-        [Fact()]
-        public async Task GetUserAnswersAsyncTest()
-        {
 
-            // QUIZ EXISTS -> LIST OF USER ANSWERS RETURNED---------------------------------------------------------------------------------------------------------------------------------------- 
-
-            _mockQuizzesCon.Setup(q => q.GetQuizAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(_testQuiz).Verifiable("GetQuizAsync is not called");
-
-            //List of user answers returned 
-            _uowMocker.mockUserAnswerRepository
-                .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<UserAnswer, bool>>>(), It.IsAny<Func<IQueryable<UserAnswer>, IOrderedQueryable<UserAnswer>>>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .ReturnsAsync(_testUserAnsList).Verifiable("Quiz exist : GetAllAsync() is not called to retreive a list of user answers");
-            Assert.Equal(_testQuiz, await _mockQuizzesCon.Object.GetQuizAsync(1));
-            var result = await _controller.GetUserAnswersAsync(1, "");
-
-
-
-            //check GetAllAsync is called 
-            _uowMocker.mockUserAnswerRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<UserAnswer, bool>>>(), It.IsAny<Func<IQueryable<UserAnswer>, IOrderedQueryable<UserAnswer>>>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()));
-            //check that user answer repository is accessed 
-            _uowMocker.mockUnitOfWork.Verify(u => u.UserAnswerRepository);
-            //check that the type of the result is Chapter list
-            Assert.IsType<List<UserAnswer>>(result);
-            //check that the result returned is the same as the test Chapter
-            Assert.Equal(JsonSerializer.Serialize(_testUserAnsList), JsonSerializer.Serialize(result));
-
-
-            //QUIZ EXISTS -> EMPTY LIST OF USER ANSWERS RETURNED---------------------------------------------------------------------------------------------------------------------------------------- 
-
-            //Empty user answers list is retunrned 
-            _uowMocker.mockUserAnswerRepository
-                .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<UserAnswer, bool>>>(), It.IsAny<Func<IQueryable<UserAnswer>, IOrderedQueryable<UserAnswer>>>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .ReturnsAsync(new List<UserAnswer>()).Verifiable("Quiz exist : GetAllAsync() is not called to retreive a list of user answers");
-
-
-            result = await _controller.GetUserAnswersAsync(1);
-
-            //check GetAllAsync is called 
-            _uowMocker.mockUserAnswerRepository.Verify(l => l.GetAllAsync(It.IsAny<Expression<Func<UserAnswer, bool>>>(), It.IsAny<Func<IQueryable<UserAnswer>, IOrderedQueryable<UserAnswer>>>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()));
-            //check that chapter repository is accessed 
-            _uowMocker.mockUnitOfWork.Verify(u => u.UserAnswerRepository);
-            //check that the type of the result is Chapter list
-            Assert.IsType<List<UserAnswer>>(result);
-            //check that the result returned is the same as the test Chapter
-            Assert.Equal(JsonSerializer.Serialize(new List<UserAnswer>()), JsonSerializer.Serialize(result));
-
-
-            //QUIZ DOES NOT EXIST---------------------------------------------------------------------------------------------------------------------------------------- 
-
-            _mockQuizzesCon.Setup(q => q.GetQuizAsync(2, It.IsAny<string>())).ThrowsAsync(new NotFoundException()).Verifiable("GetQuizAsync is not called");
-
-            Func<Task> action = (async () => await _controller.GetUserAnswersAsync(2));
-
-            //check that not found is returned 
-            await Assert.ThrowsAsync<NotFoundException>(action);
-            //verify that get quiz async was called 
-            _mockQuizzesCon.Verify(q => q.GetQuizAsync(2, It.IsAny<string>()));
-
-
-        }
 
 
         [Fact()]
