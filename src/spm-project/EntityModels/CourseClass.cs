@@ -11,9 +11,9 @@ namespace SPM_Project.EntityModels
 
         public string Name { get; set; }
 
-        public DateTime CreationTimeStamp { get; set; }
+        public DateTime CreationTimestamp { get; set; }
 
-        public DateTime UpdateTimeStamp { get; set; }
+        public DateTime UpdateTimestamp { get; set; }
 
         public DateTime StartRegistration { get; set; }
 
