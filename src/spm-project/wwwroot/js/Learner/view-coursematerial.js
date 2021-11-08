@@ -223,7 +223,7 @@ function displayQuiz(quizId, typeOfQuiz) {
                                     <div id="countdownTime-card" class="">
                                         <div class="card" style="width: 620px; min-height: 50px;">
                                             <div class="card-body text-center">
-                                                <strong id="countdownTime-text">${timeLimit}:00</strong>
+                                                <strong>Time left: </strong><strong id="countdownTime-text">${timeLimit}:00</strong>
                                             </div>
                                             <div id="countdownTime-body" class="card-body text-center d-none">
                                                 <strong id="countdownTime-timeup" class="text-danger"></strong>
@@ -253,13 +253,18 @@ function displayQuiz(quizId, typeOfQuiz) {
                 var questionType = item.questionType
                 var isMultiSelect = item.isMultiSelect
                 var questionId = item.id
+                var questionMarks = item.marks
                 contentHtml += `
                     <div class="row m-4">
                         <div class="col">
                             <div class="card" style="width: 620px; min-height: 200px;">
                               <div class="card-body">
                                 
-                                <h5 class="card-title">Question ${questionNum}</h5>
+                                <h5 class="card-title">Question ${questionNum} &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+                                 &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+                                 &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+                                [ ${questionMarks} marks ]
+                                </h5>
                                 <p class="card-text">${questionName}</p>`;
 
                 if (questionType == "TFQuestion") {
@@ -471,10 +476,11 @@ function submitForm(numOfQuestions, quizId) {
     });
     console.log(prevAttemptAnswer)
 
-    var totalMarks = 0
+    var userScore = 0
     var correctOrWrong = ""
     var updatedDataList = []
     var newObj = {}
+    var totalMarks = 0
     // retrieve question answer
     $.ajax(`/api/Quizzes/${quizId}`, {
         type: 'GET',  // http method
@@ -490,18 +496,20 @@ function submitForm(numOfQuestions, quizId) {
                 let currQnId = quesObj["questionId"]
                 let actualQnAnswer = quesObj["answer"]
                 let userAnsObj = userAnswer[x]
+                totalMarks += quesObj.marks
                 console.log(userAnsObj)
 
                 // Mark user answer
                 if (actualQnAnswer == userAnsObj["answer"]) {
                     correctOrWrong = "<span class='text-success'>You are correct! </span>"
-                    totalMarks += quesObj.marks
+                    userScore += quesObj.marks
                     marksAwarded += quesObj.marks
                     isCorrect = true
                 } else {
                     correctOrWrong = "<span class='text-danger'>Sorry, that is the wrong answer... </span>"
                     isCorrect = false
                 }
+                console.log(marksAwarded)
 
                 // display correct answer on UI
                 // Retrieve the displayCorrectAnswer elements in the quizForm
@@ -541,10 +549,16 @@ function submitForm(numOfQuestions, quizId) {
         }
     });
     console.log(updatedDataList)
+    console.log(userScore)
     console.log(totalMarks)
+    console.log(userScore / totalMarks * 100)
+    let num = userScore / totalMarks * 100
+    var userScorePercentage = num.toFixed(2);
+    console.log(userScorePercentage)
+
     // Display user total marks
     $("#displayUserMarks-card").attr("class", "")
-    $("#displayUserMarks-text").html(`Your quiz score is ${totalMarks}`)
+    $("#displayUserMarks-text").html(`Your quiz score is ${userScore}/${totalMarks} (${userScorePercentage}%)`)
 
 
 
