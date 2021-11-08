@@ -133,8 +133,8 @@ namespace SPM_Project.ApiControllers
 
             if (currentenrollment.Count > 0)
             {
-               
-                currentenrollment[0].IsEnrollled = false;
+                await _unitOfWork.ClassEnrollmentRecordRepository.RemoveByIdAsync(currentenrollment[0].Id);
+                //currentenrollment[0].IsEnrollled = false;
             }
             else
             {
