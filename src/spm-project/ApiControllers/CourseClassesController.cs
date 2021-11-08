@@ -424,6 +424,7 @@ namespace SPM_Project.ApiControllers
             var currentenrollment = await _unitOfWork.ClassEnrollmentRecordRepository.GetAllAsync(filter: f => f.CourseClass.Id == courseClassId && f.LMSUser.Id == learner.Id);
 
 
+          
 
             //checks if there is existing enrolment and throw if exist
             if (currentenrollment.Count >0 && currentenrollment[0].IsEnrollled == true )
