@@ -580,9 +580,9 @@ namespace SPM_Project.ApiControllers.Tests
         {
 
             //setup courseclass
-            _uowMocker. .
-               Setup(l => l.GetByIdAsync(1, "Course,ClassTrainer,GradedQuiz")).
-               ReturnsAsync(TestCourseClass()).Verifiable("Course Class was NOT retreived");
+            //_uowMocker. .
+            //   Setup(l => l.GetByIdAsync(1, "Course,ClassTrainer,GradedQuiz")).
+            //   ReturnsAsync(TestCourseClass()).Verifiable("Course Class was NOT retreived");
 
             //setup classenrolment
             //_uowMocker.mockClassEnrollmentRecordRepository
