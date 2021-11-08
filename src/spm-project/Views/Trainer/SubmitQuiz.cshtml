@@ -23,15 +23,15 @@
                                 <!--begin::Time Limit section-->
                                 <!--end::Time Limit section-->
                                 <!--begin::Qn Card (at least preset 1)-->
-                                <p hidden id="CourseClassID" value="@ViewBag.courseClassId"></p>
-                                <p hidden id="ChapterID" value="@ViewBag.chapterId"></p>
-                                <p hidden id="QuizID" value="@ViewBag.quizId"></p>
+                                <input hidden id="CourseClassID" type="number" value="@ViewBag.courseClassId">
+                                <input  hidden id="ChapterID" type="number" value="@ViewBag.chapterId">
+                                <input hidden id="QuizID" type="number" value="@ViewBag.quizId">
                                 <div class="form-group">
                                     <input type="text" class="form-control" id="quizName" placeholder="Quiz Name">
                                     <textarea class="form-control my-4 ml-2 qnText" id="quizDescription" rows="2" placeholder="Write question description"></textarea>
                                 </div>
                                 
-                                    <div class="form-check form-check-inline justify-content-center">
+                                    <div class="form-check form-check-inline justify-content-center gradedGrp">
                                         <input class="form-check-input gradedRadio" type="radio" name="inlineRadioOptions" id="gradedQuiz" value="true">
                                         <label class="form-check-label" for="inlineRadio1">Graded Quiz</label>
                                     </div>
@@ -59,19 +59,19 @@
                                         
                                         <textarea class="form-control my-4 ml-2 qnText" id="exampleFormControlTextarea1" rows="2" placeholder="Write question here"></textarea>
                                         <div class="question_options">
-                                            <div class="input-group mb-3">
+                                            <div class="input-group mb-3 qnOption">
                                                 <span class="input-group-text" id="inputGroup-sizing-default">1.</span>
                                                 <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="option1">
                                             </div>
-                                            <div class="input-group mb-3">
+                                            <div class="input-group mb-3 qnOption">
                                                 <span class="input-group-text" id="inputGroup-sizing-default">2.</span>
                                                 <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="option2">
                                             </div>
-                                            <div class="input-group mb-3">
+                                            <div class="input-group mb-3 qnOption">
                                                 <span class="input-group-text" id="inputGroup-sizing-default">3.</span>
                                                 <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="option3">
                                             </div>
-                                            <div class="input-group mb-3">
+                                            <div class="input-group mb-3 qnOption">
                                                 <span class="input-group-text" id="inputGroup-sizing-default">4.</span>
                                                 <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="option4">
                                             </div>
@@ -90,7 +90,7 @@
                                     </div>
                                 </div>
                                 <!--end::Qn Card-->
-                                <button type="button" class="btn btn-info" id="createQuiz"> Create new quiz</button>
+                                <button type="button" class="btn btn-info" id="createQuiz" href="#0"> Create new quiz</button>
                             </div>
                             <div class="container d-flex align-items-end flex-column" id="containerRight">
                                 <div class="form-group">
