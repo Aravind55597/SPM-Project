@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SPM_Project.DTOs
 {
 
-    //TODO UNIT TEST THIS CLASS
+
     public class QuizDTO
     {
 

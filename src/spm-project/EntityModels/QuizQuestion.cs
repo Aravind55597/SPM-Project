@@ -40,7 +40,7 @@ namespace SPM_Project.EntityModels
         public string Answer { get; set; }
 
 
-        //TODO REMOVE GETTERS & SETTERS
+   
         public int Marks
         {
             get

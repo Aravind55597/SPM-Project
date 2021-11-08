@@ -13,7 +13,6 @@ namespace SPM_Project.ApiControllers
     [Route("api/[controller]")]
     [ApiController]
 
-    //TODO ADD TESTS TO RETREIVE QUIZZES 
     public class QuizzesController : ControllerBase
     {
         public IUnitOfWork _unitOfWork;
@@ -37,7 +36,7 @@ namespace SPM_Project.ApiControllers
 
         //POST QUESTION-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        //TODO UNIT TESTS
+
 
         [HttpPost, Route("", Name = "AddQuiz")]
         public async Task<IActionResult> PostQuizDTOAPIAsync([FromBody] QuizDTO quizDTO)
@@ -86,7 +85,7 @@ namespace SPM_Project.ApiControllers
         {
             //check if quiz exists 
 
-            //TODO CREATE REUSABLE FUNCTION TO RETREIVE QUIZ
+
             var quiz = await _unitOfWork.QuizRepository.GetByIdAsync(id, "Questions"); 
 
             if (quiz == null)
@@ -106,7 +105,6 @@ namespace SPM_Project.ApiControllers
         {
             //check if quiz exists 
 
-            //TODO CREATE REUSABLE FUNCTION TO RETREIVE QUIZ
             var quiz = await GetQuizDTOAsync(id, "CourseClass,Chapter,Questions"); 
 
             if (quiz == null)
@@ -178,7 +176,6 @@ namespace SPM_Project.ApiControllers
             quiz.CourseClass = await _courseClassesCon.GetCourseClassAsync((int)quizDTO.CourseClassId);
      
 
-            //TODO CHECK THIS
             if (quizDTO.Id != 0)
             {
                 typeof(Quiz).GetProperty(nameof(quiz.Id)).SetValue(quiz, 1);
@@ -213,7 +210,7 @@ namespace SPM_Project.ApiControllers
 
                 mcq.SetAnswer(new List<int>().CommaSepStringToIntList(quizQuestionDTO.Answer));
 
-                //TODO CHECK THIS
+             
 
                 if (quizQuestionDTO.Id !=0)
                 {
@@ -291,6 +288,7 @@ namespace SPM_Project.ApiControllers
             return quiz;
         }
 
+
         [NonAction]
         public async Task<QuizDTO> GetQuizDTOAsync(int id, string properties = "")
         {
@@ -314,6 +312,11 @@ namespace SPM_Project.ApiControllers
             return quizQuestion;
 
         }
+
+
+
+
+
 
         //get quiz question
         [NonAction]

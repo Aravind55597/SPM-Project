@@ -7,13 +7,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace SPM_Project.ApiControllers.Tests
 {
 
-    //TODO ASSERT THE EXCEPTION MESSAGE 
+
     //https://www.meziantou.net/quick-introduction-to-xunitdotnet.htm
     public class ResourcesControllerTests : IDisposable
     {
@@ -154,7 +155,7 @@ namespace SPM_Project.ApiControllers.Tests
             //check that the type of the result is Resource
             Assert.IsType<Resource>(result);
             //check that the result returned is the same as the test Resource
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestResourceCreator(1)), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(TestResourceCreator(1)), JsonSerializer.Serialize(result));
 
             //WHEN CHAPTER DOES NOT EXIST----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -173,7 +174,7 @@ namespace SPM_Project.ApiControllers.Tests
         {
             //WHEN RESOURCE EXISTS----------------------------------------------------------------------------------------------------------------------------------------
             var result = await _controller.GetResourceDTOAsync(1, "");
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestResourceDTOCreator(1)), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(TestResourceDTOCreator(1)), JsonSerializer.Serialize(result));
 
             //WHEN RESOURCE DOES NOT EXIST----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -202,7 +203,7 @@ namespace SPM_Project.ApiControllers.Tests
             //check that the type of the result is Resource list
             Assert.IsType<List<Resource>>(result);
             //check that the result returned is the same as the test Resource
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestResourcesList()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(TestResourcesList()), JsonSerializer.Serialize(result));
 
             //CHAPTER EXISTS -> EMPTY LIST OF RESOURCES RETURNED----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -220,7 +221,7 @@ namespace SPM_Project.ApiControllers.Tests
             //check that the type of the result is Resource list
             Assert.IsType<List<Resource>>(result);
             //check that the result returned is the same as the test Resource
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(new List<Resource>()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(new List<Resource>()), JsonSerializer.Serialize(result));
 
             //CHAPTER DOES NOT EXIST----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -253,7 +254,7 @@ namespace SPM_Project.ApiControllers.Tests
             //check that the type of the result is Resource list
             Assert.IsType<List<Resource>>(result);
             //check that the result returned is the same as the test Resource
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestResourcesList()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(TestResourcesList()), JsonSerializer.Serialize(result));
 
             //EMPTY LIST OF CHAPTERS RETURNED----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -271,7 +272,7 @@ namespace SPM_Project.ApiControllers.Tests
             //check that the type of the result is Resource list
             Assert.IsType<List<Resource>>(result);
             //check that the result returned is the same as the test Resource
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(new List<Resource>()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(new List<Resource>()), JsonSerializer.Serialize(result));
         }
 
         //get multiple chapters  async
@@ -287,7 +288,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             var result = await _controller.GetResourceDTOsAsync(1);
 
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestResourceDTOsList()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(TestResourceDTOsList()), JsonSerializer.Serialize(result));
 
             //COURSECLASE EXISTS -> EMPTY LIST OF CHAPTERS RETURNED----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -298,7 +299,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             result = await _controller.GetResourceDTOsAsync(1);
 
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(new List<ResourceDTO>()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(new List<ResourceDTO>()), JsonSerializer.Serialize(result));
 
             //COURSECLASS DOES NOT EXIST----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -320,7 +321,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             var result = await _controller.GetResourceDTOsAsync(1);
 
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestResourceDTOsList()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(TestResourceDTOsList()), JsonSerializer.Serialize(result));
 
             //EMPTY LIST OF CHAPTERS RETURNED----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -331,7 +332,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             result = await _controller.GetResourceDTOsAsync(1);
 
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(new List<ResourceDTO>()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(new List<ResourceDTO>()), JsonSerializer.Serialize(result));
         }
     }
 }
