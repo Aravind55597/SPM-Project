@@ -6,6 +6,7 @@ using SPM_Project.EntityModels;
 using SPM_Project.Extensions;
 using SPM_Project.Repositories.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SPM_Project.ApiControllers
@@ -131,16 +132,37 @@ namespace SPM_Project.ApiControllers
         //get user Answers------------------------------------------------------------------------------------------------------------
 
         [NonAction]
-        //TEST THIS FOR SANITY CHECK 
+ 
+        //DIIFICULT TO TEST THIS
         public async Task<List<UserAnswer>> GetUserAnswersAsync(int quizId, string properties = "")
         {
+           
             //auto send badrequest exception
-            var cc = await _quizzesCon.GetQuizAsync(quizId, "");
+            var quiz = await _quizzesCon.GetQuizAsync(quizId, "Questions");
+
+            var quesIdList = quiz.Questions.Select(q => q.Id).ToList();
 
             var userId = await _usersCon.GetCurrentUserId();
+            
+             return  await RetreiveUserAnsList(properties, quesIdList, userId);
+            
 
-            return await _unitOfWork.UserAnswerRepository.GetAllAsync(filter: f => f.QuizQuestion.Id == cc.Id && f.User.Id == userId, includeProperties: properties);
+            //return await _unitOfWork.QuizQuestionRepository.GetAllAsync(filter: f => f..Id == cc.Id && f.User.Id == userId, includeProperties: properties);
+
         }
+
+        private async Task<List<UserAnswer>> RetreiveUserAnsList(string properties, List<int> quesIdList, int userId)
+        {
+            var result = new List<UserAnswer>();
+            foreach (var item in quesIdList)
+            {
+
+                var uAns = await _unitOfWork.UserAnswerRepository.GetAllAsync(filter: f => f.QuizQuestion.Id == item && f.User.Id == userId, includeProperties: properties);
+                result.Add(uAns[0]);
+            }
+            return result; 
+        }
+
 
         [NonAction]
         //TOO SIMPLE TO BE TESTED ; JUST A LOOP
@@ -187,9 +209,9 @@ namespace SPM_Project.ApiControllers
         public async Task<UserAnswer> UpdateConversionAsync(UserAnswerDTO userDTO)
         {
 
-            var userAns = await GetUserAnswerAsync(userDTO.QuestionId, "QuizQuestion");
+            var userAns = await GetUserAnswerAsync(userDTO.Id, "QuizQuestion");
 
-            userAns.Answer = userAns.Answer;
+            userAns.Answer = userDTO.Answer;
 
             return userAns; 
 

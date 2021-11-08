@@ -37,11 +37,11 @@ function queryStringHandler(action, classid, userid) {
 	var query = null;
 
 	if (action == "approve") {
-		query = "api/ClassEnrollmentRecord/ApproveEnrollment?learnerId=" + userid + "&classId=" + classid;
+		query = "/api/ClassEnrollmentRecord/ApproveEnrollment?learnerId=" + userid + "&classId=" + classid;
 	}
 
 	else if (action == "reject") {
-		query = "api/ClassEnrollmentRecord/DeclineEnrollment?learnerId=" + userid + "&classId=" + classid;
+		query = "/api/ClassEnrollmentRecord/DeclineEnrollment?learnerId=" + userid + "&classId=" + classid;
 	}
 
 	return query
@@ -159,7 +159,7 @@ function viewRequestDT(filterInput) {
 
 
 		//default order and sort. In this case ,order by ID in ascending order (Id is column number 1)
-		order: [[5, "desc"]],
+		order: [[6, "desc"]],
 
 
 
@@ -176,6 +176,7 @@ function viewRequestDT(filterInput) {
 			{ name: 'UserId', data: 'UserId' },
 			{ name: 'LearnerName', data: 'LearnerName' },
 			{ name: 'CourseClassName', data: 'CourseClassName' },
+			{ name: 'IsAssigned', data: 'IsAssigned' },
 			{ name: 'RecordStatus', data: 'RecordStatus' },
 			//responsive priority is an option to state the priority of the column to be view when the screen is smaller
 			//data: null means it is not Retrieveing data from the server
@@ -192,6 +193,19 @@ function viewRequestDT(filterInput) {
 
 					return moment(data).format('Do MMMM YYYY, h:mm a')
 						;
+
+				},
+			},
+
+			{
+				targets: 5,
+				render: function (data, type, full, meta) {
+					if (data.IsAssigned == true) {
+						return "Pre Assigned";
+					}
+					else {
+						return "Self Enrolled";
+					}
 
 				},
 			},
