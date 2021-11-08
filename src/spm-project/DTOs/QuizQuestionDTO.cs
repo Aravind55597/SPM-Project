@@ -7,11 +7,11 @@ using System.Linq;
 
 namespace SPM_Project.DTOs
 {
-    //TODO UNIT TEST THIS CLASS
+
     //https://www.intertech.com/unit-test-net-entity-validation/
 
     public class QuizQuestionDTO
-        //TODO TESTS NOT REQUIRED   
+    
     {
         public QuizQuestionDTO()
         {

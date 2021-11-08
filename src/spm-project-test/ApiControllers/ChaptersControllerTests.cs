@@ -11,12 +11,12 @@ using Moq;
 using SPM_Project.CustomExceptions;
 using System.Linq.Expressions;
 using SPM_Project.DTOs;
+using System.Text.Json;
 
 namespace SPM_Project.ApiControllers.Tests
 {
 
 
-    //TODO ASSERT THE EXCEPTION MESSAGE 
     //https://www.meziantou.net/quick-introduction-to-xunitdotnet.htm
     public class ChaptersControllerTests:IDisposable
     {
@@ -199,7 +199,7 @@ namespace SPM_Project.ApiControllers.Tests
             //check that the type of the result is Chapter
             Assert.IsType<Chapter>(result); 
             //check that the result returned is the same as the test Chapter
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestChapterCreator(1)), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(TestChapterCreator(1)), JsonSerializer.Serialize(result));
 
             //WHEN CHAPTER DOES NOT EXIST---------------------------------------------------------------------------------------------------------------------------------------- 
 
@@ -221,7 +221,7 @@ namespace SPM_Project.ApiControllers.Tests
         {
             //WHEN CHAPTER EXISTS---------------------------------------------------------------------------------------------------------------------------------------- 
             var result = await _controller.GetChapterDTOAsync(1, "");
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestChapterDTOCreator(1)), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(TestChapterDTOCreator(1)), JsonSerializer.Serialize(result));
 
 
             //WHEN CHAPTER DOES NOT EXIST---------------------------------------------------------------------------------------------------------------------------------------- 
@@ -259,7 +259,7 @@ namespace SPM_Project.ApiControllers.Tests
             //check that the type of the result is Chapter list
             Assert.IsType<List<Chapter>>(result);
             //check that the result returned is the same as the test Chapter
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestChaptersList()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(TestChaptersList()), JsonSerializer.Serialize(result));
 
 
             //COURSECLASE EXISTS -> EMPTY LIST OF CHAPTERS RETURNED---------------------------------------------------------------------------------------------------------------------------------------- 
@@ -279,7 +279,7 @@ namespace SPM_Project.ApiControllers.Tests
             //check that the type of the result is Chapter list
             Assert.IsType<List<Chapter>>(result);
             //check that the result returned is the same as the test Chapter
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(new List<Chapter>()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(new List<Chapter>()), JsonSerializer.Serialize(result));
 
 
             //COURSECLASS DOES NOT EXIST---------------------------------------------------------------------------------------------------------------------------------------- 
@@ -322,7 +322,7 @@ namespace SPM_Project.ApiControllers.Tests
             //check that the type of the result is Chapter list
             Assert.IsType<List<Chapter>>(result);
             //check that the result returned is the same as the test Chapter
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestChaptersList()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(TestChaptersList()), JsonSerializer.Serialize(result));
 
 
             //EMPTY LIST OF CHAPTERS RETURNED---------------------------------------------------------------------------------------------------------------------------------------- 
@@ -343,7 +343,7 @@ namespace SPM_Project.ApiControllers.Tests
             //check that the type of the result is Chapter list
             Assert.IsType<List<Chapter>>(result);
             //check that the result returned is the same as the test Chapter
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(new List<Chapter>()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(new List<Chapter>()), JsonSerializer.Serialize(result));
 
 
         }
@@ -366,7 +366,7 @@ namespace SPM_Project.ApiControllers.Tests
             var result = await _controller.GetChapterDTOsAsync(1);
 
 
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestChapterDTOsList()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(TestChapterDTOsList()), JsonSerializer.Serialize(result));
 
 
             //COURSECLASE EXISTS -> EMPTY LIST OF CHAPTERS RETURNED---------------------------------------------------------------------------------------------------------------------------------------- 
@@ -378,7 +378,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             result = await _controller.GetChapterDTOsAsync(1);
 
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(new List<ChapterDTO>()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(new List<ChapterDTO>()), JsonSerializer.Serialize(result));
 
             //COURSECLASS DOES NOT EXIST---------------------------------------------------------------------------------------------------------------------------------------- 
 
@@ -407,7 +407,7 @@ namespace SPM_Project.ApiControllers.Tests
             var result = await _controller.GetChapterDTOsAsync(1);
 
 
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(TestChapterDTOsList()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(TestChapterDTOsList()), JsonSerializer.Serialize(result));
 
 
             //EMPTY LIST OF CHAPTERS RETURNED---------------------------------------------------------------------------------------------------------------------------------------- 
@@ -421,7 +421,7 @@ namespace SPM_Project.ApiControllers.Tests
 
             result = await _controller.GetChapterDTOsAsync(1);
 
-            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(new List<ChapterDTO>()), Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            Assert.Equal(JsonSerializer.Serialize(new List<ChapterDTO>()), JsonSerializer.Serialize(result));
 
         }
 

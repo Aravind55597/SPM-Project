@@ -6,7 +6,7 @@ namespace SPM_Project.EntityModels
 {
     public class CourseClass : IEntityWithId
     {
-        //TODO UNIT TESTS
+
         public int Id { get; private set; }
 
         public string Name { get; set; }

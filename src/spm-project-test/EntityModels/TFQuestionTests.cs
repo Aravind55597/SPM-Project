@@ -57,7 +57,7 @@ namespace SPM_Project.EntityModels.Tests
             _testQuestionSingleGraded = null;
         }
 
-
+    
         [Fact()]
         //returns a list of integers when parsing from string to int is valid 
         public void GetAnswerTest()
@@ -71,7 +71,6 @@ namespace SPM_Project.EntityModels.Tests
             _testQuestionSingleGraded.Answer = "true";
             Assert.True(_testQuestionSingleGraded.GetAnswer());
 
-            //TODO ASSERT FOR EXCEPTION WHEN PARSING FAILS 
         }
 
 

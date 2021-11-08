@@ -18,7 +18,7 @@ using Xunit;
 namespace SPM_Project.ApiControllers.Tests
 {
 
-    //TODO ASSERT THE EXCEPTION MESSAGE 
+
     //https://www.meziantou.net/quick-introduction-to-xunitdotnet.htm
     public class ClassEnrollmentRecordControllerTests : IDisposable
     {
@@ -229,8 +229,7 @@ namespace SPM_Project.ApiControllers.Tests
             //check if DTResponse object is send to front end 
             var deserializedMessage = JsonConvert.DeserializeObject<DTResponse<ClassEnrollmentRecordTableData>>(items);
             Assert.IsType<DTResponse<ClassEnrollmentRecordTableData>>(deserializedMessage);
-            ////check that the data inside the response object is a list of ClassEnrollmentRecordsTabelData 
-            //Assert.IsType<List<ClassEnrollmentRecordTableData>>(deserializedMessage.Data);
+
 
         }
 

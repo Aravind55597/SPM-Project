@@ -17,7 +17,7 @@ namespace SPM_Project.EntityModels
 
         public Course Course { get; set; }
         public Chapter Chapter { get; set; }
-        public bool Completed { get; set; }
+        public bool CompletedUngradedQuiz { get; set; }
 
         public bool HaveViewedResources { get; set; }
         public LMSUser LMSUser { get; set; }
