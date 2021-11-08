@@ -217,22 +217,8 @@ function get_chapter(courseClassId) {
 														<div class="col"></div>
 														<div class="col-6">
 
-
-
-
-
-
 															
 															<a style="width:180px" href="/Trainer/SubmitQuiz?chapterId=${chapterId}&courseClassId=${courseClassId}" class="btn btn-primary                       EditUngradedbtn">Create Ungraded Quiz</a>
-
-
-
-
-
-
-
-
-
 
 
 															<br/>
@@ -265,14 +251,14 @@ function get_chapter(courseClassId) {
 function createUngradedQuiz(chapterID, courseClassId) {
 	//need to send chapterID + courseClassId +  json strcuture for ungraded
 
-	window.location.href = `/Trainer/QuizForm?chapterId=${chapterId}&courseClassId=${courseClassId}`
+	window.location.href = `/Trainer/SubmitQuiz?chapterId=${chapterId}&courseClassId=${courseClassId}`
 
 
 }	
 
 
-function createGradedQuiz(courseClassID) {
+function createGradedQuiz(courseClassId) {
 	//need to send courseClassID +  json strcuture for ungraded
-	window.location.href = `/Trainer/QuizForm?courseClassId=${courseClassId}`
+	window.location.href = `/Trainer/SubmitQuiz?courseClassId=${courseClassId}`
 }
 

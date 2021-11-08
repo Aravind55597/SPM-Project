@@ -31,32 +31,26 @@
                                     <textarea class="form-control my-4 ml-2 qnText" id="quizDescription" rows="2" placeholder="Write question description"></textarea>
                                 </div>
                                 
-                                    <div class="form-check form-check-inline justify-content-center gradedGrp">
-                                        <input class="form-check-input gradedRadio" type="radio" name="inlineRadioOptions" id="gradedQuiz" value="true">
-                                        <label class="form-check-label" for="inlineRadio1">Graded Quiz</label>
-                                    </div>
-
-                                    <div class="form-check form-check-inline justify-content-center">
-                                        <input class="form-check-input gradedRadio" type="radio" name="inlineRadioOptions" id="ungradedQuiz" value="false" checked>
-                                        <label class="form-check-label" for="inlineRadio2">Ungraded Quiz</label>
-                                    </div>
+                                    
                                 
                                 <div class="d-flex justify-content-end mb-2">
                                     <button type="button" class="btn btn-success btn-sm btn-block" id="create_TFqn">Add True/False question</button>
                                     <button type="button" class="btn btn-success btn-sm btn-block" id="create_MCQqn">Add MCQ question</button>
                                 </div>
                                 <div id="question_cards">
+
+                               
                                     <div class="questions card p-4 m-4">
-                                        
-                                            <div class="form-check form-check-inline justify-content-center">
-                                                <input class="form-check-input multiSelectRadio" type="radio" name="multiselectRadio" id="multiselectTrue" value="true" checked>
-                                                <label class="form-check-label" for="inlineRadio2">MultiSelect Qn</label>
-                                            </div>
-                                            <div class="form-check form-check-inline justify-content-center">
-                                                <input class="form-check-input multiSelectRadio" type="radio" name="multiselectRadio" id="multiselectFalse" value="false" >
-                                                <label class="form-check-label" for="inlineRadio2">Single Answer Qn</label>
-                                            </div>
-                                        
+
+                                        <div class="form-check form-check-inline justify-content-center">
+                                            <input class="form-check-input multiSelectRadio multiselectTrue " type="radio" name="multiselectRadio"  value="true" checked>                                     
+                                            <label class="form-check-label" for="inlineRadio2">MultiSelect Qn</label>
+                                        </div>
+                                        <div class="form-check form-check-inline justify-content-center">
+                                            <input class="form-check-input multiSelectRadio multiselectFalse" type="radio" name="multiselectRadio" value="false">
+                                            <label class="form-check-label" for="inlineRadio2">Single Answer Qn</label>
+                                        </div>
+
                                         <textarea class="form-control my-4 ml-2 qnText" id="exampleFormControlTextarea1" rows="2" placeholder="Write question here"></textarea>
                                         <div class="question_options">
                                             <div class="input-group mb-3 qnOption">
@@ -75,7 +69,7 @@
                                                 <span class="input-group-text" id="inputGroup-sizing-default">4.</span>
                                                 <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="option4">
                                             </div>
-                                            
+
                                         </div>
                                         <div class="input-group mb-3">
                                             <span class="input-group-text" id="inputGroup-sizing-default">Set Answer</span>
@@ -84,10 +78,14 @@
                                         <div class="input-group mb-3">
                                             <span class="input-group-text" id="inputGroup-sizing-default">Set Marks</span>
                                             <input type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="qnMarks">
+
                                         </div>
-                                        
+
+                                        <button type="button" class="btn btn-danger" onclick="deleteQns(this)"> Delete Question</button>
+
 
                                     </div>
+                                    
                                 </div>
                                 <!--end::Qn Card-->
                                 <button type="button" class="btn btn-info" id="createQuiz" href="#0"> Create new quiz</button>
