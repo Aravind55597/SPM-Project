@@ -25,7 +25,7 @@ function notification(notificationString, value) {
 function closeModal() {
 	$(".btn-close").click(function () {
 		$(".overlay").hide();
-
+		$("#course_class_datatable").DataTable().ajax.reload();
 	});
 }
 
@@ -142,7 +142,7 @@ function queryStringHandler(action, classid, userid) {
 	}
 
 	else if (action == "addLearner") {
-		query = "/api/CourseClasses/addlearner" + "?learnerId=" + userid + "&" + "classId=" + classid;
+		query = "/api/CourseClasses/AssignLearner" + "?learnerId=" + userid + "&" + "classId=" + classid;
     }
 	else if (action == "withdrawLearner") {
 		query = "/api/CourseClasses/WithdrawLearner" + "?learnerId=" + userid + "&" + "classId=" + classid;
