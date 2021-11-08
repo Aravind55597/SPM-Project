@@ -1,17 +1,17 @@
-using Xunit;
-using SPM_Project.ApiControllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SPM_ProjectTests.Mocks;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
+using Newtonsoft.Json;
+using SPM_Project.CustomExceptions;
 using SPM_Project.DataTableModels;
 using SPM_Project.DataTableModels.DataTableData;
 using SPM_Project.DataTableModels.DataTableResponse;
-using Moq;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using SPM_Project.EntityModels;
+using SPM_ProjectTests.Mocks;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace SPM_Project.ApiControllers.Tests
 {
@@ -34,6 +34,52 @@ namespace SPM_Project.ApiControllers.Tests
             _controller = new ClassEnrollmentRecordController(_uowMocker.mockUnitOfWork.Object);
             _inputDTModel = new DTParameterModel();
             _outputDTModel = new DTResponse<ClassEnrollmentRecordTableData>();
+
+        }
+
+        //createa test course class with random integer for tests 
+        private CourseClass TestCourseClassCreator()
+        {
+
+            Random rnd = new Random();
+            int id = rnd.Next(1, 50);
+
+            var courseClass = new CourseClass()
+            {
+
+
+                Name = $"Test Course Class {id}",
+                StartRegistration = DateTime.Now,
+                EndRegistration = DateTime.Now,
+                StartClass = DateTime.Now,
+                EndClass = DateTime.Now,
+                ClassTrainer = new LMSUser()
+                {
+                    Name = $"Test Trainer {id}",
+                    Department = Department.Human_Resource,
+                    DOB = DateTime.Now,
+
+                },
+                Course = new Course()
+                {
+                    Name = $"Test Course {1}",
+                    Description = "Test Description",
+                    PassingPercentage = (decimal)0.85
+                },
+                Slots = 30
+
+            };
+
+            //set id of the courseClass 
+            typeof(CourseClass).GetProperty(nameof(courseClass.Id)).SetValue(courseClass, id);
+
+            //set id of classtrainer 
+            typeof(LMSUser).GetProperty(nameof(courseClass.ClassTrainer.Id)).SetValue(courseClass.ClassTrainer, id);
+
+            //set id of course 
+            typeof(Course).GetProperty(nameof(courseClass.Course.Id)).SetValue(courseClass.Course, 1);
+
+            return courseClass;
 
         }
 
@@ -76,7 +122,15 @@ namespace SPM_Project.ApiControllers.Tests
 
         }
 
+        //APPROVE 
 
+
+
+        //DECLINE
+
+
+
+       
 
 
 
