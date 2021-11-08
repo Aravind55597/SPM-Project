@@ -54,10 +54,47 @@ namespace SPM_Project.ApiControllers.Tests
             return courseClassesList;
         }
 
+        //returns a list of ClassEnrollmentRecord 
+        private List<ClassEnrollmentRecord> TestClassEnrollmentRecordList()
+        {
+            List<ClassEnrollmentRecord> ClassEnrollmentRecordList = new List<ClassEnrollmentRecord>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                ClassEnrollmentRecordList.Add(TestClassEnrollmentRecordCreator());
+            }
+
+            return ClassEnrollmentRecordList;
+        }
+        //creates test classenrollmentrecord
+        private ClassEnrollmentRecord TestClassEnrollmentRecordCreator()
+        {
+
+            Random rnd = new Random();
+            int id = rnd.Next(1, 50);
+
+            var classEnrollmentRecord = new ClassEnrollmentRecord()
+            {
+
+                IsAssigned = true,
+                IsEnrollled = true,
+                LMSUser = new LMSUser(),
+                CourseClass = TestCourseClass()
+            };
+
+            typeof(ClassEnrollmentRecord).GetProperty(nameof(classEnrollmentRecord.Id)).SetValue(classEnrollmentRecord, 1);
+
+            //set id of classtrainer 
+            typeof(LMSUser).GetProperty(nameof(classEnrollmentRecord.LMSUser.Id)).SetValue(classEnrollmentRecord.LMSUser, 1);
+
+
+
+            return classEnrollmentRecord;
+        }
 
         //createa test course class with random integer for tests 
         private CourseClass TestCourseClassCreator()
-        {
+            {
 
             Random rnd = new Random();
             int id = rnd.Next(1, 50);
@@ -541,36 +578,54 @@ namespace SPM_Project.ApiControllers.Tests
         //}
 
 
-        //ASSIGN
+        //ASSIGN Learner 
 
         //User does not exist , throw not found
-        //[Theory]
-        //[InlineData(1, 1, true, false)]
-        //[InlineData(1, 1, false, true)]
-        //[InlineData(1, 1, true, true)]
-        //public async Task CHECKIFCLASS_FULL(int? courseId)
-        //{
+        [Theory]
+        [InlineData(1, 1 )]
+       
+        public async Task AssignLearner_Test(int learnerId, int courseClassId)
+        {
 
-        //    //returns user based on the ID passed 
-        //    _uowMocker.mockLMSUserRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync((LMSUser)null).Verifiable("GetByIdAsync LMSUser was not called");
+            //returns user based on the ID passed 
+            _uowMocker.mockLMSUserRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync((LMSUser)null).Verifiable("GetByIdAsync LMSUser was not called");
+            //test courseclass
+            var __testcc = TestCourseClass();
+            _uowMocker.mockCourseClassRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(__testcc).Verifiable("GetByIdAsync LMSUser was not called");
 
-
-        //    //create a passable function 
-        //    Func<Task> action = (async () => await _controller.GetCourseClassesDataTable(_inputDTModel, courseId, lmsUserId, isTrainer, isLearner));
-
-
-
-        //    await Assert.ThrowsAsync<NotFoundException>(action);
+            var result = _controller.AssignLearner(learnerId, courseClassId);
 
 
-        //    //verify that id of the current user is retreived 
-        //    _uowMocker.mockLMSUserRepository.Verify(l => l.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>()));
+            Assert.NotNull(result);
+
+          
+
+          
 
 
 
-        //}
-        //WITHDRAW
+        }
 
+        //WITHDRAW learner 
+        [Theory]
+        [InlineData(1, 1)]
+
+        public async Task WithdrawLearner_Test(int learnerId, int courseClassId)
+        {
+
+            //returns user based on the ID passed 
+            _uowMocker.mockLMSUserRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync((LMSUser)null).Verifiable("GetByIdAsync LMSUser was not called");
+            //test courseclass
+            var __testcc = TestCourseClass();
+            _uowMocker.mockCourseClassRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(__testcc).Verifiable("GetByIdAsync LMSUser was not called");
+
+            var result = _controller.WithdrawLearner(learnerId, courseClassId);
+
+
+            Assert.NotNull(result);
+
+
+        }
 
         //CHECKIFCLASS_FULL
 
@@ -578,23 +633,20 @@ namespace SPM_Project.ApiControllers.Tests
         [InlineData(1)]
         public async Task CHECKIFCLASS_FULL(int courseClassId)
         {
+            var __testcc = TestCourseClass(); 
+            _uowMocker.mockCourseClassRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(__testcc).Verifiable("GetByIdAsync LMSUser was not called");
 
-            //setup courseclass
-            //_uowMocker. .
-            //   Setup(l => l.GetByIdAsync(1, "Course,ClassTrainer,GradedQuiz")).
-            //   ReturnsAsync(TestCourseClass()).Verifiable("Course Class was NOT retreived");
 
-            //setup classenrolment
-            //_uowMocker.mockClassEnrollmentRecordRepository
-            //  .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<ClassEnrollmentRecord, bool>>>(), It.IsAny<Func<IQueryable<ClassEnrollmentRecord>, IOrderedQueryable<ClassEnrollmentRecord>>>(), "Course,ClassTrainer,GradedQuiz", It.IsAny<int>(), It.IsAny<int>()))
-            //  .ReturnsAsync(TestCourseClassCreator).Verifiable("Course Classes were not retreived");
+            _uowMocker.mockClassEnrollmentRecordRepository
+             .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<ClassEnrollmentRecord, bool>>>(), It.IsAny<Func<IQueryable<ClassEnrollmentRecord>, IOrderedQueryable<ClassEnrollmentRecord>>>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+             .ReturnsAsync(TestClassEnrollmentRecordList()).Verifiable("ClassEnrollmentRecord were not retrieved");
 
 
 
-            //var isFull = await _controller.CheckIfClassFull(courseClassId);
-            //Assert.True(isFull == false);
+            var isFull = await _controller.CheckIfClassFull(courseClassId);
+            Assert.False(isFull);
 
-            Assert.True(true);
+
 
         }
     }

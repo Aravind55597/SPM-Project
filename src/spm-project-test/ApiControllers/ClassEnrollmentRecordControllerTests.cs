@@ -8,6 +8,8 @@ using SPM_Project.DataTableModels.DataTableResponse;
 using SPM_Project.EntityModels;
 using SPM_ProjectTests.Mocks;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -83,6 +85,116 @@ namespace SPM_Project.ApiControllers.Tests
 
         }
 
+
+        //sample test course class 
+        private CourseClass TestCourseClass()
+        {
+
+
+            var courseClass = new CourseClass()
+            {
+
+
+                Name = $"Test Course Class {1}",
+                StartRegistration = DateTime.Now,
+                EndRegistration = DateTime.Now,
+                StartClass = DateTime.Now,
+                EndClass = DateTime.Now,
+                ClassTrainer = new LMSUser()
+                {
+                    Name = $"Test Trainer {1}",
+                    Department = Department.Human_Resource,
+                    DOB = DateTime.Now,
+
+                },
+                Course = new Course
+                {
+                    Name = $"Test Course {1}",
+                    Description = "Test Description",
+                    PassingPercentage = (decimal)0.85
+                },
+                Slots = 30
+
+            };
+
+            //set id of the courseClass 
+            typeof(CourseClass).GetProperty(nameof(courseClass.Id)).SetValue(courseClass, 1);
+
+            //set id of classtrainer 
+            typeof(LMSUser).GetProperty(nameof(courseClass.ClassTrainer.Id)).SetValue(courseClass.ClassTrainer, 1);
+
+            //set id of course 
+            typeof(Course).GetProperty(nameof(courseClass.Course.Id)).SetValue(courseClass.Course, 1);
+
+            return courseClass;
+
+        }
+
+
+
+        //returns a list of ClassEnrollmentRecord 
+        private List<ClassEnrollmentRecord> TestClassEnrollmentRecordList()
+        {
+            List<ClassEnrollmentRecord> ClassEnrollmentRecordList = new List<ClassEnrollmentRecord>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                ClassEnrollmentRecordList.Add(TestClassEnrollmentRecordCreator());
+            }
+
+            return ClassEnrollmentRecordList;
+        }
+        //creates test classenrollmentrecord
+        private ClassEnrollmentRecord TestClassEnrollmentRecordCreator()
+        {
+
+            Random rnd = new Random();
+            int id = rnd.Next(1, 50);
+
+            var classEnrollmentRecord = new ClassEnrollmentRecord()
+            {
+
+                IsAssigned = true,
+                IsEnrollled = true,
+                LMSUser = new LMSUser(),
+                CourseClass = TestCourseClass()
+            };
+
+            typeof(ClassEnrollmentRecord).GetProperty(nameof(classEnrollmentRecord.Id)).SetValue(classEnrollmentRecord, 1);
+
+            //set id of classtrainer 
+            typeof(LMSUser).GetProperty(nameof(classEnrollmentRecord.LMSUser.Id)).SetValue(classEnrollmentRecord.LMSUser, 1);
+
+          
+
+            return classEnrollmentRecord;
+        }
+
+        //creates test learner
+        private LMSUser TestLearnerCreator()
+        {
+
+            Random rnd = new Random();
+            int id = rnd.Next(1, 50);
+
+            var testlearner = new LMSUser()
+            {
+                Name = "TestLearner",
+                Enrollments = new List<ClassEnrollmentRecord>(),
+    
+                
+            };
+
+
+            testlearner.Enrollments.Add(TestClassEnrollmentRecordCreator());
+            //set id of classtrainer 
+            typeof(LMSUser).GetProperty(nameof(testlearner.Id)).SetValue(testlearner, 1);
+
+          
+
+            return testlearner;
+        }
+
         public void Dispose()
         {
             _uowMocker = null;
@@ -124,13 +236,64 @@ namespace SPM_Project.ApiControllers.Tests
 
         //APPROVE 
 
+        [Fact]
+        public async Task ApproveLearnerEnrolment_Test()
+        {
+            //setup courseclass id 
+            var __testcc = TestCourseClass();
+            _uowMocker.mockCourseClassRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(__testcc).Verifiable("GetByIdAsync LMSUser was not called");
+           
+
+            _uowMocker.mockClassEnrollmentRecordRepository
+            .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<ClassEnrollmentRecord, bool>>>(), It.IsAny<Func<IQueryable<ClassEnrollmentRecord>, IOrderedQueryable<ClassEnrollmentRecord>>>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+            .ReturnsAsync(TestClassEnrollmentRecordList()).Verifiable("ClassEnrollmentRecord were not retrieved");
+
+
+            //setup learner id 
+         
+            _uowMocker.mockLMSUserRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(TestLearnerCreator()).Verifiable("GetByIdAsync LMSUser was not called");
+
+            // call function 
+            var result = await _controller.ApproveEnrollment(1, __testcc.Id);
+
+            //assert as true if learner's isEnrolled is true
+            Debug.WriteLine(result);
+            Assert.NotNull(result);
+
+        }
 
 
         //DECLINE
 
+        [Fact()]
+        public async Task DeclineLearnerEnrolment_Test()
+        {
 
 
-       
+            //setup courseclass id 
+            var __testcc = TestCourseClass();
+            _uowMocker.mockCourseClassRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(__testcc).Verifiable("GetByIdAsync LMSUser was not called");
+
+
+            _uowMocker.mockClassEnrollmentRecordRepository
+            .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<ClassEnrollmentRecord, bool>>>(), It.IsAny<Func<IQueryable<ClassEnrollmentRecord>, IOrderedQueryable<ClassEnrollmentRecord>>>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+            .ReturnsAsync(TestClassEnrollmentRecordList()).Verifiable("ClassEnrollmentRecord were not retrieved");
+
+
+            //setup learner id 
+
+            _uowMocker.mockLMSUserRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(TestLearnerCreator()).Verifiable("GetByIdAsync LMSUser was not called");
+
+            // call function 
+            var result = await _controller.DeclineEnrollment(1, __testcc.Id);
+
+            //assert as true if learner's isEnrolled is true
+            Debug.WriteLine(result);
+            Assert.NotNull(result);
+
+        }
+
+
 
 
 
