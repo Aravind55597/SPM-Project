@@ -186,8 +186,6 @@ namespace SPM_Project.ApiControllers.Tests
                 ReturnsAsync(TestCourseClass()).Verifiable("Course Class was NOT retreived");
 
 
-
-
             //when when course id = 1 , return course
             _uowMocker.mockCourseRepository
                 .Setup(l => l.GetByIdAsync(1, It.IsAny<string>()))
@@ -527,44 +525,52 @@ namespace SPM_Project.ApiControllers.Tests
 
 
 
+        //[Fact()]
+        //public void IsCourseClassModifiableTest()
+        //{
+
+        //    //start class is after current datetime
+        //    var cc = TestCourseClassCreator();
+        //    cc.StartClass = DateTime.Now.AddDays(1); 
+        //    Assert.True(_controller.IsCourseClassModifiable(cc), "This test needs an implementation");
+
+
+        //    //start class is before datetime
+        //    cc.StartClass = DateTime.Now.AddDays(-1);
+        //    Assert.False(_controller.IsCourseClassModifiable(cc), "This test needs an implementation");
+        //}
+
 
         //ASSIGN
 
-        [Fact]
-        
-        public async Task AssignLearner_Test()
-        {
+        //User does not exist , throw not found
+        //[Theory]
+        //[InlineData(1, 1, true, false)]
+        //[InlineData(1, 1, false, true)]
+        //[InlineData(1, 1, true, true)]
+        //public async Task CHECKIFCLASS_FULL(int? courseId)
+        //{
 
-            //setup courseclass
-            _uowMocker.mockCourseClassRepository
-                 .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), It.IsAny<Func<IQueryable<CourseClass>, IOrderedQueryable<CourseClass>>>(), "Course,ClassTrainer,GradedQuiz", It.IsAny<int>(), It.IsAny<int>()))
-                 .ReturnsAsync(TestCourseClassList().Concat(TestCourseClassList()).ToList()).Verifiable("Course Classes were not retreived");
+        //    //returns user based on the ID passed 
+        //    _uowMocker.mockLMSUserRepository.Setup(l => l.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync((LMSUser)null).Verifiable("GetByIdAsync LMSUser was not called");
 
-          
-            
-            Assert.True(true);
 
-        }
+        //    //create a passable function 
+        //    Func<Task> action = (async () => await _controller.GetCourseClassesDataTable(_inputDTModel, courseId, lmsUserId, isTrainer, isLearner));
 
+
+
+        //    await Assert.ThrowsAsync<NotFoundException>(action);
+
+
+        //    //verify that id of the current user is retreived 
+        //    _uowMocker.mockLMSUserRepository.Verify(l => l.GetByIdAsync(It.IsAny<int>(), It.IsAny<string>()));
+
+
+
+        //}
         //WITHDRAW
 
-        [Fact]
-
-        public async Task WithdrawLearner_Test()
-        {
-
-            //setup courseclass
-             _uowMocker.mockCourseClassRepository
-                 .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), It.IsAny<Func<IQueryable<CourseClass>, IOrderedQueryable<CourseClass>>>(), "Course,ClassTrainer,GradedQuiz", It.IsAny<int>(), It.IsAny<int>()))
-                 .ReturnsAsync(TestCourseClassList().Concat(TestCourseClassList()).ToList()).Verifiable("Course Classes were not retreived");
-
-
-
-
-        
-            Assert.True(true);
-
-        }
 
         //CHECKIFCLASS_FULL
 
@@ -574,19 +580,19 @@ namespace SPM_Project.ApiControllers.Tests
         {
 
             //setup courseclass
-            _uowMocker.mockCourseClassRepository
-                 .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<CourseClass, bool>>>(), It.IsAny<Func<IQueryable<CourseClass>, IOrderedQueryable<CourseClass>>>(), "Course,ClassTrainer,GradedQuiz", It.IsAny<int>(), It.IsAny<int>()))
-                 .ReturnsAsync(TestCourseClassList().Concat(TestCourseClassList()).ToList()).Verifiable("Course Classes were not retreived");
+            _uowMocker. .
+               Setup(l => l.GetByIdAsync(1, "Course,ClassTrainer,GradedQuiz")).
+               ReturnsAsync(TestCourseClass()).Verifiable("Course Class was NOT retreived");
 
             //setup classenrolment
             //_uowMocker.mockClassEnrollmentRecordRepository
             //  .Setup(l => l.GetAllAsync(It.IsAny<Expression<Func<ClassEnrollmentRecord, bool>>>(), It.IsAny<Func<IQueryable<ClassEnrollmentRecord>, IOrderedQueryable<ClassEnrollmentRecord>>>(), "Course,ClassTrainer,GradedQuiz", It.IsAny<int>(), It.IsAny<int>()))
             //  .ReturnsAsync(TestCourseClassCreator).Verifiable("Course Classes were not retreived");
 
+          
 
-
-            //var isFull = await _controller.CheckIfClassFull(courseClassId);
-            Assert.True(true);
+            var isFull = await _controller.CheckIfClassFull(courseClassId);
+            Assert.True(isFull == false);
 
         }
     }
