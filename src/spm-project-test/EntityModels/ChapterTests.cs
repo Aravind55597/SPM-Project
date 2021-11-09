@@ -7,7 +7,7 @@ namespace SPM_Project.EntityModels.Tests
     public class ChapterTests : IDisposable
     {
         //PREFACE : NAVIGATION PROPERTIES ARE MINIMALLY TESTED DUE TO DIFFICULTY OF CREATING LARGE OBJECTS
-
+        //TEST CLASS AUTHOR : ESTHER TEO 01400174
 
 
         private Chapter _chap1;

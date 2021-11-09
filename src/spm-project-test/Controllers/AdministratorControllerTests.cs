@@ -11,7 +11,7 @@ using SPM_ProjectTests.Extensions;
 
 namespace SPM_Project.Controllers.Tests
 {
-
+    //TEST CLASS AUTHOR : SHUM CHIN NING 01355819
     public class AdministratorControllerTests : IDisposable
     {
 
@@ -35,7 +35,7 @@ namespace SPM_Project.Controllers.Tests
 
         //ViewEngineers-------------------------------------------------------------------
 
-        //SHUM CHIN NING 
+
         [Fact()]
         public void ViewEngineersTest_Check_If_Correct_Page_Is_Returned()
         {

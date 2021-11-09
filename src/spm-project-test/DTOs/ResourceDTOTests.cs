@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace SPM_Project.DTOs.Tests
 {
-
+    //TEST CLASS AUTHOR : SHUM CHIN NING 01355819
     public class ResourceDTOTests:IDisposable
     {
 

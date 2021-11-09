@@ -11,6 +11,8 @@ using SPM_ProjectTests.Extensions;
 
 namespace SPM_Project.Controllers.Tests
 {
+
+    //TEST CLASS AUTHOR : THEN EE KI 01329299
     public class TrainerControllerTests : IDisposable
     {
 

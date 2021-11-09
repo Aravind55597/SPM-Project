@@ -343,7 +343,7 @@ function displayQuiz(quizId, typeOfQuiz) {
                             <div class="row">
                                 <div class="col-6"></div>
                                 <div class="col">
-                                    <button class="btn btn-primary" onclick="resetForm()">Re-attempt</button>
+                                    <button class="btn btn-primary reattempt-btn" onclick="resetForm()" disabled=''>Re-attempt</button>
                                     <button class="btn btn-primary" onclick="submitForm(${numOfQuestions}, ${quizId})" id="ajaxBtn">Submit</button>
                                 </div>
                                 <div class="col-2"></div>
@@ -371,6 +371,7 @@ function resetForm() {
             quizForm[i].checked = false
         }
     }
+    $('.reattempt-btn').attr('disabled','');
     $("#displayUserMarks-card").attr("class", "d-none")
     $(".displayCorrectAnswer").html(``)
 
@@ -454,6 +455,12 @@ function submitForm(numOfQuestions, quizId) {
     //Get request to retrieve user ans
     var attemptedQuiz = true
     var prevAttemptAnswer = {}
+
+
+    //enable reattempt
+
+    $('.reattempt-btn').removeAttr('disabled');
+
     $.ajax(`/api/UserAnswers?quizId=${quizId}`, {
         type: 'GET',  // http method
         // async need to be false in order to access variable outside of ajax function
