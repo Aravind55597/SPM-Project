@@ -14,7 +14,7 @@ using Xunit;
 namespace SPM_Project.ApiControllers.Tests
 {
 
-
+    //TEST CLASS AUTHOR : SHUM CHIN NING 01355819
     //https://www.meziantou.net/quick-introduction-to-xunitdotnet.htm
     public class ResourcesControllerTests : IDisposable
     {

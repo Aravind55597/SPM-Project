@@ -93,7 +93,7 @@ namespace SPM_Project.Repositories
 
         //generate IQueryable for manipulation by datatable
 
-        private IQueryable<LMSUsersTableData> GetLMSUsersTableQueryable(bool isTrainer, bool isLearner, bool isEligible , int? classId)
+        private IQueryable<LMSUsersTableData> GetLMSUsersTableQueryable(bool isTrainer, bool isLearner, bool isEligible, int? classId)
         {
             //var roles = await RetreiveAllRolesAsync();
             var queryable = _context.UserRoles
@@ -154,21 +154,35 @@ namespace SPM_Project.Repositories
 
                 if (isLearner)
                 {
-                    queryable = queryable.Where(q => q.Role == "Learner");
+                    queryable = queryable = queryable.Where(q => q.Role == "Learner");
 
                     //check the prerequisite of the class 
-                    var preReq = _context.CourseClass.Where(cc => cc.Id == classId).Select(cc => cc.Course).SelectMany(c => c.PreRequisites).Select(p => p.Id);
+                    var preReq = _context.CourseClass.Where(cc => cc.Id == classId).Select(cc => cc.Course).SelectMany(c => c.PreRequisites).Select(p => p.Id).ToList();
+
+                    if (preReq==null||preReq.Count==0)
+                    {
+                        return queryable;
+                    }
                     //return Queryable
 
                     //check if all  the prereq course ids are present in 
-                    queryable.
-                        Where(q => preReq.All(_context.LMSUser.Where(l => l.Id == q.Id).SelectMany(l => l.Enrollments).Where(e => e.CompletionStatus).Select(e => e.CourseClass.Course.Id).Contains)
-                    );
+                    //queryable.
+                    //    Where(q => preReq.All(_context.LMSUser.Where(l => l.Id == q.Id).SelectMany(l => l.Enrollments).Where(e => e.CompletionStatus).Select(e => e.CourseClass.Course.Id).Contains)
+                    //);
+
+
+                    queryable = queryable.
+                    Where(q => (_context.LMSUser.Where(l => l.Id == q.Id).SelectMany(l => l.Enrollments).Where(e => e.CompletionStatus).Select(e => e.CourseClass.Course.Id).ToList()).Contains(preReq[0])
+                        );
+
+                    //var test = queryable.ToList();
+
+                    //var test2 = 1; 
                 }
 
                 if (isTrainer)
                 {
-                    queryable.Where(q => q.Role == "Trainer");
+                    queryable = queryable.Where(q => q.Role == "Trainer");
                 }
 
 
@@ -190,7 +204,6 @@ namespace SPM_Project.Repositories
 
             return queryable;
         }
-
         private IQueryable<LMSUsersTableData> GlobalTableSearcher(IQueryable<LMSUsersTableData> queryable , DTRequestHandler<LMSUsersTableData> dtH)
         {
             //if search value is not empty

@@ -184,7 +184,20 @@ function viewRequestDT(filterInput, userID) {
 				//target last column
 				targets: -1,
 				render: function (data, type, full, meta) {
-					return `<a href="javascript:;" class="btn btn-danger WithdrawClassBtn">Withdrawal from class</a>`
+
+
+					var btnDisabled = "";
+					var btnType = "";
+					if (data.RecordStatus == 'Enrolled') {
+						btnDisabled = "disabled"
+						btnType = "btn-secondary"
+						
+					} else {
+						btnDisabled = ""
+						btnType = "btn-primary"
+					}
+
+					return `<a href="javascript:;" class="btn btn-danger WithdrawClassBtn ${btnDisabled}" ${btnDisabled} >Withdraw from class</a>`
 						;
 				},
 			},

@@ -74,30 +74,34 @@ namespace SPM_Project.ApiControllers
 
             //for loop enroolment and check for completionstatus 
 
-            var currentEnrollments = user.Enrollments.Where(e=>e.CompletionStatus == true);
+            //var currentEnrollments = user.Enrollments.Where(e=>e.CompletionStatus == true);
+
+            var currentEnrollments = await _unitOfWork.ClassEnrollmentRecordRepository.GetAllAsync(filter: f => f.LMSUser.Id == user.Id && f.CompletionStatus == true, includeProperties: "CourseClass,Course");
+
             //for loop the completed ones to include course class
-            var currentUserEnrollments = new List<ClassEnrollmentRecord>() ;
-            foreach (var enrollment in currentEnrollments) {
-                currentUserEnrollments.Add(await _unitOfWork.ClassEnrollmentRecordRepository.GetByIdAsync(enrollment.Id, "Course"));
-            }
+            //var currentUserEnrollments = new List<ClassEnrollmentRecord>() ;
+            //foreach (var enrollment in currentEnrollments) {
+            //    currentUserEnrollments.Add(await _unitOfWork.ClassEnrollmentRecordRepository.GetByIdAsync(enrollment.Id, "Course"));
+            //}
 
             var currentUserCourses = new List<Course>();
 
-            foreach (var enrollment in currentUserEnrollments)
+            foreach (var enrollment in currentEnrollments)
             {
                 currentUserCourses.Add(enrollment.Course);
             }
 
             //get all coursess();
-            var courses =await  _unitOfWork.CourseRepository.GetAllAsync(null,null, "PreRequisites CourseClass");
+            var courses = await _unitOfWork.CourseRepository.GetAllAsync(null, null, "PreRequisites,CourseClass");
             //foreach course, check if user is eligible and push to 
-            if (courses.Count >0)
+            if (courses.Count > 0)
             {
 
                 foreach (var course in courses)
                 {
                     //var isEligible = await GetCourseEligiblity(user, course);
-                    if (course.PreRequisites == null || course.PreRequisites.Count == 0 ) {
+                    if (course.PreRequisites == null || course.PreRequisites.Count == 0)
+                    {
                         eligiblecourses.Add(course);
                     }
 
@@ -117,22 +121,36 @@ namespace SPM_Project.ApiControllers
         }
 
         [NonAction]
-        public async Task<bool> GetCourseEligiblity(Course course,List<Course> courseprereq)
+        public async Task<bool> GetCourseEligiblity(Course course, List<Course> courseprereq)
         {
-            //sort arrays then check if equal
-            course.PreRequisites = course.PreRequisites.OrderBy(c => c.Id).ToList();
-            courseprereq = courseprereq.OrderBy(c => c.Id).ToList();
-            //if the count is 0 means got no prereq
-            if (course.PreRequisites.Count == 0 && courseprereq.Count == 0)
-            {
-                return true;
-            }
 
-            if (course.Equals(courseprereq))
+            if (course.PreRequisites == null || course.PreRequisites.Count() == 0)
             {
                 return true;
             }
-            return false;
+            var preReq = course.PreRequisites.Select(p => p.Id).ToList();
+
+            var userPreReq = courseprereq.Select(p => p.Id).ToList();
+
+            var check = userPreReq.Contains(preReq[0]);
+            return check;
+
+
+
+            ////sort arrays then check if equal
+            //course.PreRequisites = course.PreRequisites.OrderBy(c => c.Id).ToList();
+            //courseprereq = courseprereq.OrderBy(c => c.Id).ToList();
+            ////if the count is 0 means got no prereq
+            //if (course.PreRequisites.Count == 0 && courseprereq.Count == 0)
+            //{
+            //    return true;
+            //}
+
+            //if (course.Equals(courseprereq))
+            //{
+            //    return true;
+            //}
+            //return false;
         }
 
 
